@@ -1,33 +1,41 @@
-import React from "react";
+import React, { Component } from "react";
 
 import "./Todolist.css";
 
-function ListItem(props) {
-  const title = props.title;
-  const dueDate = props.dueDate;
-  const formattedDate = formatDate(dueDate);
-  console.log(props.completed);
+export default class ListItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      itemID: props.itemID,
+    };
+  }
 
-  const rowClasses =
-    "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center" +
-    (props.completed ? " completed" : "");
-  return (
-    <div className={rowClasses}>
-      <div className="col-9 text-left">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          value=""
-          checked={props.completed}
-        />
-        <span className="ml-2 item-title">{title}</span>
-      </div>
+  render() {
+    const title = this.props.title;
+    const dueDate = this.props.dueDate;
+    const formattedDate = formatDate(dueDate);
 
-      <div className="col-3 text-right item-due-date font-small">
-        {formattedDate}
+    const rowClasses =
+      "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center" +
+      (this.props.completed ? " completed" : "");
+    return (
+      <div className={rowClasses}>
+        <div className="col-9 text-left">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            value=""
+            // checked={this.props.completed}
+          />
+          <span className="ml-2 item-title">{title}</span>
+        </div>
+
+        <div className="col-3 text-right item-due-date font-small">
+          {formattedDate}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 function formatDate(str) {
@@ -60,5 +68,3 @@ function formatDate(str) {
 
   return formatted;
 }
-
-export default ListItem;

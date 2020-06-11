@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 const { MongoClient } = require("mongodb");
+const { ObjectID } = require("mongodb").ObjectID;
 
 /* MongoDB init */
 const dbUser = "dbUser";
@@ -42,6 +43,7 @@ router.post("/", (req, res, next) => {
               dueDate: dueDate,
               priority: priority,
               completed: false,
+              itemID: new ObjectID(),
             },
           },
         },

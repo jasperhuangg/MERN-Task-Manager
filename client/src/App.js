@@ -7,7 +7,12 @@ const domain = "http://localhost:9000";
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "", isLoaded: false, error: null, lists: [] };
+    this.state = { isLoaded: false, error: null, lists: [] };
+  }
+
+  rerender() {
+    console.log("rerender is getting called");
+    this.setState({ isLoaded: false });
   }
 
   // for now assume we are getting the user's username from the props
@@ -27,56 +32,24 @@ export default class App extends Component {
       body: body,
     })
       .then((res) => res.json())
-      .then(
-        (res) => {
-          var lists = res;
-          this.setState({ isLoaded: true, lists: lists });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        }
-      );
-  }
-
-  addListItem(listName, title, dueDate, description, priority) {
-    const url = domain + "/addListItem";
-    const body = JSON.stringify({
-      username: "Jasper",
-      listName: listName,
-      title: title,
-      dueDate: dueDate,
-      description: description,
-      priority: priority,
-    });
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: body,
-    })
-      .then((res) => res.text())
-      .then(
-        (res) => {
-          console.log(res);
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        }
-      );
+      .then((res) => {
+        var lists = res;
+        this.setState({ lists: lists, isLoaded: true });
+        console.log("state set");
+      });
   }
 
   componentDidMount() {
-    this.addListItem("Test List", "postmanTest", "2020-08-12", "", "medium");
     this.getLists();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isLoaded !== prevState.isLoaded) {
+      this.getLists();
+      console.log(
+        "in componentDidUpdate after this.getLists(): " + this.state.isLoaded
+      );
+    }
   }
 
   render() {
@@ -88,30 +61,11 @@ export default class App extends Component {
             color={list.color}
             name={list.name}
             items={list.items}
+            addListItem={this.addListItem}
+            rerender={() => this.rerender()}
           />
         ))}
       </div>
     );
   }
 }
-
-// // TODO: maybe move this to the back end
-// function sortListItems(a, b) {
-//   if (a.completed && !b.completed) return 1;
-//   else if (!a.completed && b.completed) return -1;
-//   else {
-//     // both are either completed or incomplete
-//     if (a.dueDate === b.dueDate) {
-//       // sort items due on the same day by priority
-//       const priorities = ["low", "medium", "high"];
-//       const priorityA = priorities.indexOf(a.priority);
-//       const priorityB = priorities.indexOf(b.priority);
-//       return priorityB - priorityA;
-//     } else {
-//       // sort items based on date
-//       const dateA = new Date(a.dueDate);
-//       const dateB = new Date(b.dueDate);
-//       return dateA - dateB;
-//     }
-//   }
-// }
