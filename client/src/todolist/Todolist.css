@@ -1,0 +1,15 @@
+.font-small {
+  font-size: 12px;
+}
+
+.icon {
+  font-size: 14px;
+}
+
+.completed {
+  opacity: 0.3;
+}
+
+/* .completed input:checked ~ .checkmark {
+  background-color: gray;
+} */
