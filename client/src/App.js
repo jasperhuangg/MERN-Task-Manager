@@ -11,10 +11,6 @@ export default class App extends Component {
     this.state = { isLoaded: false, error: null, lists: [] };
   }
 
-  rerender() {
-    this.setState({ isLoaded: false });
-  }
-
   // for now assume we are getting the user's username from the props
   // that are being passed in by a Login component (to be created)
   getLists() {
@@ -40,10 +36,6 @@ export default class App extends Component {
 
   componentDidMount() {
     this.getLists();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.isLoaded !== prevState.isLoaded) this.getLists();
   }
 
   addListItem(listName, title, dueDate, description, priority) {
@@ -87,7 +79,40 @@ export default class App extends Component {
     }).then((res) => res.text());
   }
 
-  setItemTitle(title) {}
+  setItemTitle(listName, itemID, title) {
+    const lists = this.state.lists.slice();
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        const items = lists[i].items;
+        for (let j = 0; j < items.length; j++) {
+          if (items[j].itemID === itemID) {
+            items[j].title = title;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    this.setState({ lists: lists });
+
+    const url = domain + "/setItemTitle";
+    const body = JSON.stringify({
+      username: "Jasper",
+      listName: listName,
+      itemID: itemID,
+      title: title,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    });
+  }
 
   setItemCompleted(listName, itemID, completed) {
     const lists = this.state.lists.slice();
@@ -97,6 +122,7 @@ export default class App extends Component {
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             items[j].completed = completed;
+            items.sort(sortListItems);
             break;
           }
         }

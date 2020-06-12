@@ -6,6 +6,7 @@ import "./Checkbox.css";
 export default class ListItem extends Component {
   constructor(props) {
     super(props);
+    this.inputRef = React.createRef();
     this.state = {
       itemID: props.itemID,
     };
@@ -22,6 +23,17 @@ export default class ListItem extends Component {
       completed
     );
   }
+
+  handleKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      this.inputRef.current.blur();
+    }
+  };
+
+  handleBlur = (e) => {
+    const title = e.target.value;
+    this.props.setItemTitle(this.props.listName, this.state.itemID, title);
+  };
 
   render() {
     const title = this.props.title;
@@ -45,10 +57,17 @@ export default class ListItem extends Component {
             className="form-check-input"
             type="checkbox"
             value=""
-            checked={!!completed}
+            checked={completed}
             onChange={this.handleCheck}
           />
-          <input className="ml-2 item-title title-input" value={title}></input>
+          <input
+            className="ml-2 item-title title-input"
+            defaultValue={title}
+            ref={this.inputRef}
+            onKeyDown={(e) => this.handleKeyPress(e)}
+            onBlur={(e) => this.handleBlur(e)}
+          ></input>
+          {/* <span className="ml-2 item-title">{title}</span> */}
         </div>
 
         <div className={dueDateClassList}>{formattedDate}</div>

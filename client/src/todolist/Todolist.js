@@ -33,7 +33,6 @@ export default class Todolist extends Component {
         this.state.addItemPriority
       );
       document.getElementById("addItemInput").value = "";
-      // this.props.rerender();
       this.handleCalendarOverlayOK();
       this.setState({ addItemDate: "", addItemValue: "" });
     }
@@ -144,7 +143,9 @@ export default class Todolist extends Component {
               setItemCompleted={(listName, itemID, completed) =>
                 this.props.setItemCompleted(listName, itemID, completed)
               }
-              rerender={() => this.props.rerender()}
+              setItemTitle={(listName, itemID, title) =>
+                this.props.setItemTitle(listName, itemID, title)
+              }
             />
           </div>
         ))}
