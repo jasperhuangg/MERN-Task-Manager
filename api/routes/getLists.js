@@ -53,7 +53,14 @@ function sortListItems(a, b) {
       const priorities = ["low", "medium", "high"];
       const priorityA = priorities.indexOf(a.priority);
       const priorityB = priorities.indexOf(b.priority);
-      return priorityB - priorityA;
+
+      if (priorityA !== priorityB) return priorityB - priorityA;
+      else {
+        // sort by itemID
+        const itemIDA = a.itemID;
+        const itemIDB = b.itemID;
+        return a.itemID - b.itemID;
+      }
     } else {
       // sort items based on date
       const dateA = new Date(a.dueDate + " 00:00");

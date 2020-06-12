@@ -46,14 +46,13 @@ router.post("/", (req, res, next) => {
               itemID: itemID,
             },
           },
+        },
+        (err, doc) => {
+          if (err) res.send("/addListItem failed");
+          else res.send("/addListItem successful");
         }
-        // (err, doc) => {
-        //   if (err) res.send("/addListItem failed");
-        //   else res.send("/addListItem successful");
-        // }
       );
     });
-    res.send(itemID);
   } catch (e) {
     console.error(e);
   }

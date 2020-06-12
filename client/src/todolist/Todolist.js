@@ -5,6 +5,7 @@ import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
 
 import "./Todolist.css";
+import DateParser from "./DateParser.js";
 
 const domain = "http://localhost:9000";
 
@@ -18,13 +19,14 @@ export default class Todolist extends Component {
       addItemDate: "",
       addItemPriority: "medium",
       listItems: this.props.items,
+      addItemDateKeywords: "",
     };
   }
 
   keyPress(e) {
     const val = document.getElementById("addItemInput").value;
     // hardcoded date and priority values as UI components not yet implemented
-    if (e.keyCode == 13 && val !== "") {
+    if (e.keyCode === 13 && val !== "") {
       this.props.addListItem(
         this.props.name,
         this.state.addItemValue,
@@ -40,6 +42,21 @@ export default class Todolist extends Component {
 
   handleInput(e) {
     this.setState({ addItemValue: e.target.value });
+
+    if (this.state.addItemDateKeywords === "") {
+      var parsedDate = DateParser(e.target.value).date;
+
+      var keywords = DateParser(e.target.value).keywords;
+
+      console.log(keywords);
+
+      if (parsedDate !== "") {
+        this.setState({
+          addItemDate: parsedDate,
+          addItemDateKeywords: keywords,
+        });
+      }
+    }
   }
 
   setAddItemDate(date) {
@@ -131,7 +148,7 @@ export default class Todolist extends Component {
           />
         </div>
         {items.map((item, i) => (
-          <div className="list-item" key={i}>
+          <div className="list-item" key={item.itemID}>
             <ListItem
               listName={name}
               title={item.title}

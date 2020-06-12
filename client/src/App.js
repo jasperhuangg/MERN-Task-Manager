@@ -5,12 +5,14 @@ import Todolist from "./todolist/Todolist.js";
 const domain = "http://localhost:9000";
 var ObjectID = require("bson-objectid");
 
-// TODO: look into how ObjectIDs are working
-
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoaded: false, error: null, lists: [] };
+    this.state = {
+      isLoaded: false,
+      error: null,
+      lists: [],
+    };
   }
 
   // for now assume we are getting the user's username from the props
@@ -159,6 +161,8 @@ export default class App extends Component {
     });
   }
 
+  setListName(oldListName, newListName) {}
+
   setItemDueDate(dueDate) {}
 
   setItemPriority(priority) {}
@@ -170,7 +174,7 @@ export default class App extends Component {
       <div className="App">
         {this.state.lists.map((list, i) => (
           <Todolist
-            key={i}
+            key={list.name}
             color={list.color}
             name={list.name}
             items={list.items}
@@ -208,7 +212,14 @@ function sortListItems(a, b) {
       const priorities = ["low", "medium", "high"];
       const priorityA = priorities.indexOf(a.priority);
       const priorityB = priorities.indexOf(b.priority);
-      return priorityB - priorityA;
+
+      if (priorityA !== priorityB) return priorityB - priorityA;
+      else {
+        // sort by itemID
+        const itemIDA = a.itemID;
+        const itemIDB = b.itemID;
+        return a.itemID - b.itemID;
+      }
     } else {
       // sort items based on date
       const dateA = new Date(a.dueDate + " 00:00");
