@@ -25,7 +25,7 @@ export default class Todolist extends Component {
     const val = document.getElementById("addItemInput").value;
     // hardcoded date and priority values as UI components not yet implemented
     if (e.keyCode == 13 && val !== "") {
-      this.addListItem(
+      this.props.addListItem(
         this.props.name,
         this.state.addItemValue,
         this.state.addItemDate,
@@ -33,7 +33,7 @@ export default class Todolist extends Component {
         this.state.addItemPriority
       );
       document.getElementById("addItemInput").value = "";
-      this.props.rerender();
+      // this.props.rerender();
       this.handleCalendarOverlayOK();
       this.setState({ addItemDate: "", addItemValue: "" });
     }
@@ -41,27 +41,6 @@ export default class Todolist extends Component {
 
   handleInput(e) {
     this.setState({ addItemValue: e.target.value });
-  }
-
-  addListItem(listName, title, dueDate, description, priority) {
-    const url = domain + "/addListItem";
-    const body = JSON.stringify({
-      username: "Jasper",
-      listName: listName,
-      title: title,
-      dueDate: dueDate,
-      description: description,
-      priority: priority,
-    });
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: body,
-    }).then((res) => res.text());
   }
 
   setAddItemDate(date) {
@@ -91,8 +70,6 @@ export default class Todolist extends Component {
     });
   }
 
-  // setCompleted(listName, )
-
   render() {
     const name = this.props.name;
     const items = this.props.items;
@@ -103,8 +80,13 @@ export default class Todolist extends Component {
     const prioritiesOverlayClasslist = this.state.prioritiesOverlayDisplaying
       ? ""
       : "d-none";
+    const dueDateFormatted = formatDate(this.state.addItemDate);
 
-    const placeholder = 'Add a task to "' + name + '"';
+    const placeholder =
+      'Add a task to "' +
+      name +
+      '"' +
+      (dueDateFormatted === "" ? "" : " on " + dueDateFormatted);
 
     return (
       // w-50 class is temporary
@@ -169,4 +151,34 @@ export default class Todolist extends Component {
       </div>
     );
   }
+}
+
+function formatDate(str) {
+  if (str === "") return "";
+  const today = new Date();
+  const currYear = today.getFullYear();
+
+  const monthAbbr = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const year = parseInt(str.substring(0, 4));
+  const month = parseInt(str.substring(5, 7));
+  const day = parseInt(str.substring(8, 10));
+
+  var formatted =
+    monthAbbr[month - 1] + " " + day + (currYear === year ? "" : ", " + year);
+
+  return formatted;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import "./Todolist.css";
+import "./Checkbox.css";
 
 export default class ListItem extends Component {
   constructor(props) {
@@ -8,27 +9,18 @@ export default class ListItem extends Component {
     this.state = {
       itemID: props.itemID,
     };
-    console.log(this.state.itemID + ": " + this.props.title);
-    console.log(props.completed);
+
+    this.handleCheck = this.handleCheck.bind(this);
   }
 
-  /*
-    TODO:
-    Issues:
-    - unchecking doesn't work
-  */
   handleCheck(e) {
-    console.log(this.state.itemID + ": " + this.props.title);
     var completed = e.target.checked;
-
-    console.log(completed);
 
     this.props.setItemCompleted(
       this.props.listName,
       this.state.itemID,
       completed
     );
-    this.props.rerender();
   }
 
   render() {
@@ -54,9 +46,9 @@ export default class ListItem extends Component {
             type="checkbox"
             value=""
             checked={!!completed}
-            onChange={(e) => this.handleCheck(e)}
+            onChange={this.handleCheck}
           />
-          <span className="ml-2 item-title">{title}</span>
+          <input className="ml-2 item-title title-input" value={title}></input>
         </div>
 
         <div className={dueDateClassList}>{formattedDate}</div>
@@ -96,8 +88,9 @@ function formatDate(str) {
 }
 
 function getIsLate(date) {
+  if (date === "") return false;
   const today = new Date();
-  const d = new Date(date);
+  const d = new Date(date + " 00:00");
 
   return d < today;
 }
