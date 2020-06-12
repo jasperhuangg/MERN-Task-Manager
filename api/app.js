@@ -10,6 +10,11 @@ var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
 var getListsRouter = require("./routes/getLists");
 var addListRouter = require("./routes/addListItem");
+var setItemCompleted = require("./routes/setItemCompleted");
+var setItemDescription = require("./routes/setItemDescription");
+var setItemDueDate = require("./routes/setItemDueDate");
+var setItemPriority = require("./routes/setItemPriority");
+var setItemTitle = require("./routes/setItemTitle");
 
 var app = express();
 
@@ -29,6 +34,11 @@ app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/getLists", getListsRouter);
 app.use("/addListItem", addListRouter);
+app.use("/setItemCompleted", setItemCompleted);
+app.use("/setItemDescription", setItemDescription);
+app.use("/setItemDueDate", setItemDueDate);
+app.use("/setItemPriority", setItemPriority);
+app.use("/setItemTitle", setItemTitle);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

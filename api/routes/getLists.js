@@ -44,8 +44,10 @@ router.post("/", (req, res, next) => {
 function sortListItems(a, b) {
   if (a.completed && !b.completed) return 1;
   else if (!a.completed && b.completed) return -1;
+  else if (a.dueDate === "" && b.dueDate !== "") return 1;
+  else if (a.dueDate !== "" && b.dueDate === "") return -1;
   else {
-    // both are either completed or incomplete
+    // both are either completed or incomplete or have a due date set or no due date set
     if (a.dueDate === b.dueDate) {
       // sort items due on the same day by priority
       const priorities = ["low", "medium", "high"];

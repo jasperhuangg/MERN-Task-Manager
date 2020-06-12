@@ -4,12 +4,67 @@
 
 .icon {
   font-size: 14px;
+  transition: 0.3s ease;
 }
 
 .completed {
   opacity: 0.3;
 }
 
+.list-item {
+  border-bottom: 0.5px rgba(150, 150, 150, 0.25) solid;
+  box-sizing: border-box;
+}
+
 /* .completed input:checked ~ .checkmark {
   background-color: gray;
 } */
+
+.icon:hover {
+  transition: 0.3s ease;
+  cursor: pointer;
+  background-color: rgb(204, 207, 211);
+}
+
+.calendar-overlay-button {
+  width: 100%;
+}
+
+.calendar-overlay {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: solid gray 0.5px;
+  border-radius: 7px;
+  padding: 10px;
+  width: 250px;
+}
+
+.priorities-overlay {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: solid gray 0.5px;
+  padding: 0px;
+  border-radius: 7px;
+  width: 70px;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.priorities-overlay-item {
+  transition: 0.15s ease;
+  padding: 5px;
+}
+
+.priorities-overlay-item:hover {
+  transition: 0.15s ease;
+  cursor: pointer;
+  background-color: rgb(21, 127, 251);
+  color: white;
+}
+
+.calendarOverlay {
+  width: 200px;
+  height: 200px;
+}

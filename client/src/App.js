@@ -11,7 +11,6 @@ export default class App extends Component {
   }
 
   rerender() {
-    console.log("rerender is getting called");
     this.setState({ isLoaded: false });
   }
 
@@ -35,7 +34,6 @@ export default class App extends Component {
       .then((res) => {
         var lists = res;
         this.setState({ lists: lists, isLoaded: true });
-        console.log("state set");
       });
   }
 
@@ -44,13 +42,35 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.isLoaded !== prevState.isLoaded) {
-      this.getLists();
-      console.log(
-        "in componentDidUpdate after this.getLists(): " + this.state.isLoaded
-      );
-    }
+    if (this.state.isLoaded !== prevState.isLoaded) this.getLists();
   }
+
+  setItemTitle(title) {}
+
+  setItemCompleted(listName, itemID, completed) {
+    const url = domain + "/setItemCompleted";
+    const body = JSON.stringify({
+      username: "Jasper",
+      listName: listName,
+      itemID: itemID,
+      completed: completed /*this.props.username*/,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    }).then((res) => res.text());
+  }
+
+  setItemDueDate(dueDate) {}
+
+  setItemPriority(priority) {}
+
+  setItemDescription(description) {}
 
   render() {
     return (
@@ -63,6 +83,18 @@ export default class App extends Component {
             items={list.items}
             addListItem={this.addListItem}
             rerender={() => this.rerender()}
+            setItemTitle={(listName, itemID, title) =>
+              this.setItemTitle(listName, itemID, title)
+            }
+            setItemCompleted={(listName, itemID, completed) =>
+              this.setItemCompleted(listName, itemID, completed)
+            }
+            setItemDueDate={(listName, itemID, dueDate) =>
+              this.setItemDueDate(listName, itemID, dueDate)
+            }
+            setItemPriority={(listName, itemID, priority) =>
+              this.setItemPriority(listName, itemID, priority)
+            }
           />
         ))}
       </div>

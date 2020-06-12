@@ -8,41 +8,67 @@ export default class ListItem extends Component {
     this.state = {
       itemID: props.itemID,
     };
+    console.log(this.state.itemID + ": " + this.props.title);
+    console.log(props.completed);
+  }
+
+  /*
+    TODO:
+    Issues:
+    - unchecking doesn't work
+  */
+  handleCheck(e) {
+    console.log(this.state.itemID + ": " + this.props.title);
+    var completed = e.target.checked;
+
+    console.log(completed);
+
+    this.props.setItemCompleted(
+      this.props.listName,
+      this.state.itemID,
+      completed
+    );
+    this.props.rerender();
   }
 
   render() {
     const title = this.props.title;
     const dueDate = this.props.dueDate;
+    const completed = this.props.completed;
     const formattedDate = formatDate(dueDate);
+    const isLate = getIsLate(dueDate);
+
+    var dueDateClassList =
+      "col-2 text-right item-due-date font-small" +
+      (isLate ? " text-danger" : "");
 
     const rowClasses =
       "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center" +
       (this.props.completed ? " completed" : "");
+
     return (
       <div className={rowClasses}>
-        <div className="col-9 text-left">
+        <div className="col-10 text-left">
           <input
             className="form-check-input"
             type="checkbox"
             value=""
-            // checked={this.props.completed}
+            checked={!!completed}
+            onChange={(e) => this.handleCheck(e)}
           />
           <span className="ml-2 item-title">{title}</span>
         </div>
 
-        <div className="col-3 text-right item-due-date font-small">
-          {formattedDate}
-        </div>
+        <div className={dueDateClassList}>{formattedDate}</div>
       </div>
     );
   }
 }
 
 function formatDate(str) {
+  if (str === "") return "";
   const today = new Date();
   const currYear = today.getFullYear();
-  // const currDay = today.getDate();
-  // const currMonth = today.getMonth() + 1;
 
   const monthAbbr = [
     "Jan",
@@ -67,4 +93,11 @@ function formatDate(str) {
     monthAbbr[month - 1] + " " + day + (currYear === year ? "" : ", " + year);
 
   return formatted;
+}
+
+function getIsLate(date) {
+  const today = new Date();
+  const d = new Date(date);
+
+  return d < today;
 }
