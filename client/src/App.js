@@ -5,6 +5,8 @@ import Todolist from "./todolist/Todolist.js";
 const domain = "http://localhost:9000";
 var ObjectID = require("bson-objectid");
 
+// TODO: look into how ObjectIDs are working
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -38,8 +40,13 @@ export default class App extends Component {
     this.getLists();
   }
 
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.state.isLoaded !== prevState.isLoaded) this.getLists();
+  // }
+
   addListItem(listName, title, dueDate, description, priority) {
     const lists = this.state.lists.slice();
+    var objID = null;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -52,6 +59,7 @@ export default class App extends Component {
           itemID: new ObjectID(),
         };
         items.push(item);
+        objID = item.itemID;
         items.sort(sortListItems);
         break;
       }
@@ -67,6 +75,7 @@ export default class App extends Component {
       dueDate: dueDate,
       description: description,
       priority: priority,
+      itemID: objID,
     });
 
     fetch(url, {
@@ -76,7 +85,7 @@ export default class App extends Component {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
-    }).then((res) => res.text());
+    });
   }
 
   setItemTitle(listName, itemID, title) {

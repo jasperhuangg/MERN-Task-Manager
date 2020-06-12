@@ -32,7 +32,8 @@ export default class ListItem extends Component {
 
   handleBlur = (e) => {
     const title = e.target.value;
-    this.props.setItemTitle(this.props.listName, this.state.itemID, title);
+    if (title !== this.props.title)
+      this.props.setItemTitle(this.props.listName, this.state.itemID, title);
   };
 
   render() {

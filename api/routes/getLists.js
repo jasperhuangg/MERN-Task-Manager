@@ -56,8 +56,8 @@ function sortListItems(a, b) {
       return priorityB - priorityA;
     } else {
       // sort items based on date
-      const dateA = new Date(a.dueDate);
-      const dateB = new Date(b.dueDate);
+      const dateA = new Date(a.dueDate + " 00:00");
+      const dateB = new Date(b.dueDate + " 00:00");
       return dateA - dateB;
     }
   }

@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 
 const { MongoClient } = require("mongodb");
-const { ObjectID } = require("mongodb").ObjectID;
 
 /* MongoDB init */
 const dbUser = "dbUser";
@@ -21,6 +20,7 @@ router.post("/", (req, res, next) => {
   const description = req.body.description;
   const dueDate = req.body.dueDate;
   const priority = req.body.priority;
+  const itemID = req.body.itemID;
 
   try {
     MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
@@ -43,16 +43,17 @@ router.post("/", (req, res, next) => {
               dueDate: dueDate,
               priority: priority,
               completed: false,
-              itemID: new ObjectID(),
+              itemID: itemID,
             },
           },
-        },
-        (err, doc) => {
-          if (err) res.send("/addListItem failed");
-          else res.send("/addListItem successful");
         }
+        // (err, doc) => {
+        //   if (err) res.send("/addListItem failed");
+        //   else res.send("/addListItem successful");
+        // }
       );
     });
+    res.send(itemID);
   } catch (e) {
     console.error(e);
   }
