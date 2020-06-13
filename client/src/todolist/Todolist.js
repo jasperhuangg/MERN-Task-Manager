@@ -24,12 +24,15 @@ export default class Todolist extends Component {
   }
 
   keyPress(e) {
-    const val = document.getElementById("addItemInput").value;
+    var val = document.getElementById("addItemInput").value;
+    val = removeOccurence(val, this.state.addItemDateKeywords);
+
     // hardcoded date and priority values as UI components not yet implemented
     if (e.keyCode === 13 && val !== "") {
+      console.log(val);
       this.props.addListItem(
         this.props.name,
-        this.state.addItemValue,
+        val,
         this.state.addItemDate,
         "",
         this.state.addItemPriority
@@ -43,19 +46,14 @@ export default class Todolist extends Component {
   handleInput(e) {
     this.setState({ addItemValue: e.target.value });
 
-    if (this.state.addItemDateKeywords === "") {
-      var parsedDate = DateParser(e.target.value).date;
+    var parsedDate = DateParser(e.target.value).date;
+    var keywords = DateParser(e.target.value).keywords;
 
-      var keywords = DateParser(e.target.value).keywords;
-
-      console.log(keywords);
-
-      if (parsedDate !== "") {
-        this.setState({
-          addItemDate: parsedDate,
-          addItemDateKeywords: keywords,
-        });
-      }
+    if (parsedDate !== "") {
+      this.setState({
+        addItemDate: parsedDate,
+        addItemDateKeywords: keywords,
+      });
     }
   }
 
@@ -199,4 +197,27 @@ function formatDate(str) {
     monthAbbr[month - 1] + " " + day + (currYear === year ? "" : ", " + year);
 
   return formatted;
+}
+
+// toRemove is all lowercase letters, str could have uppercase letters
+function removeOccurence(str, toRemove) {
+  if (toRemove === "") return str;
+  var lowerCase = str.toLowerCase();
+  var startIndex = lowerCase.indexOf(toRemove);
+  var endIndex = startIndex + toRemove.length;
+
+  var res = str.substring(0, startIndex) + str.substring(endIndex, str.length);
+
+  // also get rid of any double spaces, spaces at the end, or spaces at the beginning
+  const searchRegExp = /"  "/g;
+  const replaceWith = " ";
+
+  res = res.replace(searchRegExp, replaceWith);
+
+  if (res[0] === " ") res = res.substring(1, res.length);
+  if (res[res.length - 1] === " ") res = res.substring(0, res.length - 1);
+
+  console.log(str);
+
+  return res;
 }

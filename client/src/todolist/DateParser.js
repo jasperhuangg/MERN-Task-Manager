@@ -69,6 +69,7 @@ export default function DateParser(str) {
   var monthBeforeDay = null;
   var keywords = "";
   var month = "";
+  var monthCandidates = [];
   var day = "";
 
   // search for any occurences of commonly spoken words
@@ -84,45 +85,66 @@ export default function DateParser(str) {
   // if we don't find any commonly spoken words, look for string representations of dates
   if (isSpokenWord === false) {
     // look for months
-    for (let i = 0; i < months.length; i++) {
-      const m = months[i];
-      if (words.indexOf(m) !== -1) {
-        month = m;
-        break;
+    for (let i = 0; i < words.length; i++) {
+      let word = words[i];
+      if (months.indexOf(word) !== -1) {
+        monthCandidates.push(word);
       }
     }
 
+    console.log(words);
+    console.log(monthCandidates);
+
     // if we found a month, look on either side of it for a date
-    if (month !== "") {
-      const monthIndex = words.indexOf(month);
-      var dateCandidates = [];
-      if (monthIndex - 1 >= 0) dateCandidates.push(words[monthIndex - 1]);
-      if (monthIndex + 1 < words.length)
-        dateCandidates.push(words[monthIndex + 1]);
+    if (monthCandidates.length > 0) {
+      // check each month candidate
+      for (let f = 0; f < monthCandidates.length; f++) {
+        var monthCandidate = monthCandidates[f];
+        const monthIndex = getPosition(words, monthCandidate, f + 1);
+        var dateCandidates = [];
+        if (monthIndex - 1 >= 0)
+          dateCandidates.push({
+            index: monthIndex - 1,
+            date: words[monthIndex - 1],
+          });
+        if (monthIndex + 1 < words.length)
+          dateCandidates.push({
+            index: monthIndex + 1,
+            date: words[monthIndex + 1],
+          });
 
-      // check to see if either of these dateCandidates are actual dates with suffixes
-      for (let i = 0; i < dateCandidates.length; i++) {
-        const dateCandidate = dateCandidates[i];
-        if (daysWithSuffix.indexOf(dateCandidate) !== -1) {
-          day = dateCandidates;
-          if (i === 0) monthBeforeDay = false;
-          else monthBeforeDay = true;
+        // check to see if either of these dateCandidates are actual dates with suffixes
+        for (let i = 0; i < dateCandidates.length; i++) {
+          const dateCandidate = dateCandidates[i].date;
+          const idx = dateCandidates[i].index;
+          if (daysWithSuffix.indexOf(dateCandidate) !== -1) {
+            day = dateCandidate;
+            if (idx > monthIndex) monthBeforeDay = true;
+            else monthBeforeDay = false;
+            break;
+          }
+        }
+
+        // if nothing was found, then we look for numeric representations
+        if (day === "") {
+          for (let i = 0; i < dateCandidates.length; i++) {
+            const dateCandidate = parseInt(dateCandidates[i].date);
+            const idx = dateCandidates[i].index;
+            if (dateCandidate > 0 && dateCandidate <= 31) {
+              day = dateCandidate;
+              if (idx > monthIndex) monthBeforeDay = true;
+              else monthBeforeDay = false;
+              break;
+            }
+          }
+        }
+
+        // if we found a date, then we have a date value
+        if (day !== "") {
+          isStringDate = true;
+          month = monthCandidates[f];
           break;
         }
-      }
-
-      // if nothing was found, then we look for numeric representations
-      for (let i = 0; i < dateCandidates.length; i++) {
-        const dateCandidate = parseInt(dateCandidates[i]);
-        if (dateCandidate > 0 && dateCandidate <= 31) {
-          day = dateCandidates;
-          break;
-        }
-      }
-
-      // if we found a date, then we have a date value
-      if (day !== "") {
-        isStringDate = true;
       }
     }
   }
@@ -230,5 +252,18 @@ function getFormattedDate(year, month, day) {
   return year + "-" + month + "-" + day;
 }
 
-// var date = GetDateFromString("");
-// console.log(date);
+function getPosition(array, entry, occurence) {
+  var seen = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === entry) {
+      seen++;
+      if (seen === occurence) return i;
+    }
+  }
+  if (seen === 1) return array.indexOf(entry);
+}
+
+var date = DateParser(
+  "test december 155 december 423 december 13 nice 12 august 15 li"
+);
+console.log(date);
