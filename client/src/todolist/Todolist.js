@@ -3,6 +3,7 @@ import Details from "./Details.js";
 import ListItem from "./ListItem.js";
 import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
+import CaretPositioning from "./EditCaretPositioning.js";
 
 import "./Todolist.css";
 import DateParser from "./DateParser.js";
@@ -20,17 +21,17 @@ export default class Todolist extends Component {
       addItemPriority: "medium",
       listItems: this.props.items,
       addItemDateKeywords: "",
+      caretPosition: 0,
     };
   }
 
   keyPress(e) {
-    var val = document.getElementById("addItemInput").value;
+    var val = document.getElementById("addItemInput").innerText;
     val = removeOccurence(val, this.state.addItemDateKeywords);
     val = removeExtraWhitespace(val);
 
     // hardcoded date and priority values as UI components not yet implemented
     if (e.keyCode === 13 && val !== "") {
-      console.log(val);
       this.props.addListItem(
         this.props.name,
         val,
@@ -50,10 +51,25 @@ export default class Todolist extends Component {
   }
 
   handleInput(e) {
-    this.setState({ addItemValue: e.target.value });
+    console.log(e.target.innerText);
+    this.setState({ addItemValue: e.target.innerText });
+    let savedCaretPosition = CaretPositioning.saveSelection(e.currentTarget);
 
-    var parsedDate = DateParser(e.target.value).date;
-    var keywords = DateParser(e.target.value).keywords;
+    this.setState(
+      {
+        caretPosition: savedCaretPosition,
+      },
+      () => {
+        //restore caret position(s)
+        CaretPositioning.restoreSelection(
+          document.getElementById("addItemInput"),
+          this.state.caretPosition
+        );
+      }
+    );
+
+    var parsedDate = DateParser(e.target.innerText).date;
+    var keywords = DateParser(e.target.innerText).keywords;
 
     if (parsedDate !== "") {
       this.setState({
@@ -91,7 +107,7 @@ export default class Todolist extends Component {
   }
 
   render() {
-    const name = this.props.name;
+    var name = this.props.name;
     const items = this.props.items;
     const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
@@ -101,26 +117,40 @@ export default class Todolist extends Component {
       ? ""
       : "d-none";
     const dueDateFormatted = formatDate(this.state.addItemDate);
-
     const placeholder =
       'Add a task to "' +
       name +
       '"' +
       (dueDateFormatted === "" ? "" : " on " + dueDateFormatted);
+    var addItemText = this.state.addItemValue;
+
+    if (
+      this.state.addItemDateKeywords !== "" &&
+      addItemText.indexOf(this.state.addItemDateKeywords) !== -1
+    ) {
+      addItemText = formatDateKeywords(
+        addItemText,
+        this.state.addItemDateKeywords
+      );
+    }
 
     return (
       // w-50 class is temporary
-      <div className="container-fluid w-50">
+      <div className="container-fluid w-50 todolist">
         <h1 className="text-right my-4">{name}</h1>
         <div className="input-group mb-4">
-          <input
+          <div
+            contentEditable="true"
+            suppressContentEditableWarning={true}
             id="addItemInput"
-            className="form-control"
+            data-placeholder={placeholder}
+            className="form-control text-left editable"
             type="text"
-            placeholder={placeholder}
             onInput={(e) => this.handleInput(e)}
             onKeyDown={(e) => this.keyPress(e)}
-          />
+          >
+            {addItemText}
+          </div>
           <div
             className="input-group-append"
             onClick={() => this.handleShowPrioritiesOverlay()}
@@ -134,6 +164,7 @@ export default class Todolist extends Component {
               handlePrioritiesOverlayClick={(priority) =>
                 this.handlePrioritiesOverlayClick(priority)
               }
+              currentlySelectedPriority={this.state.addItemPriority}
             />
           </div>
           <div
@@ -151,25 +182,27 @@ export default class Todolist extends Component {
             handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
           />
         </div>
-        {items.map((item, i) => (
-          <div className="list-item" key={item.itemID}>
-            <ListItem
-              listName={name}
-              title={item.title}
-              description={item.description}
-              priority={item.priority}
-              dueDate={item.dueDate}
-              completed={item.completed}
-              itemID={item.itemID}
-              setItemCompleted={(listName, itemID, completed) =>
-                this.props.setItemCompleted(listName, itemID, completed)
-              }
-              setItemTitle={(listName, itemID, title) =>
-                this.props.setItemTitle(listName, itemID, title)
-              }
-            />
-          </div>
-        ))}
+        <div className="todolist-items">
+          {items.map((item, i) => (
+            <div className="list-item" key={item.itemID}>
+              <ListItem
+                listName={name}
+                title={item.title}
+                description={item.description}
+                priority={item.priority}
+                dueDate={item.dueDate}
+                completed={item.completed}
+                itemID={item.itemID}
+                setItemCompleted={(listName, itemID, completed) =>
+                  this.props.setItemCompleted(listName, itemID, completed)
+                }
+                setItemTitle={(listName, itemID, title) =>
+                  this.props.setItemTitle(listName, itemID, title)
+                }
+              />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -207,7 +240,6 @@ function formatDate(str) {
 
 // toRemove is all lowercase letters, str could have uppercase letters
 function removeOccurence(str, toRemove) {
-  console.log("toRemove: " + toRemove);
   if (toRemove === "") return str;
   var lowerCase = str.toLowerCase();
   var startIndex = lowerCase.indexOf(toRemove);
@@ -223,4 +255,18 @@ function removeExtraWhitespace(str) {
   str = str.trim();
 
   return str;
+}
+
+function formatDateKeywords(name, keywords) {
+  var startIndex = name.indexOf(keywords);
+  var endIndex = startIndex + keywords.length;
+  var res =
+    name.substring(0, startIndex) +
+    // "<span class='text-primary'>" +
+    "<span>" +
+    keywords +
+    "</span>" +
+    name.substring(endIndex, name.length);
+
+  return res;
 }

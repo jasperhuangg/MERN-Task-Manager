@@ -67,7 +67,7 @@ export default class ListItem extends Component {
             ref={this.inputRef}
             onKeyDown={(e) => this.handleKeyPress(e)}
             onBlur={(e) => this.handleBlur(e)}
-          ></input>
+          />
         </div>
 
         <div className={dueDateClassList}>{formattedDate}</div>
