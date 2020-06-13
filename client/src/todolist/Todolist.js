@@ -26,6 +26,7 @@ export default class Todolist extends Component {
   keyPress(e) {
     var val = document.getElementById("addItemInput").value;
     val = removeOccurence(val, this.state.addItemDateKeywords);
+    val = removeExtraWhitespace(val);
 
     // hardcoded date and priority values as UI components not yet implemented
     if (e.keyCode === 13 && val !== "") {
@@ -39,7 +40,12 @@ export default class Todolist extends Component {
       );
       document.getElementById("addItemInput").value = "";
       this.handleCalendarOverlayOK();
-      this.setState({ addItemDate: "", addItemValue: "" });
+      this.setState({
+        addItemDate: "",
+        addItemValue: "",
+        addItemDateKeywords: "",
+        addItemPriority: "medium",
+      });
     }
   }
 
@@ -201,6 +207,7 @@ function formatDate(str) {
 
 // toRemove is all lowercase letters, str could have uppercase letters
 function removeOccurence(str, toRemove) {
+  console.log("toRemove: " + toRemove);
   if (toRemove === "") return str;
   var lowerCase = str.toLowerCase();
   var startIndex = lowerCase.indexOf(toRemove);
@@ -208,16 +215,12 @@ function removeOccurence(str, toRemove) {
 
   var res = str.substring(0, startIndex) + str.substring(endIndex, str.length);
 
-  // also get rid of any double spaces, spaces at the end, or spaces at the beginning
-  const searchRegExp = /"  "/g;
-  const replaceWith = " ";
-
-  res = res.replace(searchRegExp, replaceWith);
-
-  if (res[0] === " ") res = res.substring(1, res.length);
-  if (res[res.length - 1] === " ") res = res.substring(0, res.length - 1);
-
-  console.log(str);
-
   return res;
+}
+
+function removeExtraWhitespace(str) {
+  str = str.replace(/\s+/g, " ");
+  str = str.trim();
+
+  return str;
 }

@@ -68,7 +68,6 @@ export default class ListItem extends Component {
             onKeyDown={(e) => this.handleKeyPress(e)}
             onBlur={(e) => this.handleBlur(e)}
           ></input>
-          {/* <span className="ml-2 item-title">{title}</span> */}
         </div>
 
         <div className={dueDateClassList}>{formattedDate}</div>

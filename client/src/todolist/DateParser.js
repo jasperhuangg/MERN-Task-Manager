@@ -2,6 +2,7 @@
 
 export default function DateParser(str) {
   const spokenWords = [
+    "today",
     "tomorrow",
     "tmr",
     "monday",
@@ -92,8 +93,8 @@ export default function DateParser(str) {
       }
     }
 
-    console.log(words);
-    console.log(monthCandidates);
+    // console.log(words);
+    // console.log(monthCandidates);
 
     // if we found a month, look on either side of it for a date
     if (monthCandidates.length > 0) {
@@ -158,8 +159,12 @@ export default function DateParser(str) {
     var currMonth = today.getMonth() + 1;
     var currDate = today.getDate();
     var currDayOfTheWeek = today.getDay() + 1;
-
-    if (keywords === "tomorrow" || keywords === "tmr") {
+    if (keywords === "today") {
+      return {
+        date: getFormattedDate(currYear, currMonth, currDate),
+        keywords: keywords,
+      };
+    } else if (keywords === "tomorrow" || keywords === "tmr") {
       var daysInMonth = 31;
       var day = (currDate + 1) % daysInMonth;
       var m = day === 1 ? currMonth + 1 : currMonth;
@@ -263,7 +268,5 @@ function getPosition(array, entry, occurence) {
   if (seen === 1) return array.indexOf(entry);
 }
 
-var date = DateParser(
-  "test december 155 december 423 december 13 nice 12 august 15 li"
-);
-console.log(date);
+// var date = DateParser("yesterday");
+// console.log(date);
