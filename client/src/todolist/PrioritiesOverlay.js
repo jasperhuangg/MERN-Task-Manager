@@ -5,13 +5,13 @@ export default class PrioritiesOverlay extends Component {
   render() {
     const highPriorityClasslist =
       "priorities-overlay-item text-left" +
-      (this.state.selectedPriority === "high" ? " text-primary" : "");
+      (this.state.selectedPriority === "high" ? " text-danger" : "");
     const mediumPriorityClasslist =
       "priorities-overlay-item text-left" +
       (this.state.selectedPriority === "medium" ? " text-primary" : "");
     const lowPriorityClasslist =
       "priorities-overlay-item text-left" +
-      (this.state.selectedPriority === "low" ? " text-primary" : "");
+      (this.state.selectedPriority === "low" ? " text-info" : "");
     return (
       <div className="overlay priorities-overlay">
         <div

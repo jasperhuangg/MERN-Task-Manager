@@ -154,6 +154,32 @@ export default class Todolist extends Component {
 
   getIndexOfFirstCompletedItem() {
     const items = this.state.listItems;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].completed) return i;
+    }
+
+    return -1;
+  }
+
+  getPriorityIconClasses() {
+    var classes = "fas fa-balance-scale-left";
+    if (this.state.addItemPriority === "high") {
+      classes += " text-danger";
+    } else if (this.state.addItemPriority === "medium") {
+      classes += " text-primary";
+    } else if (this.state.addItemPriority === "low") {
+      classes += " text-info";
+    }
+
+    return classes;
+  }
+
+  getCalendarIconClasses() {
+    var classes = "fas fa-calendar-alt";
+    if (this.state.addItemDate !== "") classes += " text-primary";
+
+    return classes;
   }
 
   render() {
@@ -174,6 +200,10 @@ export default class Todolist extends Component {
       (dueDateFormatted === "" ? "" : " on " + dueDateFormatted);
     var addItemText = this.state.addItemValue;
 
+    const priorityIconClasses = this.getPriorityIconClasses();
+
+    const calendarIconClasses = this.getCalendarIconClasses();
+
     if (
       this.state.addItemDateKeywords !== "" &&
       addItemText.indexOf(this.state.addItemDateKeywords) !== -1
@@ -184,6 +214,11 @@ export default class Todolist extends Component {
       ).formatted;
       if (tmp !== addItemText) addItemText = tmp;
     }
+    const firstCompletedIndex = this.getIndexOfFirstCompletedItem();
+
+    $(document).on("click", ".completed-separator", function () {
+      console.log("clicked");
+    });
 
     return (
       // w-50 class is temporary
@@ -207,7 +242,7 @@ export default class Todolist extends Component {
             onClick={() => this.handleShowPrioritiesOverlay()}
           >
             <span className="input-group-text icon">
-              <i className="fas fa-balance-scale-left"></i>
+              <i className={priorityIconClasses}></i>
             </span>
           </div>
           <div className={prioritiesOverlayClasslist}>
@@ -223,7 +258,7 @@ export default class Todolist extends Component {
             onClick={() => this.handleShowCalendarOverlay()}
           >
             <span className="input-group-text icon">
-              <i className="fas fa-calendar-alt"></i>
+              <i className={calendarIconClasses}></i>
             </span>
           </div>
         </div>
@@ -234,25 +269,54 @@ export default class Todolist extends Component {
           />
         </div>
         <div className="todolist-items">
-          {items.map((item, i) => (
-            <div className="list-item" key={item.itemID}>
-              <ListItem
-                listName={name}
-                title={item.title}
-                description={item.description}
-                priority={item.priority}
-                dueDate={item.dueDate}
-                completed={item.completed}
-                itemID={item.itemID}
-                setItemCompleted={(listName, itemID, completed) =>
-                  this.props.setItemCompleted(listName, itemID, completed)
-                }
-                setItemTitle={(listName, itemID, title) =>
-                  this.props.setItemTitle(listName, itemID, title)
-                }
-              />
-            </div>
-          ))}
+          {items.map((item, i) => {
+            if (i !== firstCompletedIndex) {
+              return (
+                <div className="list-item" key={item.itemID}>
+                  <ListItem
+                    listName={name}
+                    title={item.title}
+                    description={item.description}
+                    priority={item.priority}
+                    dueDate={item.dueDate}
+                    completed={item.completed}
+                    itemID={item.itemID}
+                    setItemCompleted={(listName, itemID, completed) =>
+                      this.props.setItemCompleted(listName, itemID, completed)
+                    }
+                    setItemTitle={(listName, itemID, title) =>
+                      this.props.setItemTitle(listName, itemID, title)
+                    }
+                  />
+                </div>
+              );
+            } else {
+              return (
+                <React.Fragment key={item.itemID}>
+                  <div className="list-item">
+                    <div className="completed-separator mt-2 mb-2 font-small text-left">
+                      <i className="fas fa-sort-down mr-2 "></i>Completed
+                    </div>
+                    <ListItem
+                      listName={name}
+                      title={item.title}
+                      description={item.description}
+                      priority={item.priority}
+                      dueDate={item.dueDate}
+                      completed={item.completed}
+                      itemID={item.itemID}
+                      setItemCompleted={(listName, itemID, completed) =>
+                        this.props.setItemCompleted(listName, itemID, completed)
+                      }
+                      setItemTitle={(listName, itemID, title) =>
+                        this.props.setItemTitle(listName, itemID, title)
+                      }
+                    />
+                  </div>
+                </React.Fragment>
+              );
+            }
+          })}
         </div>
       </div>
     );

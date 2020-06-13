@@ -218,7 +218,7 @@ function sortListItems(a, b) {
         // sort by itemID
         const itemIDA = a.itemID;
         const itemIDB = b.itemID;
-        return a.itemID - b.itemID;
+        return itemIDA - itemIDB;
       }
     } else {
       // sort items based on date
