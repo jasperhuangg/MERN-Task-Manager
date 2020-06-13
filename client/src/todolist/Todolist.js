@@ -223,7 +223,7 @@ export default class Todolist extends Component {
     return (
       // w-50 class is temporary
       <div className="container-fluid w-50 todolist">
-        <h1 className="text-right my-4">{name}</h1>
+        <h1 className="text-left my-4">{name}</h1>
         <div className="input-group mb-4">
           <div
             contentEditable="true"
