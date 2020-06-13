@@ -4,6 +4,7 @@ import ListItem from "./ListItem.js";
 import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
 import CaretPositioning from "./EditCaretPositioning.js";
+import $ from "jquery";
 
 import "./Todolist.css";
 import DateParser from "./DateParser.js";
@@ -22,6 +23,7 @@ export default class Todolist extends Component {
       listItems: this.props.items,
       addItemDateKeywords: "",
       caretPosition: 0,
+      lastCharInKeyword: -1,
     };
   }
 
@@ -46,12 +48,31 @@ export default class Todolist extends Component {
         addItemValue: "",
         addItemDateKeywords: "",
         addItemPriority: "medium",
+        keywordSet: false,
       });
     }
   }
 
   handleInput(e) {
-    console.log(e.target.innerText);
+    if (
+      e.keyCode === 8 &&
+      this.state.caretPosition - 1 === this.state.lastCharInKeyword
+    ) {
+      console.log("unwrapping");
+      $("#date-keyword").unwrap();
+    }
+
+    if (
+      this.state.addItemDateKeywords !== "" &&
+      e.target.innerText.indexOf(this.state.addItemDateKeywords) !== -1
+    ) {
+      const lastCharInKeyword =
+        e.target.innerText.indexOf(this.state.addItemDateKeywords) +
+        this.state.addItemDateKeywords.length -
+        1;
+      this.setState({ lastCharInKeyword: lastCharInKeyword });
+    }
+
     this.setState({ addItemValue: e.target.innerText });
     let savedCaretPosition = CaretPositioning.saveSelection(e.currentTarget);
 
@@ -106,6 +127,35 @@ export default class Todolist extends Component {
     });
   }
 
+  formatDateKeywords(name, keyword) {
+    console.log($("#addItemInput").children("span").length);
+
+    // if there's already a keyword that is highlighted, short circuit
+    if ($("#addItemInput").children("span").length > 0)
+      return {
+        formatted: name,
+        lastCharInKeyword: 0,
+      };
+    var startIndex = name.indexOf(keyword);
+    var endIndex = startIndex + keyword.length;
+    var res = (
+      <>
+        {name.substring(0, startIndex)}
+        <span className="text-primary" id="date-keyword">
+          {keyword}
+        </span>
+        {name.substring(endIndex, name.length)}
+      </>
+    );
+    const lastCharInKeyword = endIndex - 1;
+
+    return { formatted: res, lastCharInKeyword: lastCharInKeyword };
+  }
+
+  getIndexOfFirstCompletedItem() {
+    const items = this.state.listItems;
+  }
+
   render() {
     var name = this.props.name;
     const items = this.props.items;
@@ -128,10 +178,11 @@ export default class Todolist extends Component {
       this.state.addItemDateKeywords !== "" &&
       addItemText.indexOf(this.state.addItemDateKeywords) !== -1
     ) {
-      addItemText = formatDateKeywords(
+      var tmp = this.formatDateKeywords(
         addItemText,
         this.state.addItemDateKeywords
-      );
+      ).formatted;
+      if (tmp !== addItemText) addItemText = tmp;
     }
 
     return (
@@ -255,18 +306,4 @@ function removeExtraWhitespace(str) {
   str = str.trim();
 
   return str;
-}
-
-function formatDateKeywords(name, keywords) {
-  var startIndex = name.indexOf(keywords);
-  var endIndex = startIndex + keywords.length;
-  var res =
-    name.substring(0, startIndex) +
-    // "<span class='text-primary'>" +
-    "<span>" +
-    keywords +
-    "</span>" +
-    name.substring(endIndex, name.length);
-
-  return res;
 }

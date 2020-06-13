@@ -100,6 +100,21 @@ function formatDate(str) {
   const month = parseInt(str.substring(5, 7));
   const day = parseInt(str.substring(8, 10));
 
+  var dateObj = new Date(year + "-" + month + "-" + day + " 00:00");
+
+  if (
+    dateObj.getFullYear() === today.getFullYear() &&
+    dateObj.getMonth() === today.getMonth()
+  ) {
+    var yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (dateObj.getDate() === today.getDate()) return "Today";
+    else if (dateObj.getDate() === yesterday.getDate()) return "Yesterday";
+    else if (dateObj.getDate() === tomorrow.getDate()) return "Tomorrow";
+  }
+
   var formatted =
     monthAbbr[month - 1] + " " + day + (currYear === year ? "" : ", " + year);
 
@@ -108,7 +123,7 @@ function formatDate(str) {
 
 function getIsLate(date) {
   if (date === "") return false;
-  const today = new Date();
+  const today = new Date() - 1;
   const d = new Date(date + " 00:00");
 
   return d < today;

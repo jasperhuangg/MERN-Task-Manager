@@ -4,6 +4,7 @@ export default function DateParser(str) {
   const spokenWords = [
     "today",
     "tomorrow",
+    "yesterday",
     "tmr",
     "monday",
     "tuesday",
@@ -164,24 +165,42 @@ export default function DateParser(str) {
         date: getFormattedDate(currYear, currMonth, currDate),
         keywords: keywords,
       };
+    } else if (keywords === "yesterday") {
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      return {
+        date: getFormattedDate(
+          yesterday.getFullYear(),
+          yesterday.getMonth() + 1,
+          yesterday.getDate()
+        ),
+        keywords: keywords,
+      };
     } else if (keywords === "tomorrow" || keywords === "tmr") {
-      var daysInMonth = 31;
-      var day = (currDate + 1) % daysInMonth;
-      var m = day === 1 ? currMonth + 1 : currMonth;
-      m = m % 12 !== 0 ? m % 12 : 1;
-      var year = m === 1 ? currYear + 1 : currYear;
-
-      return { date: getFormattedDate(year, m, day), keywords: keywords };
+      var tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return {
+        date: getFormattedDate(
+          tomorrow.getFullYear(),
+          tomorrow.getMonth() + 1,
+          tomorrow.getDate()
+        ),
+        keywords: keywords,
+      };
     } else {
       var dayOfTheWeek = dayOfTheWeekToNumber(keywords); // always going to assume its the next upcoming day
       var difference = distanceToNextDay(currDayOfTheWeek, dayOfTheWeek);
-      var daysInMonth = 31;
-      var day = (currDate + difference) % daysInMonth;
-      var m = day === 1 ? currMonth + 1 : currMonth;
-      m = m % 12 !== 0 ? m % 12 : 1;
-      var year = m === 1 ? currYear + 1 : currYear;
+      var nextGivenDay = new Date();
+      nextGivenDay.setDate(nextGivenDay.getDate() + difference);
 
-      return { date: getFormattedDate(year, m, day), keywords: keywords };
+      return {
+        date: getFormattedDate(
+          nextGivenDay.getFullYear(),
+          nextGivenDay.getMonth() + 1,
+          nextGivenDay.getDate()
+        ),
+        keywords: keywords,
+      };
     }
   } else if (isStringDate && !isSpokenWord) {
     var today = new Date(); // we will just assume they mean this year (or next year if either come before the current day)
@@ -268,5 +287,4 @@ function getPosition(array, entry, occurence) {
   if (seen === 1) return array.indexOf(entry);
 }
 
-// var date = DateParser("yesterday");
-// console.log(date);
+// console.log(DateParser("bla bla bla Monday"));

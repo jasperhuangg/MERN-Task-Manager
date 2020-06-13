@@ -8,9 +8,9 @@
   overflow-y: auto;
 }
 
-/* .todolist-items::-webkit-scrollbar {
-  display: none;
-} */
+#addItemInput {
+  cursor: text;
+}
 
 [contenteditable]:focus {
   outline: 0px solid transparent;
@@ -21,9 +21,8 @@
 }
 
 ::-webkit-scrollbar-track {
-  display: none;
+  opacity: 0;
 }
-
 /* Hide scrollbar for IE and Edge */
 .todolist-items {
   -ms-overflow-style: none;
