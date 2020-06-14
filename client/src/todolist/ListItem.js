@@ -62,6 +62,7 @@ export default class ListItem extends Component {
             onChange={this.handleCheck}
           />
           <input
+            spellCheck="false"
             className="ml-2 item-title title-input"
             defaultValue={title}
             ref={this.inputRef}

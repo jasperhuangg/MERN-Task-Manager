@@ -191,6 +191,31 @@ export default class Todolist extends Component {
     return classes;
   }
 
+  handleCloseOverlays(e) {
+    console.log(e.target);
+    if (
+      this.state.calendarOverlayDisplaying ||
+      this.state.prioritiesOverlayDisplaying
+    ) {
+      if (
+        e.target.id !== "calendar-overlay" &&
+        e.target.id !== "priorities-overlay"
+      )
+        this.setState({
+          calendarOverlayDisplaying: false,
+          prioritiesOverlayDisplaying: false,
+        });
+      else if (e.target.id === "calendar-overlay")
+        this.setState({
+          prioritiesOverlayDisplaying: false,
+        });
+      else if (e.target.id === "priorities-overlay")
+        this.setState({
+          calendarOverlayDisplaying: false,
+        });
+    }
+  }
+
   getCalendarIconClasses() {
     var classes = "fas fa-calendar-alt";
     if (this.state.addItemDate !== "") classes += " text-primary";
@@ -238,11 +263,15 @@ export default class Todolist extends Component {
 
     return (
       // w-50 class is temporary
-      <div className="container-fluid w-50 todolist">
+      <div
+        className="container-fluid w-50 todolist"
+        onClick={(e) => this.handleCloseOverlays(e)}
+      >
         <h1 className="text-left my-4">{name}</h1>
         <div className="input-group mb-4">
           <div
             contentEditable="true"
+            spellCheck="false"
             suppressContentEditableWarning={true}
             id="addItemInput"
             data-placeholder={placeholder}
@@ -261,7 +290,7 @@ export default class Todolist extends Component {
               <i className={priorityIconClasses}></i>
             </span>
           </div>
-          <div className={prioritiesOverlayClasslist}>
+          <div id="priorities-overlay" className={prioritiesOverlayClasslist}>
             <PrioritiesOverlay
               handlePrioritiesOverlayClick={(priority) =>
                 this.handlePrioritiesOverlayClick(priority)
@@ -278,7 +307,7 @@ export default class Todolist extends Component {
             </span>
           </div>
         </div>
-        <div className={calendarOverlayClasslist}>
+        <div id="calendar-overlay" className={calendarOverlayClasslist}>
           <CalendarOverlay
             setAddItemDate={(date) => this.setAddItemDate(date)}
             handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
@@ -313,7 +342,7 @@ export default class Todolist extends Component {
                   >
                     <MenuItem
                       data={{ foo: "bar" }}
-                      className="text-danger delete-menu-item px-4"
+                      className="text-danger delete-menu-item px-2"
                       onClick={(id) => this.handleDelete(item.itemID)}
                     >
                       Delete
@@ -355,7 +384,7 @@ export default class Todolist extends Component {
                     >
                       <MenuItem
                         data={{ foo: "bar" }}
-                        className="text-danger delete-menu-item px-4"
+                        className="text-danger delete-menu-item px-2"
                         onClick={(id) => this.handleDelete(item.itemID)}
                       >
                         Delete

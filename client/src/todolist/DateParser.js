@@ -287,4 +287,4 @@ function getPosition(array, entry, occurence) {
   if (seen === 1) return array.indexOf(entry);
 }
 
-// console.log(DateParser("bla bla bla Monday"));
+console.log(DateParser("bla bla bla today    "));
