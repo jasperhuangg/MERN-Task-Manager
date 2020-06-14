@@ -4,6 +4,7 @@ import ListItem from "./ListItem.js";
 import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
 import CaretPositioning from "./EditCaretPositioning.js";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import $ from "jquery";
 
 import "./Todolist.css";
@@ -50,6 +51,7 @@ export default class Todolist extends Component {
         addItemPriority: "medium",
         keywordSet: false,
       });
+      e.target.blur();
     }
   }
 
@@ -97,6 +99,10 @@ export default class Todolist extends Component {
         addItemDate: parsedDate,
         addItemDateKeywords: keywords,
       });
+    } else {
+      this.setState({
+        addItemDate: "",
+      });
     }
   }
 
@@ -104,8 +110,16 @@ export default class Todolist extends Component {
     this.setState({ addItemDate: date });
   }
 
+  handleDelete(id) {
+    this.props.deleteListItem(this.props.name, id);
+  }
+
   handleCalendarOverlayOK() {
     this.setState({ calendarOverlayDisplaying: false });
+  }
+
+  handleCalendarOverlayClear() {
+    this.setState({ calendarOverlayDisplaying: false, addItemDate: "" });
   }
 
   handleShowCalendarOverlay() {
@@ -131,11 +145,13 @@ export default class Todolist extends Component {
     console.log($("#addItemInput").children("span").length);
 
     // if there's already a keyword that is highlighted, short circuit
-    if ($("#addItemInput").children("span").length > 0)
+    if ($("#addItemInput").children("span").length > 0) {
+      var res = <>{name}</>;
       return {
-        formatted: name,
+        formatted: res,
         lastCharInKeyword: 0,
       };
+    }
     var startIndex = name.indexOf(keyword);
     var endIndex = startIndex + keyword.length;
     var res = (
@@ -266,6 +282,7 @@ export default class Todolist extends Component {
           <CalendarOverlay
             setAddItemDate={(date) => this.setAddItemDate(date)}
             handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
+            handleCalendarOverlayClear={() => this.handleCalendarOverlayClear()}
           />
         </div>
         <div className="todolist-items">
@@ -273,30 +290,7 @@ export default class Todolist extends Component {
             if (i !== firstCompletedIndex) {
               return (
                 <div className="list-item" key={item.itemID}>
-                  <ListItem
-                    listName={name}
-                    title={item.title}
-                    description={item.description}
-                    priority={item.priority}
-                    dueDate={item.dueDate}
-                    completed={item.completed}
-                    itemID={item.itemID}
-                    setItemCompleted={(listName, itemID, completed) =>
-                      this.props.setItemCompleted(listName, itemID, completed)
-                    }
-                    setItemTitle={(listName, itemID, title) =>
-                      this.props.setItemTitle(listName, itemID, title)
-                    }
-                  />
-                </div>
-              );
-            } else {
-              return (
-                <React.Fragment key={item.itemID}>
-                  <div className="list-item">
-                    <div className="completed-separator mt-2 mb-2 font-small text-left">
-                      <i className="fas fa-sort-down mr-2 "></i>Completed
-                    </div>
+                  <ContextMenuTrigger id={item.itemID}>
                     <ListItem
                       listName={name}
                       title={item.title}
@@ -312,6 +306,61 @@ export default class Todolist extends Component {
                         this.props.setItemTitle(listName, itemID, title)
                       }
                     />
+                  </ContextMenuTrigger>
+                  <ContextMenu
+                    id={item.itemID}
+                    className="delete-menu px-2 py-1"
+                  >
+                    <MenuItem
+                      data={{ foo: "bar" }}
+                      className="text-danger delete-menu-item px-4"
+                      onClick={(id) => this.handleDelete(item.itemID)}
+                    >
+                      Delete
+                    </MenuItem>
+                  </ContextMenu>
+                </div>
+              );
+            } else {
+              return (
+                <React.Fragment key={item.itemID}>
+                  <div className="list-item">
+                    <div className="completed-separator mt-2 mb-2 font-small text-left">
+                      <i className="fas fa-sort-down mr-2 "></i>Completed
+                    </div>
+                    <ContextMenuTrigger id={item.itemID}>
+                      <ListItem
+                        listName={name}
+                        title={item.title}
+                        description={item.description}
+                        priority={item.priority}
+                        dueDate={item.dueDate}
+                        completed={item.completed}
+                        itemID={item.itemID}
+                        setItemCompleted={(listName, itemID, completed) =>
+                          this.props.setItemCompleted(
+                            listName,
+                            itemID,
+                            completed
+                          )
+                        }
+                        setItemTitle={(listName, itemID, title) =>
+                          this.props.setItemTitle(listName, itemID, title)
+                        }
+                      />
+                    </ContextMenuTrigger>
+                    <ContextMenu
+                      id={item.itemID}
+                      className="delete-menu px-2 py-1"
+                    >
+                      <MenuItem
+                        data={{ foo: "bar" }}
+                        className="text-danger delete-menu-item px-4"
+                        onClick={(id) => this.handleDelete(item.itemID)}
+                      >
+                        Delete
+                      </MenuItem>
+                    </ContextMenu>
                   </div>
                 </React.Fragment>
               );

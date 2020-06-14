@@ -48,14 +48,14 @@ export default class ListItem extends Component {
       (isLate ? " text-danger" : "");
 
     const rowClasses =
-      "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center" +
+      "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center font-color" +
       (this.props.completed ? " completed" : "");
 
     return (
       <div className={rowClasses}>
         <div className="col-10 text-left">
           <input
-            className="form-check-input"
+            className="form-check-input font-color"
             type="checkbox"
             value=""
             checked={completed}

@@ -13,6 +13,7 @@ export default class CalendarOverlay extends Component {
             <button
               type="button"
               className="btn btn-secondary calendar-overlay-button"
+              onClick={() => this.props.handleCalendarOverlayClear()}
             >
               Clear
             </button>

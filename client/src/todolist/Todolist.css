@@ -98,6 +98,18 @@ select:focus {
   padding: 5px;
 }
 
+.delete-menu {
+  border-radius: 5px;
+  z-index: 1000;
+  background-color: white;
+  border: solid 0.25px rgb(206, 212, 218);
+}
+
+.delete-menu:hover {
+  cursor: pointer;
+  background-color: rgb(233, 236, 239);
+}
+
 .priorities-overlay-item:hover {
   transition: 0.15s ease;
   cursor: pointer;

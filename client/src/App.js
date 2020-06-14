@@ -90,6 +90,41 @@ export default class App extends Component {
     });
   }
 
+  deleteListItem(listName, itemID) {
+    const lists = this.state.lists.slice();
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        var items = lists[i].items;
+        var idx = -1;
+        for (let j = 0; j < items.length; j++) {
+          if (items[j].itemID === itemID) {
+            idx = j;
+            break;
+          }
+        }
+        items = items.splice(idx, 1);
+      }
+    }
+
+    this.setState({ lists: lists });
+
+    const url = domain + "/deleteListItem";
+    const body = JSON.stringify({
+      username: "Jasper",
+      listName: listName,
+      itemID: itemID,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    });
+  }
+
   setItemTitle(listName, itemID, title) {
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
@@ -180,6 +215,9 @@ export default class App extends Component {
             items={list.items}
             addListItem={(listName, title, dueDate, description, priority) =>
               this.addListItem(listName, title, dueDate, description, priority)
+            }
+            deleteListItem={(listName, itemID) =>
+              this.deleteListItem(listName, itemID)
             }
             setItemTitle={(listName, itemID, title) =>
               this.setItemTitle(listName, itemID, title)
