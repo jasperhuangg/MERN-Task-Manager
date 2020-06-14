@@ -1,2 +1,2 @@
 # MERN-Todolist
-# MERN-Todolist
+A todolist app inspired by TickTick.
