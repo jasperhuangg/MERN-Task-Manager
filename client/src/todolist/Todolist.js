@@ -29,8 +29,7 @@ export default class Todolist extends Component {
       addItemPriority: "medium",
       listItems: this.props.items,
       addItemDateKeywords: "",
-      caretPosition: 0,
-      lastCharInKeyword: -1,
+      completedItemsShowing: true,
     };
   }
 
@@ -87,13 +86,8 @@ export default class Todolist extends Component {
     // let savedCaretPosition = CaretPositioning.saveSelection(e.currentTarget);
 
     var dateParserObj = DateParser(e.target.value);
-    console.log("innerText: " + e.target.value);
     var parsedDate = dateParserObj.date;
     var keywords = dateParserObj.keywords;
-
-    console.log("state: " + this.state.addItemDate);
-
-    console.log("parsedDate: " + parsedDate);
 
     if (
       keywords === "" &&
@@ -246,6 +240,11 @@ export default class Todolist extends Component {
     return classes;
   }
 
+  handleCompletedSeparatorClick() {
+    this.setState({ completedItemsShowing: !this.state.completedItemsShowing });
+    $(document).find("#completed-items").slideToggle("fast");
+  }
+
   render() {
     var name = this.props.name;
     const items = this.props.items;
@@ -267,10 +266,6 @@ export default class Todolist extends Component {
     const priorityIconClasses = this.getPriorityIconClasses();
     const calendarIconClasses = this.getCalendarIconClasses();
 
-    $(document).on("click", ".completed-separator", function () {
-      // TODO: handle hiding completing items here
-    });
-
     $(document).find(".add-item-input-container").show();
 
     const firstCompletedIndex = this.getIndexOfFirstCompletedItem();
@@ -280,6 +275,9 @@ export default class Todolist extends Component {
       firstCompletedIndex,
       this.state.listItems.length
     );
+    const completedSeparatorIconClasses =
+      "fas fa-sort-down mr-2 base" +
+      (this.state.completedItemsShowing ? "" : " icon-rotated");
 
     return (
       // w-50 class is temporary
@@ -372,8 +370,15 @@ export default class Todolist extends Component {
               );
             })}
           </div>
-          <div className="completed-separator mt-2 mb-2 font-small text-left">
-            <i className="fas fa-sort-down mr-2 "></i>
+          <div
+            style={{ cursor: "pointer" }}
+            className="completed-separator mt-2 mb-2 font-small text-left"
+            onClick={() => this.handleCompletedSeparatorClick()}
+          >
+            <i
+              id="completed-separator-icon"
+              className={completedSeparatorIconClasses}
+            ></i>
             Completed
           </div>
           <div id="completed-items">
@@ -413,88 +418,6 @@ export default class Todolist extends Component {
               );
             })}
           </div>
-
-          {/* {items.map((item, i) => {
-            if (i !== firstCompletedIndex) {
-              return (
-                <div className="list-item" key={item.itemID}>
-                  <ContextMenuTrigger id={item.itemID}>
-                    <ListItem
-                      listName={name}
-                      title={item.title}
-                      description={item.description}
-                      priority={item.priority}
-                      dueDate={item.dueDate}
-                      completed={item.completed}
-                      itemID={item.itemID}
-                      setItemCompleted={(listName, itemID, completed) =>
-                        this.props.setItemCompleted(listName, itemID, completed)
-                      }
-                      setItemTitle={(listName, itemID, title) =>
-                        this.props.setItemTitle(listName, itemID, title)
-                      }
-                    />
-                  </ContextMenuTrigger>
-                  <ContextMenu
-                    id={item.itemID.toString()}
-                    className="delete-menu px-2 py-1"
-                  >
-                    <MenuItem
-                      data={{ foo: "bar" }}
-                      className="text-danger delete-menu-item px-2"
-                      onClick={(id) => this.handleDelete(item.itemID)}
-                    >
-                      Delete
-                    </MenuItem>
-                  </ContextMenu>
-                </div>
-              );
-            } else {
-              return (
-                <React.Fragment key={item.itemID}>
-                  <div className="list-item">
-                    <div className="completed-separator mt-2 mb-2 font-small text-left">
-                      <i className="fas fa-sort-down mr-2 "></i>
-                      Completed
-                    </div>
-                    <ContextMenuTrigger id={item.itemID}>
-                      <ListItem
-                        listName={name}
-                        title={item.title}
-                        description={item.description}
-                        priority={item.priority}
-                        dueDate={item.dueDate}
-                        completed={item.completed}
-                        itemID={item.itemID}
-                        setItemCompleted={(listName, itemID, completed) =>
-                          this.props.setItemCompleted(
-                            listName,
-                            itemID,
-                            completed
-                          )
-                        }
-                        setItemTitle={(listName, itemID, title) =>
-                          this.props.setItemTitle(listName, itemID, title)
-                        }
-                      />
-                    </ContextMenuTrigger>
-                    <ContextMenu
-                      id={item.itemID}
-                      className="delete-menu px-2 py-1"
-                    >
-                      <MenuItem
-                        data={{ foo: "bar" }}
-                        className="text-danger delete-menu-item px-2"
-                        onClick={(id) => this.handleDelete(item.itemID)}
-                      >
-                        Delete
-                      </MenuItem>
-                    </ContextMenu>
-                  </div>
-                </React.Fragment>
-              );
-            }
-          })} */}
         </div>
       </div>
     );
