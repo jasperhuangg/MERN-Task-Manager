@@ -75,9 +75,9 @@ export default function DateParser(str) {
   var day = "";
 
   // search for any occurences of commonly spoken words
-  for (let i = 0; i < spokenWords.length; i++) {
-    var word = spokenWords[i];
-    if (words.indexOf(word) !== -1) {
+  for (let i = 0; i < words.length; i++) {
+    var word = words[i];
+    if (spokenWords.indexOf(word) !== -1) {
       keywords = word;
       isSpokenWord = true;
       break;
@@ -93,9 +93,6 @@ export default function DateParser(str) {
         monthCandidates.push(word);
       }
     }
-
-    // console.log(words);
-    // console.log(monthCandidates);
 
     // if we found a month, look on either side of it for a date
     if (monthCandidates.length > 0) {
@@ -151,15 +148,16 @@ export default function DateParser(str) {
     }
   }
 
+  var today = new Date();
+  var currYear = today.getFullYear();
+  var currMonth = today.getMonth() + 1;
+  var currDate = today.getDate();
+  var currDayOfTheWeek = today.getDay() + 1;
+
   // create and return the parsed date
   if (!isSpokenWord && !isStringDate) return { date: "", keywords: "" };
   // no date found
   else if (isSpokenWord && !isStringDate) {
-    var today = new Date();
-    var currYear = today.getFullYear();
-    var currMonth = today.getMonth() + 1;
-    var currDate = today.getDate();
-    var currDayOfTheWeek = today.getDay() + 1;
     if (keywords === "today") {
       return {
         date: getFormattedDate(currYear, currMonth, currDate),
@@ -203,9 +201,6 @@ export default function DateParser(str) {
       };
     }
   } else if (isStringDate && !isSpokenWord) {
-    var today = new Date(); // we will just assume they mean this year (or next year if either come before the current day)
-    var currYear = today.getFullYear();
-    var currMonth = today.getMonth() + 1;
     var currDay = today.getDate();
 
     var monthNum = convertMonthToNumber(month);
@@ -287,4 +282,4 @@ function getPosition(array, entry, occurence) {
   if (seen === 1) return array.indexOf(entry);
 }
 
-console.log(DateParser("bla bla bla today    "));
+// console.log(DateParser("test wednesday today"));

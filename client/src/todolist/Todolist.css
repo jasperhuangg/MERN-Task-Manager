@@ -1,5 +1,7 @@
 .todolist {
-  height: 95vh;
+  height: 100vh;
+  border: solid 0.25px rgb(206, 212, 218);
+  border-radius: 7px;
 }
 
 .todolist-items {
@@ -46,12 +48,9 @@
   box-sizing: border-box;
 }
 
-/* .completed input:checked ~ .checkmark {
-  background-color: gray;
-} */
-
 .title-input {
   width: 100%;
+  text-overflow: ellipsis;
   border: 0;
 }
 
@@ -119,4 +118,27 @@ select:focus {
 .calendarOverlay {
   width: 200px;
   height: 200px;
+}
+
+[placeholder]:empty::before {
+  content: attr(placeholder);
+  color: #555;
+}
+
+[placeholder]:empty:focus::before {
+  content: "";
+}
+
+.calendar-selected {
+  color: rgb(21, 127, 251);
+  transition: 0.2s ease;
+}
+
+.icon-rotated {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-transition: all 0.4s ease;
 }

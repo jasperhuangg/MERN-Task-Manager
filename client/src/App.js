@@ -58,7 +58,7 @@ export default class App extends Component {
           dueDate: dueDate,
           priority: priority,
           completed: false,
-          itemID: new ObjectID(),
+          itemID: new ObjectID().toString(),
         };
         items.push(item);
         objID = item.itemID;
