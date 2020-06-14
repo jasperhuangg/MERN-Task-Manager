@@ -4,7 +4,6 @@ import "react-calendar/dist/Calendar.css";
 
 export default class CalendarOverlay extends Component {
   render() {
-    console.log("in CalendarOverlay.js: " + this.props.currentlySelectedDate);
     var date = undefined;
 
     if (this.props.currentlySelectedDate !== "")

@@ -1,7 +1,6 @@
 .todolist {
   height: 100vh;
-  border: solid 0.25px rgb(206, 212, 218);
-  border-radius: 7px;
+  border: solid 0.25px rgba(206, 212, 218, 0.5);
 }
 
 .todolist-items {

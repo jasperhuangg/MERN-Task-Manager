@@ -14,8 +14,10 @@ export default class ListItem extends Component {
     this.handleCheck = this.handleCheck.bind(this);
   }
 
-  handleCheck(e) {
+  async handleCheck(e) {
     var completed = e.target.checked;
+
+    // await sleep(20);
 
     this.props.setItemCompleted(
       this.props.listName,
@@ -128,4 +130,8 @@ function getIsLate(date) {
   const d = new Date(date + " 00:00");
 
   return d < today;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

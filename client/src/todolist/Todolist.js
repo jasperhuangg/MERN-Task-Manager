@@ -29,8 +29,14 @@ export default class Todolist extends Component {
       addItemPriority: "medium",
       listItems: this.props.items,
       addItemDateKeywords: "",
-      completedItemsShowing: true,
+      completedItemsShowing: false,
     };
+  }
+
+  componentDidMount() {
+    $(document).ready(function () {
+      $("#completed-items").hide();
+    });
   }
 
   keyPress(e) {
@@ -64,27 +70,6 @@ export default class Todolist extends Component {
   }
 
   handleInput(e) {
-    // if (
-    //   e.keyCode === 8 &&
-    //   this.state.caretPosition - 1 === this.state.lastCharInKeyword
-    // ) {
-    //   console.log("unwrapping");
-    //   $("#date-keyword").unwrap();
-    // }
-
-    // if (
-    //   this.state.addItemDateKeywords !== "" &&
-    //   e.target.innerText.indexOf(this.state.addItemDateKeywords) !== -1
-    // ) {
-    //   const lastCharInKeyword =
-    //     e.target.innerText.indexOf(this.state.addItemDateKeywords) +
-    //     this.state.addItemDateKeywords.length -
-    //     1;
-    //   this.setState({ lastCharInKeyword: lastCharInKeyword });
-    // }
-
-    // let savedCaretPosition = CaretPositioning.saveSelection(e.currentTarget);
-
     var dateParserObj = DateParser(e.target.value);
     var parsedDate = dateParserObj.date;
     var keywords = dateParserObj.keywords;
@@ -98,22 +83,11 @@ export default class Todolist extends Component {
       keywords = this.state.addItemDateKeywords;
     }
 
-    this.setState(
-      {
-        addItemValue: e.target.value,
-        addItemDate: parsedDate,
-        addItemDateKeywords: keywords,
-        // caretPosition: savedCaretPosition,
-      }
-      // ,
-      // () => {
-      //   //restore caret position(s)
-      //   CaretPositioning.restoreSelection(
-      //     document.getElementById("addItemInput"),
-      //     this.state.caretPosition
-      //   );
-      // }
-    );
+    this.setState({
+      addItemValue: e.target.value,
+      addItemDate: parsedDate,
+      addItemDateKeywords: keywords,
+    });
   }
 
   setAddItemDate(date) {
