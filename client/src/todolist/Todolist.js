@@ -64,13 +64,13 @@ export default class Todolist extends Component {
   }
 
   handleInput(e) {
-    if (
-      e.keyCode === 8 &&
-      this.state.caretPosition - 1 === this.state.lastCharInKeyword
-    ) {
-      console.log("unwrapping");
-      $("#date-keyword").unwrap();
-    }
+    // if (
+    //   e.keyCode === 8 &&
+    //   this.state.caretPosition - 1 === this.state.lastCharInKeyword
+    // ) {
+    //   console.log("unwrapping");
+    //   $("#date-keyword").unwrap();
+    // }
 
     // if (
     //   this.state.addItemDateKeywords !== "" &&
@@ -155,7 +155,7 @@ export default class Todolist extends Component {
   }
 
   formatDateKeywords(name, keyword) {
-    console.log($("#addItemInput").children("span").length);
+    // console.log($("#addItemInput").children("span").length);
 
     // if there's already a keyword that is highlighted, short circuit
     if ($("#addItemInput").children("span").length > 0) {
@@ -232,10 +232,8 @@ export default class Todolist extends Component {
   }
 
   getCalendarIconClasses() {
-    var classes = "fas fa-calendar-alt";
+    var classes = "fas fa-calendar-alt calendar-base";
     if (this.state.addItemDate !== "") classes += " calendar-selected";
-    console.log(this.state.addItemDate);
-    console.log("classes: " + classes);
 
     return classes;
   }
@@ -278,6 +276,8 @@ export default class Todolist extends Component {
     const completedSeparatorIconClasses =
       "fas fa-sort-down mr-2 base" +
       (this.state.completedItemsShowing ? "" : " icon-rotated");
+
+    console.log("in Todolist.js: " + this.state.addItemDate);
 
     return (
       // w-50 class is temporary
@@ -330,6 +330,7 @@ export default class Todolist extends Component {
             setAddItemDate={(date) => this.setAddItemDate(date)}
             handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
             handleCalendarOverlayClear={() => this.handleCalendarOverlayClear()}
+            currentlySelectedDate={this.state.addItemDate}
           />
         </div>
         <div className="todolist-items">
@@ -383,8 +384,10 @@ export default class Todolist extends Component {
           </div>
           <div id="completed-items">
             {completedItems.map((item, i) => {
+              console.log(incompletedItems.length - 2);
+              console.log(i);
               return (
-                <div className="list-item" key={item.itemID}>
+                <div className={"list-item"} key={item.itemID}>
                   <ContextMenuTrigger id={item.itemID}>
                     <ListItem
                       listName={name}
@@ -418,6 +421,12 @@ export default class Todolist extends Component {
               );
             })}
           </div>
+          <div
+            id="bottom-line"
+            className={
+              "list-item" + (this.state.completedItemsShowing ? " d-none" : "")
+            }
+          ></div>
         </div>
       </div>
     );

@@ -3,11 +3,20 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 export default class CalendarOverlay extends Component {
-  state = { selectedDate: "" };
   render() {
+    console.log("in CalendarOverlay.js: " + this.props.currentlySelectedDate);
+    var date = undefined;
+
+    if (this.props.currentlySelectedDate !== "")
+      date = new Date(this.props.currentlySelectedDate + " 00:00");
+
+    console.log(date);
     return (
       <div className="calendar-overlay">
-        <Calendar onChange={(date) => this.setDate(date)} />
+        <Calendar
+          selectedValue={date}
+          onChange={(date) => this.setDate(date)}
+        />
         <div className="row mt-4">
           <div className="col-6">
             <button

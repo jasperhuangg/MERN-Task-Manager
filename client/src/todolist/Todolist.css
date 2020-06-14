@@ -129,9 +129,13 @@ select:focus {
   content: "";
 }
 
+.calendar-base {
+  transition: 0.3s ease;
+}
+
 .calendar-selected {
   color: rgb(21, 127, 251);
-  transition: 0.2s ease;
+  transition: 0.3s ease;
 }
 
 .base {
