@@ -101,12 +101,12 @@ export default class Details extends Component {
               // }
             >
               <span className="mr-2">
-                <i class="fas fa-calendar-alt"></i>
+                <i className="fas fa-calendar-alt"></i>
               </span>
               {formatDate(this.state.dueDate)}
             </div>
             <div className={priorityPickerClasses}>
-              <i class="fas fa-balance-scale-left"></i>
+              <i className="fas fa-balance-scale-left"></i>
             </div>
           </div>
           <div id="details-title-input-container" className="pb-2">
@@ -140,7 +140,7 @@ export default class Details extends Component {
           <div className="col-12 text-center my-auto">
             Click on an item to see it's details <br />
             <br />
-            <i class="fas fa-tasks" style={{ fontSize: "20px" }}></i>
+            <i className="fas fa-tasks" style={{ fontSize: "20px" }}></i>
           </div>
         </div>
       </React.Fragment>

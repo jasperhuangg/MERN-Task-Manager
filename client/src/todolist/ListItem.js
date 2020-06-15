@@ -40,13 +40,14 @@ export default class ListItem extends Component {
 
   handleBlur = (e) => {
     const title = e.target.value;
-    if (title !== this.state.title)
+    if (title !== this.props.title)
       this.props.setItemTitle(this.props.listName, this.state.itemID, title);
   };
 
   componentDidUpdate(prevProp) {
     if (
       prevProp.title === this.props.title &&
+      prevProp.itemID === this.props.itemID &&
       prevProp.dueDate === this.props.dueDate &&
       prevProp.priority === this.props.priority &&
       prevProp.completed === this.props.completed
@@ -54,6 +55,7 @@ export default class ListItem extends Component {
       return;
     this.setState({
       title: this.props.title,
+      itemID: this.props.itemID,
       dueDate: this.props.dueDate,
       priority: this.props.priority,
       completed: this.props.completed,

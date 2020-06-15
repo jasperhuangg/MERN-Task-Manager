@@ -266,7 +266,6 @@ export default class Todolist extends Component {
         <div className="todolist-items">
           <div id="incompleted-items">
             {incompletedItems.map((item, i) => {
-              console.log(item.title);
               return (
                 <div className="list-item" key={item.itemID}>
                   <ContextMenuTrigger id={item.itemID}>

@@ -148,21 +148,12 @@ export default class App extends Component {
   }
 
   setItemTitle(listName, itemID, title) {
-    console.log(
-      "~~~***setItemTitle called with: " +
-        title +
-        ", " +
-        itemID +
-        ", " +
-        listName
-    );
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
-            console.log("updating");
             items[j].title = title;
             break;
           }
