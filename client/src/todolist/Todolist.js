@@ -287,6 +287,7 @@ export default class Todolist extends Component {
                         this.props.setSelectedItem(itemID)
                       }
                       selectedItemID={this.props.selectedItemID}
+                      handleDelete={(id) => this.handleDelete(id)}
                     />
                   </ContextMenuTrigger>
                   <ContextMenu
@@ -342,6 +343,7 @@ export default class Todolist extends Component {
                         this.props.setSelectedItem(itemID)
                       }
                       selectedItemID={this.props.selectedItemID}
+                      handleDelete={(id) => this.handleDelete(id)}
                     />
                   </ContextMenuTrigger>
                   <ContextMenu

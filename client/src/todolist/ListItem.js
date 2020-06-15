@@ -13,6 +13,7 @@ export default class ListItem extends Component {
       dueDate: this.props.dueDate,
       completed: this.props.completed,
       priority: this.props.priority,
+      pressedKeys: {},
     };
 
     this.handleCheck = this.handleCheck.bind(this);
@@ -37,6 +38,13 @@ export default class ListItem extends Component {
       this.inputRef.current.blur();
     }
   };
+
+  handleCmdDelete(e) {
+    const map = this.state.pressedKeys;
+    // e = e || event;
+    map[e.keyCode] = e.type === "keydown";
+    if (map[91] && map[8]) this.props.handleDelete(this.state.itemID);
+  }
 
   handleBlur = (e) => {
     const title = e.target.value;
@@ -106,7 +114,10 @@ export default class ListItem extends Component {
             className={titleInputClasses}
             value={title}
             ref={this.inputRef}
-            onKeyDown={(e) => this.handleKeyPress(e)}
+            onKeyDown={(e) => {
+              this.handleKeyPress(e);
+              this.handleCmdDelete(e);
+            }}
             onBlur={(e) => this.handleBlur(e)}
             onChange={(e) => this.setState({ title: e.target.value })}
           />

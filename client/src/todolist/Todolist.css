@@ -207,7 +207,11 @@ select:focus {
   height: 100%;
   border: 0;
   font-size: 14px;
-  /* resize: none; */
+  resize: none;
+}
+
+#details-desc-input-container {
+  height: 85%;
 }
 
 .details-date-picker {
@@ -231,4 +235,8 @@ select:focus {
 #details-placeholder {
   font-size: 16px;
   color: rgb(73, 80, 87);
+}
+
+.details-container {
+  height: 95vh;
 }

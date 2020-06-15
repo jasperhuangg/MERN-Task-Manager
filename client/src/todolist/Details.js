@@ -81,7 +81,7 @@ export default class Details extends Component {
   }
 
   render() {
-    var priorityPickerClasses = "col-1 details-priority-picker";
+    var priorityPickerClasses = "col-2 offset-md-5 details-priority-picker";
     if (this.state.priority === "high") priorityPickerClasses += " text-danger";
     else if (this.state.priority === "medium")
       priorityPickerClasses += " text-primary";
@@ -90,7 +90,11 @@ export default class Details extends Component {
 
     return (
       <React.Fragment>
-        <div className={this.state.itemID === "" ? "d-none" : ""}>
+        <div
+          className={
+            "details-container " + (this.state.itemID === "" ? "d-none" : "")
+          }
+        >
           <div
             id="details-top-row"
             className="row align-items-center mt-4 pb-3 justify-content-around mb-4"
@@ -106,7 +110,7 @@ export default class Details extends Component {
             </div>
             <div
               className={
-                "details-date-picker col-3" +
+                "details-date-picker col-4" +
                 (getIsLate(this.state.dueDate)
                   ? " text-danger"
                   : this.state.dueDate === ""
@@ -122,12 +126,12 @@ export default class Details extends Component {
               </span>
               {formatDate(this.state.dueDate)}
             </div>
-            <div className="col-7"></div>
+            {/* <div className="col-5"></div> */}
             <div className={priorityPickerClasses}>
               <i className="fas fa-balance-scale-left"></i>
             </div>
           </div>
-          <div id="details-title-input-container" className="pb-2">
+          <div id="details-title-input-container" className="mb-3">
             <input
               spellCheck="false"
               className="details-title-input"
@@ -139,18 +143,21 @@ export default class Details extends Component {
               onChange={(e) => this.setState({ title: e.target.value })}
             />
           </div>
-          <div id="details-desc-input-container" className="h-100">
+          <div
+            id="details-desc-input-container"
+            className="details-desc-input-container"
+          >
             <textarea
               id="details-desc-input"
               value={this.state.description}
               placeholder="Description"
-              onChange={(e) => this.setState({ description: e.target.value })}
               ref={this.descInputRef}
               onKeyDown={(e) => this.handleDescInputKeyPress(e)}
               onBlur={(e) => this.handleDescInputBlur(e)}
               onChange={(e) => this.setState({ description: e.target.value })}
             />
           </div>
+          <div id="details-bottom-row" className="row w-100"></div>
         </div>
         <div
           id="details-placeholder"
