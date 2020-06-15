@@ -70,7 +70,7 @@ export default class App extends Component {
 
   addListItem(listName, title, dueDate, description, priority) {
     const lists = this.state.lists.slice();
-    var objID = null;
+    var id = null;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -83,13 +83,13 @@ export default class App extends Component {
           itemID: new ObjectID().toString(),
         };
         items.push(item);
-        objID = item.itemID;
+        id = item.itemID;
         items.sort(sortListItems);
         break;
       }
     }
 
-    this.setState({ lists: lists });
+    this.setState({ lists: lists, currentlySelectedItemID: id });
 
     const url = domain + "/addListItem";
     const body = JSON.stringify({
@@ -99,7 +99,7 @@ export default class App extends Component {
       dueDate: dueDate,
       description: description,
       priority: priority,
-      itemID: objID,
+      itemID: id,
     });
 
     fetch(url, {
@@ -290,7 +290,7 @@ export default class App extends Component {
                   listName={list.name}
                   selectedItemID={selectedItem.itemID}
                   selectedItemTitle={selectedItem.title}
-                  selectedItemDueDate={selectedItem.duedate}
+                  selectedItemDueDate={selectedItem.dueDate}
                   selectedItemDescription={selectedItem.description}
                   selectedItemPriority={selectedItem.priority}
                   selectedItemCompleted={selectedItem.completed}
