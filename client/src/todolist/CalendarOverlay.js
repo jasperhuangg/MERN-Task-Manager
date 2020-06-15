@@ -3,24 +3,29 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 export default class CalendarOverlay extends Component {
-  render() {
-    var date = undefined;
+  handleClear() {
+    // clear the calendar
+    this.props.handleCalendarOverlayClear();
+  }
 
-    if (this.props.currentlySelectedDate !== "")
-      date = new Date(this.props.currentlySelectedDate + " 00:00");
+  render() {
+    var d = undefined;
+
+    if (this.props.currentlySelectedDate !== "") {
+      console.log("date is not empty: " + this.props.currentlySelectedDate);
+      d = new Date(this.props.currentlySelectedDate + " 00:00");
+      console.log("date obj: " + d);
+    }
 
     return (
       <div className="calendar-overlay">
-        <Calendar
-          selectedValue={date}
-          onChange={(date) => this.setDate(date)}
-        />
+        <Calendar value={d} onChange={(date) => this.setDate(date)} />
         <div className="row mt-4">
           <div className="col-6">
             <button
               type="button"
               className="btn btn-secondary calendar-overlay-button"
-              onClick={() => this.props.handleCalendarOverlayClear()}
+              onClick={() => this.handleClear()}
             >
               Clear
             </button>

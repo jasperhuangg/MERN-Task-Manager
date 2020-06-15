@@ -164,7 +164,7 @@ export default class Details extends Component {
               handleCalendarOverlayClear={() =>
                 this.handleCalendarOverlayClear()
               }
-              currentlySelectedDate={this.state.addItemDate}
+              currentlySelectedDate={this.state.dueDate}
             />
           </div>
           <div id="details-title-input-container" className="mb-2">
