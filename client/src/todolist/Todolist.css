@@ -242,3 +242,7 @@ select:focus {
 .details-container {
   height: 95vh;
 }
+
+.form-check-input {
+  margin-top: 0.45rem !important;
+}

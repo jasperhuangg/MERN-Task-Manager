@@ -103,7 +103,7 @@ export default class ListItem extends Component {
         onContextMenu={(e) => this.handleItemSelection(e)}
         style={{ borderColor: rowBorderColor }}
       >
-        <div className="col-10 text-left">
+        <div className="col-10 text-left align-items-center">
           <input
             className="form-check-input"
             type="checkbox"
