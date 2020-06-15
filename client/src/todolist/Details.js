@@ -72,6 +72,18 @@ export default class Details extends Component {
     });
   }
 
+  handleCalendarOverlayOK() {
+    this.setState({ calendarOverlayDisplaying: false });
+  }
+
+  handleCalendarOverlayClear() {
+    this.setState({
+      calendarOverlayDisplaying: false,
+      dueDate: "",
+    });
+    this.props.setItemDueDate(this.props.listName, this.state.itemID, "");
+  }
+
   handleShowCalendarOverlay() {
     if (this.state.calendarOverlayDisplaying)
       this.setState({ calendarOverlayDisplaying: false });
