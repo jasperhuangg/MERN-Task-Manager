@@ -224,7 +224,40 @@ export default class App extends Component {
 
   setItemPriority(priority) {}
 
-  setItemDescription(description) {}
+  setItemDescription(listName, itemID, description) {
+    const lists = this.state.lists.slice();
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        const items = lists[i].items;
+        for (let j = 0; j < items.length; j++) {
+          if (items[j].itemID === itemID) {
+            items[j].description = description;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    this.setState({ lists: lists });
+
+    const url = domain + "/setItemDescription";
+    const body = JSON.stringify({
+      username: "Jasper",
+      listName: listName,
+      itemID: itemID,
+      description: description,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    });
+  }
 
   render() {
     const listArr = this.state.lists.slice(this.state.currentlySelectedList, 1);
@@ -296,6 +329,9 @@ export default class App extends Component {
                   }
                   setItemPriority={(listName, itemID, priority) =>
                     this.setItemPriority(listName, itemID, priority)
+                  }
+                  setItemDescription={(listName, itemID, description) =>
+                    this.setItemDescription(listName, itemID, description)
                   }
                   deleteListItem={(listName, itemID) =>
                     this.deleteListItem(listName, itemID)

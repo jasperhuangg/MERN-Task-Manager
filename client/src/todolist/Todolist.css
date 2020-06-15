@@ -1,6 +1,6 @@
 .todolist {
   height: 100vh;
-  border: solid 0.25px rgb(206, 212, 218);
+  border: solid 0.25px rgb(240, 240, 240);
 }
 
 .todolist-items {
@@ -43,7 +43,7 @@
 }
 
 .list-item {
-  border-bottom: 0.25px rgb(206, 212, 218) solid;
+  border-bottom: 0.25px rgb(240, 240, 240) solid;
   box-sizing: border-box;
 }
 
@@ -73,7 +73,7 @@ select:focus {
   position: absolute;
   z-index: 1000;
   background-color: white;
-  border: solid 0.25px rgb(206, 212, 218);
+  border: solid 0.25px rgb(240, 240, 240);
   border-radius: 7px;
   padding: 10px;
   width: 250px;
@@ -86,7 +86,7 @@ select:focus {
   position: absolute;
   z-index: 1000;
   background-color: white;
-  border: solid 0.25px rgb(206, 212, 218);
+  border: solid 0.25px rgb(240, 240, 240);
   padding: 0px;
   border-radius: 7px;
   width: 70px;
@@ -107,7 +107,7 @@ select:focus {
   z-index: 1000;
   color: rgb(73, 80, 87);
   background-color: white;
-  border: solid 0.25px rgb(206, 212, 218);
+  border: solid 0.25px rgb(240, 240, 240);
   transition: 0.05s ease;
   font-size: 13px;
 }
@@ -115,13 +115,13 @@ select:focus {
 .delete-menu:hover {
   transition: 0.2s ease;
   cursor: pointer;
-  background-color: rgb(206, 212, 218);
+  background-color: rgb(240, 240, 240);
 }
 
 .priorities-overlay-item:hover {
   transition: 0.15s ease;
   cursor: pointer;
-  background-color: rgb(206, 212, 218);
+  background-color: rgb(240, 240, 240);
 }
 
 .calendarOverlay {
@@ -176,14 +176,14 @@ select:focus {
 
 .selected-item {
   /* transition: 0.1s ease; */
-  background-color: rgb(206, 212, 218, 0.6) !important;
+  background-color: rgb(240, 240, 240, 0.6) !important;
 
   box-sizing: border-box;
 }
 
 .selected-item-input {
   /* transition: 0.1s ease; */
-  background-color: rgb(206, 212, 218, 0) !important;
+  background-color: rgb(240, 240, 240, 0) !important;
 }
 
 .details-title-input {
@@ -195,11 +195,11 @@ select:focus {
 }
 
 #details-top-row {
-  border-bottom: 0.25px rgb(206, 212, 218) solid;
+  border-bottom: 0.25px rgb(240, 240, 240) solid;
 }
 
 .details-top-row-check {
-  border-right: 0.25px rgb(206, 212, 218) solid;
+  border-right: 0.25px rgb(240, 240, 240) solid;
 }
 
 #details-desc-input {

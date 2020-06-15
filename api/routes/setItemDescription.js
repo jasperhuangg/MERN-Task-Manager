@@ -34,7 +34,7 @@ router.post("/", (req, res, next) => {
             user.lists.forEach((list) => {
               if (list.name === listName) {
                 list.items.forEach((item) => {
-                  if (item.itemID === itemID) {
+                  if (item.itemID.toString() === itemID) {
                     item.description = description;
                   }
                 });

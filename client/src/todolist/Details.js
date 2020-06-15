@@ -5,7 +5,8 @@ import "./Todolist.css";
 export default class Details extends Component {
   constructor(props) {
     super(props);
-    this.inputRef = React.createRef();
+    this.titleInputRef = React.createRef();
+    this.descInputRef = React.createRef();
     this.state = {
       itemID: this.props.selectedItemID,
       title: this.props.selectedItemTitle,
@@ -17,7 +18,7 @@ export default class Details extends Component {
     this.handleCheck = this.handleCheck.bind(this);
   }
 
-  handleBlur = (e) => {
+  handleTitleInputBlur = (e) => {
     const title = e.target.value;
     if (title !== this.props.selectedItemTitle)
       this.props.setItemTitle(
@@ -27,9 +28,25 @@ export default class Details extends Component {
       );
   };
 
-  handleKeyPress = (e) => {
+  handleTitleInputKeyPress = (e) => {
     if (e.keyCode === 13) {
-      this.inputRef.current.blur();
+      this.titleInputRef.current.blur();
+    }
+  };
+
+  handleDescInputBlur = (e) => {
+    const description = e.target.value;
+    if (description !== this.props.selectedItemDescription)
+      this.props.setItemDescription(
+        this.props.listName,
+        this.props.selectedItemID,
+        description
+      );
+  };
+
+  handleDescInputKeyPress = (e) => {
+    if (e.keyCode === 9) {
+      this.descInputRef.current.blur();
     }
   };
 
@@ -116,9 +133,9 @@ export default class Details extends Component {
               className="details-title-input"
               placeholder="Title"
               value={this.state.title}
-              onKeyDown={(e) => this.handleKeyPress(e)}
-              onBlur={(e) => this.handleBlur(e)}
-              ref={this.inputRef}
+              onKeyDown={(e) => this.handleTitleInputKeyPress(e)}
+              onBlur={(e) => this.handleTitleInputBlur(e)}
+              ref={this.titleInputRef}
               onChange={(e) => this.setState({ title: e.target.value })}
             />
           </div>
@@ -127,6 +144,10 @@ export default class Details extends Component {
               id="details-desc-input"
               value={this.state.description}
               placeholder="Description"
+              onChange={(e) => this.setState({ description: e.target.value })}
+              ref={this.descInputRef}
+              onKeyDown={(e) => this.handleDescInputKeyPress(e)}
+              onBlur={(e) => this.handleDescInputBlur(e)}
               onChange={(e) => this.setState({ description: e.target.value })}
             />
           </div>
