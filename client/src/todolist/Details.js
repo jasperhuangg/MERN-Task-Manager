@@ -89,7 +89,7 @@ export default class Details extends Component {
             </div>
             <div
               className={
-                "details-date-picker col-9" +
+                "details-date-picker col-3" +
                 (getIsLate(this.state.dueDate)
                   ? " text-danger"
                   : this.state.dueDate === ""
@@ -105,6 +105,7 @@ export default class Details extends Component {
               </span>
               {formatDate(this.state.dueDate)}
             </div>
+            <div className="col-7"></div>
             <div className={priorityPickerClasses}>
               <i className="fas fa-balance-scale-left"></i>
             </div>
