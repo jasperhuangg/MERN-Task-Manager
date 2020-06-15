@@ -30,6 +30,7 @@ export default class ListItem extends Component {
   }
 
   handleItemSelection(e) {
+    console.log(this.state.itemID);
     this.props.setSelectedItem(this.state.itemID);
   }
 
@@ -40,6 +41,7 @@ export default class ListItem extends Component {
   };
 
   handleCmdDelete(e) {
+    console.log(this.state.itemID);
     const map = this.state.pressedKeys;
     // e = e || event;
     map[e.keyCode] = e.type === "keydown";

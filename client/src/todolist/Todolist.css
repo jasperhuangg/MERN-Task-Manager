@@ -189,6 +189,7 @@ select:focus {
 .details-title-input {
   width: 100%;
   text-overflow: ellipsis;
+  overflow-wrap: anywhere;
   border: 0;
   font-weight: 700;
   font-size: 16px;
@@ -235,6 +236,7 @@ select:focus {
 #details-placeholder {
   font-size: 16px;
   color: rgb(73, 80, 87);
+  pointer-events: none;
 }
 
 .details-container {

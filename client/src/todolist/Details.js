@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import CalendarOverlay from "./CalendarOverlay.js";
 
 import "./Todolist.css";
 
@@ -14,6 +15,7 @@ export default class Details extends Component {
       priority: this.props.selectedItemPriority,
       description: this.props.selectedItemDescription,
       completed: this.props.selectedItemCompleted,
+      calendarOverlayDisplaying: false,
     };
     this.handleCheck = this.handleCheck.bind(this);
   }
@@ -70,6 +72,12 @@ export default class Details extends Component {
     });
   }
 
+  handleShowCalendarOverlay() {
+    if (this.state.calendarOverlayDisplaying)
+      this.setState({ calendarOverlayDisplaying: false });
+    else this.setState({ calendarOverlayDisplaying: true });
+  }
+
   handleCheck(e) {
     var completed = e.target.checked;
 
@@ -80,6 +88,10 @@ export default class Details extends Component {
     );
   }
 
+  handleCalendarChange(date) {
+    this.props.setItemDueDate(this.props.listName, this.state.itemID, date);
+  }
+
   render() {
     var priorityPickerClasses = "col-2 offset-md-5 details-priority-picker";
     if (this.state.priority === "high") priorityPickerClasses += " text-danger";
@@ -87,6 +99,10 @@ export default class Details extends Component {
       priorityPickerClasses += " text-primary";
     else if (this.state.priority === "low")
       priorityPickerClasses += " text-info";
+
+    const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
+      ? ""
+      : "d-none";
 
     return (
       <React.Fragment>
@@ -117,9 +133,7 @@ export default class Details extends Component {
                   ? ""
                   : " text-primary")
               }
-              // onClick={
-              //   // show details calendar overlay
-              // }
+              onClick={() => this.handleShowCalendarOverlay()}
             >
               <span className="mr-2">
                 <i className="fas fa-calendar-alt"></i>
@@ -131,7 +145,17 @@ export default class Details extends Component {
               <i className="fas fa-balance-scale-left"></i>
             </div>
           </div>
-          <div id="details-title-input-container" className="mb-3">
+          <div id="calendar-overlay" className={calendarOverlayClasslist}>
+            <CalendarOverlay
+              setAddItemDate={(date) => this.handleCalendarChange(date)}
+              handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
+              handleCalendarOverlayClear={() =>
+                this.handleCalendarOverlayClear()
+              }
+              currentlySelectedDate={this.state.addItemDate}
+            />
+          </div>
+          <div id="details-title-input-container" className="mb-2">
             <input
               spellCheck="false"
               className="details-title-input"

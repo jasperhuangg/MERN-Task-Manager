@@ -201,11 +201,19 @@ export default class Todolist extends Component {
 
     const firstCompletedIndex = this.getIndexOfFirstCompletedItem();
 
-    const incompletedItems = this.state.listItems.slice(0, firstCompletedIndex);
-    const completedItems = this.state.listItems.slice(
-      firstCompletedIndex,
-      this.state.listItems.length
-    );
+    var incompletedItems = [];
+    var completedItems = [];
+
+    if (firstCompletedIndex !== -1) {
+      incompletedItems = this.state.listItems.slice(0, firstCompletedIndex);
+      completedItems = this.state.listItems.slice(
+        firstCompletedIndex,
+        this.state.listItems.length
+      );
+    } else {
+      incompletedItems = this.state.listItems.slice();
+      completedItems = [];
+    }
     const completedSeparatorIconClasses =
       "fas fa-sort-down mr-2 base" +
       (this.state.completedItemsShowing ? "" : " icon-rotated");
@@ -215,7 +223,7 @@ export default class Todolist extends Component {
         className="container-fluid todolist"
         onClick={(e) => this.handleCloseOverlays(e)}
       >
-        <h2 className="text-left my-4">{name}</h2>
+        <h3 className="text-left my-4">{name}</h3>
         <div className="add-item-input-container">
           <div className="input-group mb-4">
             <input
@@ -265,6 +273,14 @@ export default class Todolist extends Component {
         </div>
         <div className="todolist-items">
           <div id="incompleted-items">
+            <span
+              className={
+                "pl-2 font-small font-italic " +
+                (this.state.listItems.length === 0 ? "" : "d-none")
+              }
+            >
+              Add an item above
+            </span>
             {incompletedItems.map((item, i) => {
               return (
                 <div className="list-item" key={item.itemID}>
@@ -311,7 +327,10 @@ export default class Todolist extends Component {
           </div>
           <div
             style={{ cursor: "pointer" }}
-            className="completed-separator mt-2 mb-2 font-small text-left"
+            className={
+              "completed-separator mt-2 mb-2 font-small text-left " +
+              (completedItems.length === 0 ? "d-none" : "")
+            }
             onClick={() => this.handleCompletedSeparatorClick()}
           >
             <i

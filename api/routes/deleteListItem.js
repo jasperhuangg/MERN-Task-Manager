@@ -17,6 +17,7 @@ router.post("/", (req, res, next) => {
   const username = req.body.username;
   const listName = req.body.listName;
   const itemID = req.body.itemID;
+  var idx = -1;
 
   try {
     MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
@@ -31,26 +32,25 @@ router.post("/", (req, res, next) => {
           if (user.lists) {
             user.lists.forEach((list) => {
               if (list.name === listName) {
-                var idx = -1;
-                // list.items.forEach((item) => {
-                //   if (item.itemID === itemID) {
-                //     item.completed = completed;
-                //   }
-                // });
                 var items = list.items;
                 for (let i = 0; i < items.length; i++) {
-                  if (items.itemID === itemID) {
+                  if (items[i].itemID === itemID) {
                     idx = i;
                     break;
                   }
                 }
-                items = items.splice(idx, 1);
+                items.splice(idx, 1);
+                res.send(
+                  "SERVER: deleted item with itemID: " +
+                    itemID +
+                    " at index: " +
+                    idx
+                );
               }
             });
           }
           dbo.collection("Users").save(user);
         });
-      res.send("saved");
     });
   } catch (e) {
     console.error(e);
@@ -58,3 +58,8 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
+
+// var stuff = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+// stuff.splice(4, 1);
+
+// console.log(stuff);

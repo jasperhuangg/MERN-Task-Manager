@@ -113,6 +113,7 @@ export default class App extends Component {
   }
 
   deleteListItem(listName, itemID) {
+    console.log("/deleteListItem called with " + itemID);
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
@@ -144,7 +145,9 @@ export default class App extends Component {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
-    });
+    })
+      .then((res) => res.text())
+      .then((res) => console.log(res));
   }
 
   setItemTitle(listName, itemID, title) {
@@ -179,7 +182,9 @@ export default class App extends Component {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
-    });
+    })
+      .then((res) => res.text())
+      .then((res) => console.log(res));
   }
 
   setItemCompleted(listName, itemID, completed) {
@@ -220,7 +225,41 @@ export default class App extends Component {
 
   setListName(oldListName, newListName) {}
 
-  setItemDueDate(dueDate) {}
+  setItemDueDate(listName, itemID, dueDate) {
+    const lists = this.state.lists.slice();
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        const items = lists[i].items;
+        for (let j = 0; j < items.length; j++) {
+          if (items[j].itemID === itemID) {
+            items[j].dueDate = dueDate;
+            items.sort(sortListItems);
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    this.setState({ lists: lists });
+
+    const url = domain + "/setItemDueDate";
+    const body = JSON.stringify({
+      username: "Jasper",
+      listName: listName,
+      itemID: itemID,
+      dueDate: dueDate,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    });
+  }
 
   setItemPriority(priority) {}
 
@@ -298,12 +337,6 @@ export default class App extends Component {
                   }
                   setItemCompleted={(listName, itemID, completed) =>
                     this.setItemCompleted(listName, itemID, completed)
-                  }
-                  setItemDueDate={(listName, itemID, dueDate) =>
-                    this.setItemDueDate(listName, itemID, dueDate)
-                  }
-                  setItemPriority={(listName, itemID, priority) =>
-                    this.setItemPriority(listName, itemID, priority)
                   }
                   setSelectedItem={(itemID) => this.setSelectedItem(itemID)}
                   selectedItemID={this.state.currentlySelectedItemID}
