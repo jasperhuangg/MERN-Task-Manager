@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import Todolist from "./todolist/Todolist.js";
+import Details from "./todolist/Details.js";
 
 const domain = "http://localhost:9000";
 var ObjectID = require("bson-objectid");
@@ -12,7 +13,36 @@ export default class App extends Component {
       isLoaded: false,
       error: null,
       lists: [],
+      currentlySelectedList: 0,
+      currentlySelectedItemID: "",
     };
+  }
+
+  componentDidMount() {
+    this.getLists();
+  }
+
+  setSelectedItem(itemID) {
+    this.setState({ currentlySelectedItemID: itemID });
+  }
+
+  getCurrentlySelectedItem() {
+    if (this.state.currentlySelectedItemID === "")
+      return {
+        title: "",
+        description: "",
+        dueDate: "",
+        priority: "",
+        completed: false,
+        itemID: "",
+      };
+
+    var items = this.state.lists.slice(this.state.currentlySelectedList)[0]
+      .items;
+
+    for (let i = 0; i < items.length; i++)
+      if (items[i].itemID === this.state.currentlySelectedItemID)
+        return items[i];
   }
 
   // for now assume we are getting the user's username from the props
@@ -37,14 +67,6 @@ export default class App extends Component {
         this.setState({ lists: lists, isLoaded: true });
       });
   }
-
-  componentDidMount() {
-    this.getLists();
-  }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.isLoaded !== prevState.isLoaded) this.getLists();
-  // }
 
   addListItem(listName, title, dueDate, description, priority) {
     const lists = this.state.lists.slice();
@@ -106,7 +128,7 @@ export default class App extends Component {
       }
     }
 
-    this.setState({ lists: lists });
+    this.setState({ lists: lists, currentlySelectedItemID: "" });
 
     const url = domain + "/deleteListItem";
     const body = JSON.stringify({
@@ -126,12 +148,21 @@ export default class App extends Component {
   }
 
   setItemTitle(listName, itemID, title) {
+    console.log(
+      "~~~***setItemTitle called with: " +
+        title +
+        ", " +
+        itemID +
+        ", " +
+        listName
+    );
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
+            console.log("updating");
             items[j].title = title;
             break;
           }
@@ -205,34 +236,84 @@ export default class App extends Component {
   setItemDescription(description) {}
 
   render() {
+    const listArr = this.state.lists.slice(this.state.currentlySelectedList, 1);
+
+    const selectedItem = this.getCurrentlySelectedItem();
+
     return (
-      <div className="App">
-        {this.state.lists.map((list, i) => (
-          <Todolist
-            key={list.name}
-            color={list.color}
-            name={list.name}
-            items={list.items}
-            addListItem={(listName, title, dueDate, description, priority) =>
-              this.addListItem(listName, title, dueDate, description, priority)
-            }
-            deleteListItem={(listName, itemID) =>
-              this.deleteListItem(listName, itemID)
-            }
-            setItemTitle={(listName, itemID, title) =>
-              this.setItemTitle(listName, itemID, title)
-            }
-            setItemCompleted={(listName, itemID, completed) =>
-              this.setItemCompleted(listName, itemID, completed)
-            }
-            setItemDueDate={(listName, itemID, dueDate) =>
-              this.setItemDueDate(listName, itemID, dueDate)
-            }
-            setItemPriority={(listName, itemID, priority) =>
-              this.setItemPriority(listName, itemID, priority)
-            }
-          />
-        ))}
+      <div className="container-fluid row">
+        <div id="sidebar" className="col-2"></div>
+        {listArr.map((list, i) => {
+          return (
+            <React.Fragment key={list.name}>
+              <div id="todolist" className="col-6">
+                <Todolist
+                  color={list.color}
+                  name={list.name}
+                  items={list.items}
+                  addListItem={(
+                    listName,
+                    title,
+                    dueDate,
+                    description,
+                    priority
+                  ) =>
+                    this.addListItem(
+                      listName,
+                      title,
+                      dueDate,
+                      description,
+                      priority
+                    )
+                  }
+                  deleteListItem={(listName, itemID) =>
+                    this.deleteListItem(listName, itemID)
+                  }
+                  setItemTitle={(listName, itemID, title) =>
+                    this.setItemTitle(listName, itemID, title)
+                  }
+                  setItemCompleted={(listName, itemID, completed) =>
+                    this.setItemCompleted(listName, itemID, completed)
+                  }
+                  setItemDueDate={(listName, itemID, dueDate) =>
+                    this.setItemDueDate(listName, itemID, dueDate)
+                  }
+                  setItemPriority={(listName, itemID, priority) =>
+                    this.setItemPriority(listName, itemID, priority)
+                  }
+                  setSelectedItem={(itemID) => this.setSelectedItem(itemID)}
+                  selectedItemID={this.state.currentlySelectedItemID}
+                />
+              </div>
+              <div id="details" className="col-4">
+                <Details
+                  listName={list.name}
+                  selectedItemID={selectedItem.itemID}
+                  selectedItemTitle={selectedItem.title}
+                  selectedItemDueDate={selectedItem.duedate}
+                  selectedItemDescription={selectedItem.description}
+                  selectedItemPriority={selectedItem.priority}
+                  selectedItemCompleted={selectedItem.completed}
+                  setItemTitle={(listName, itemID, title) =>
+                    this.setItemTitle(listName, itemID, title)
+                  }
+                  setItemCompleted={(listName, itemID, completed) =>
+                    this.setItemCompleted(listName, itemID, completed)
+                  }
+                  setItemDueDate={(listName, itemID, dueDate) =>
+                    this.setItemDueDate(listName, itemID, dueDate)
+                  }
+                  setItemPriority={(listName, itemID, priority) =>
+                    this.setItemPriority(listName, itemID, priority)
+                  }
+                  deleteListItem={(listName, itemID) =>
+                    this.deleteListItem(listName, itemID)
+                  }
+                />
+              </div>
+            </React.Fragment>
+          );
+        })}
       </div>
     );
   }

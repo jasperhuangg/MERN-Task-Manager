@@ -9,6 +9,10 @@ export default class ListItem extends Component {
     this.inputRef = React.createRef();
     this.state = {
       itemID: props.itemID,
+      title: this.props.title,
+      dueDate: this.props.dueDate,
+      completed: this.props.completed,
+      priority: this.props.priority,
     };
 
     this.handleCheck = this.handleCheck.bind(this);
@@ -17,13 +21,15 @@ export default class ListItem extends Component {
   async handleCheck(e) {
     var completed = e.target.checked;
 
-    // await sleep(20);
-
     this.props.setItemCompleted(
       this.props.listName,
       this.state.itemID,
       completed
     );
+  }
+
+  handleItemSelection(e) {
+    this.props.setSelectedItem(this.state.itemID);
   }
 
   handleKeyPress = (e) => {
@@ -34,14 +40,30 @@ export default class ListItem extends Component {
 
   handleBlur = (e) => {
     const title = e.target.value;
-    if (title !== this.props.title)
+    if (title !== this.state.title)
       this.props.setItemTitle(this.props.listName, this.state.itemID, title);
   };
 
+  componentDidUpdate(prevProp) {
+    if (
+      prevProp.title === this.props.title &&
+      prevProp.dueDate === this.props.dueDate &&
+      prevProp.priority === this.props.priority &&
+      prevProp.completed === this.props.completed
+    )
+      return;
+    this.setState({
+      title: this.props.title,
+      dueDate: this.props.dueDate,
+      priority: this.props.priority,
+      completed: this.props.completed,
+    });
+  }
+
   render() {
-    const title = this.props.title;
-    const dueDate = this.props.dueDate;
-    const completed = this.props.completed;
+    const title = this.state.title;
+    const dueDate = this.state.dueDate;
+    const completed = this.state.completed;
     const formattedDate = formatDate(dueDate);
     const isLate = getIsLate(dueDate);
 
@@ -50,14 +72,28 @@ export default class ListItem extends Component {
       (isLate ? " text-danger" : "");
 
     const rowClasses =
-      "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center font-color" +
-      (this.props.completed ? " completed" : "");
+      "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center todo-item" +
+      (this.state.completed ? " completed" : "") +
+      (this.state.itemID === this.props.selectedItemID ? " selected-item" : "");
+
+    const rowBorderColor = getRowBorderColor(this.state.priority);
+
+    const titleInputClasses =
+      "ml-2 title-input" +
+      (this.state.itemID === this.props.selectedItemID
+        ? " selected-item-input"
+        : "");
 
     return (
-      <div className={rowClasses}>
+      <div
+        className={rowClasses}
+        onClick={(e) => this.handleItemSelection(e)}
+        onContextMenu={(e) => this.handleItemSelection(e)}
+        style={{ borderColor: rowBorderColor }}
+      >
         <div className="col-10 text-left">
           <input
-            className="form-check-input font-color"
+            className="form-check-input"
             type="checkbox"
             value=""
             checked={completed}
@@ -65,11 +101,12 @@ export default class ListItem extends Component {
           />
           <input
             spellCheck="false"
-            className="ml-2 item-title title-input"
-            defaultValue={title}
+            className={titleInputClasses}
+            value={title}
             ref={this.inputRef}
             onKeyDown={(e) => this.handleKeyPress(e)}
             onBlur={(e) => this.handleBlur(e)}
+            onChange={(e) => this.setState({ title: e.target.value })}
           />
         </div>
 
@@ -132,6 +169,8 @@ function getIsLate(date) {
   return d < today;
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function getRowBorderColor(priority) {
+  if (priority === "high") return "rgb(218, 56, 73)";
+  else if (priority === "medium") return "rgb(21, 127, 251)";
+  else if (priority === "low") return "rgb(37, 162, 183)";
 }

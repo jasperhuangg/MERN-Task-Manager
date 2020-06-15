@@ -9,7 +9,6 @@ export default class CalendarOverlay extends Component {
     if (this.props.currentlySelectedDate !== "")
       date = new Date(this.props.currentlySelectedDate + " 00:00");
 
-    console.log(date);
     return (
       <div className="calendar-overlay">
         <Calendar

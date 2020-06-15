@@ -7,19 +7,12 @@ export default function DateParser(str) {
     "yesterday",
     "tmr",
     "monday",
-    "mon",
     "tuesday",
-    "tue",
     "wednesday",
-    "wed",
     "thursday",
-    "thu",
     "friday",
-    "fri",
     "saturday",
-    "sat",
     "sunday",
-    "sun",
   ];
 
   const months = [
@@ -28,14 +21,10 @@ export default function DateParser(str) {
     "february",
     "feb",
     "march",
-    "mar",
     "april",
-    "apr",
     "may",
     "june",
-    "jun",
     "july",
-    "jul",
     "august",
     "aug",
     "september",
@@ -242,6 +231,14 @@ export default function DateParser(str) {
 }
 
 function convertMonthToNumber(month) {
+  if (month === "jan") return 1;
+  if (month === "feb") return 2;
+  if (month === "aug") return 8;
+  if (month === "sep") return 9;
+  if (month === "oct") return 10;
+  if (month === "nov") return 11;
+  if (month === "dec") return 12;
+
   const months = [
     "",
     "january",
@@ -300,4 +297,4 @@ function getPosition(array, entry, occurence) {
   if (seen === 1) return array.indexOf(entry);
 }
 
-// console.log(DateParser("test wednesday today"));
+// console.log(DateParser("go to italy sep 10"));

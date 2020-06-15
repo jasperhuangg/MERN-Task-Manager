@@ -1,22 +1,12 @@
 import React, { Component } from "react";
-import ReactHtmlParser, {
-  processNodes,
-  convertNodeToElement,
-  htmlparser2,
-} from "react-html-parser";
-import ReactDOMServer from "react-dom/server";
-import Details from "./Details.js";
 import ListItem from "./ListItem.js";
 import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
-import CaretPositioning from "./EditCaretPositioning.js";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import $ from "jquery";
 
 import "./Todolist.css";
 import DateParser from "./DateParser.js";
-
-const domain = "http://localhost:9000";
 
 export default class Todolist extends Component {
   constructor(props) {
@@ -63,9 +53,9 @@ export default class Todolist extends Component {
         keywordSet: false,
       });
       $(document).find(".add-item-input-container").show();
-      var e = $.Event("keyDown");
-      e.which = 8; // # Some key code value
-      $("#addItemInput").trigger(e);
+      var backspaceEvent = $.Event("keyDown");
+      backspaceEvent.which = 8; // # Some key code value
+      $("#addItemInput").trigger(backspaceEvent);
     }
   }
 
@@ -126,36 +116,6 @@ export default class Todolist extends Component {
       addItemPriority: priority,
       prioritiesOverlayDisplaying: false,
     });
-  }
-
-  formatDateKeywords(name, keyword) {
-    // console.log($("#addItemInput").children("span").length);
-
-    // if there's already a keyword that is highlighted, short circuit
-    if ($("#addItemInput").children("span").length > 0) {
-      var res = <>{name}</>;
-      return {
-        formatted: res,
-        lastCharInKeyword: 0,
-      };
-    }
-    var startIndex = name.indexOf(keyword);
-    var endIndex = startIndex + keyword.length;
-    var res = (
-      <>
-        {name.substring(0, startIndex)}
-        <span className="text-primary" id="date-keyword">
-          {keyword}
-        </span>
-        {name.substring(endIndex, name.length)}
-      </>
-    );
-    const lastCharInKeyword = endIndex - 1;
-
-    return {
-      formatted: res,
-      lastCharInKeyword: lastCharInKeyword,
-    };
   }
 
   getIndexOfFirstCompletedItem() {
@@ -219,7 +179,6 @@ export default class Todolist extends Component {
 
   render() {
     var name = this.props.name;
-    const items = this.props.items;
     const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
       ? ""
@@ -251,15 +210,12 @@ export default class Todolist extends Component {
       "fas fa-sort-down mr-2 base" +
       (this.state.completedItemsShowing ? "" : " icon-rotated");
 
-    console.log("in Todolist.js: " + this.state.addItemDate);
-
     return (
-      // w-50 class is temporary
       <div
-        className="container-fluid w-50 todolist"
+        className="container-fluid todolist"
         onClick={(e) => this.handleCloseOverlays(e)}
       >
-        <h1 className="text-left my-4">{name}</h1>
+        <h2 className="text-left my-4">{name}</h2>
         <div className="add-item-input-container">
           <div className="input-group mb-4">
             <input
@@ -310,6 +266,7 @@ export default class Todolist extends Component {
         <div className="todolist-items">
           <div id="incompleted-items">
             {incompletedItems.map((item, i) => {
+              console.log(item.title);
               return (
                 <div className="list-item" key={item.itemID}>
                   <ContextMenuTrigger id={item.itemID}>
@@ -327,18 +284,25 @@ export default class Todolist extends Component {
                       setItemTitle={(listName, itemID, title) =>
                         this.props.setItemTitle(listName, itemID, title)
                       }
+                      setSelectedItem={(itemID) =>
+                        this.props.setSelectedItem(itemID)
+                      }
+                      selectedItemID={this.props.selectedItemID}
                     />
                   </ContextMenuTrigger>
                   <ContextMenu
-                    id={item.itemID.toString()}
+                    id={item.itemID}
                     className="delete-menu px-2 py-1"
                   >
                     <MenuItem
                       data={{ foo: "bar" }}
-                      className="text-danger delete-menu-item px-2"
+                      className="delete-menu-item px-1"
                       onClick={(id) => this.handleDelete(item.itemID)}
                     >
-                      Delete
+                      <div className="row align-items-center justify-content-left">
+                        <i className="fas fa-trash col-1"></i>
+                        <span className="col-6">Delete</span>
+                      </div>
                     </MenuItem>
                   </ContextMenu>
                 </div>
@@ -358,8 +322,6 @@ export default class Todolist extends Component {
           </div>
           <div id="completed-items">
             {completedItems.map((item, i) => {
-              console.log(incompletedItems.length - 2);
-              console.log(i);
               return (
                 <div className={"list-item"} key={item.itemID}>
                   <ContextMenuTrigger id={item.itemID}>
@@ -377,6 +339,10 @@ export default class Todolist extends Component {
                       setItemTitle={(listName, itemID, title) =>
                         this.props.setItemTitle(listName, itemID, title)
                       }
+                      setSelectedItem={(itemID) =>
+                        this.props.setSelectedItem(itemID)
+                      }
+                      selectedItemID={this.props.selectedItemID}
                     />
                   </ContextMenuTrigger>
                   <ContextMenu
@@ -385,10 +351,13 @@ export default class Todolist extends Component {
                   >
                     <MenuItem
                       data={{ foo: "bar" }}
-                      className="text-danger delete-menu-item px-2"
+                      className="delete-menu-item px-1"
                       onClick={(id) => this.handleDelete(item.itemID)}
                     >
-                      Delete
+                      <div className="row align-items-center justify-content-left">
+                        <i className="fas fa-trash col-1"></i>
+                        <span className="col-6">Delete</span>
+                      </div>
                     </MenuItem>
                   </ContextMenu>
                 </div>

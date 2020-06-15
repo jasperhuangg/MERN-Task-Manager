@@ -1,17 +1,21 @@
 import React, { Component } from "react";
 
 export default class PrioritiesOverlay extends Component {
-  state = { selectedPriority: this.props.currentlySelectedPriority };
+  state = {
+    selectedPriority: this.props.currentlySelectedPriority,
+  };
   render() {
     const highPriorityClasslist =
       "priorities-overlay-item text-left" +
-      (this.state.selectedPriority === "high" ? " text-danger" : "");
+      (this.props.currentlySelectedPriority === "high" ? " text-danger" : "");
     const mediumPriorityClasslist =
       "priorities-overlay-item text-left" +
-      (this.state.selectedPriority === "medium" ? " text-primary" : "");
+      (this.props.currentlySelectedPriority === "medium"
+        ? " text-primary"
+        : "");
     const lowPriorityClasslist =
       "priorities-overlay-item text-left" +
-      (this.state.selectedPriority === "low" ? " text-info" : "");
+      (this.props.currentlySelectedPriority === "low" ? " text-info" : "");
     return (
       <div className="overlay priorities-overlay">
         <div
