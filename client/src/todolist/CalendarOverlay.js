@@ -8,13 +8,20 @@ export default class CalendarOverlay extends Component {
     this.props.handleCalendarOverlayClear();
   }
 
+  setDate(date) {
+    var formatted = formatDate(date);
+    this.props.setAddItemDate(formatted);
+  }
+
   render() {
     var d = undefined;
 
-    if (this.props.currentlySelectedDate !== "") {
-      console.log("date is not empty: " + this.props.currentlySelectedDate);
+    if (
+      this.props.currentlySelectedDate !== "" &&
+      this.props.currentlySelectedDate !== undefined &&
+      this.props.currentlySelectedDate !== null
+    ) {
       d = new Date(this.props.currentlySelectedDate + " 00:00");
-      console.log("date obj: " + d);
     }
 
     return (
@@ -42,11 +49,6 @@ export default class CalendarOverlay extends Component {
         </div>
       </div>
     );
-  }
-
-  setDate(date) {
-    var formatted = formatDate(date);
-    this.props.setAddItemDate(formatted);
   }
 }
 

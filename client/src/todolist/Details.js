@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CalendarOverlay from "./CalendarOverlay.js";
+import PrioritiesOverlay from "./PrioritiesOverlay.js";
 
 import "./Todolist.css";
 
@@ -16,6 +17,7 @@ export default class Details extends Component {
       description: this.props.selectedItemDescription,
       completed: this.props.selectedItemCompleted,
       calendarOverlayDisplaying: false,
+      prioritiesOverlayDisplaying: false,
     };
     this.handleCheck = this.handleCheck.bind(this);
   }
@@ -90,6 +92,12 @@ export default class Details extends Component {
     else this.setState({ calendarOverlayDisplaying: true });
   }
 
+  handleShowPrioritiesOverlay() {
+    if (this.state.prioritiesOverlayDisplaying)
+      this.setState({ prioritiesOverlayDisplaying: false });
+    else this.setState({ prioritiesOverlayDisplaying: true });
+  }
+
   handleCheck(e) {
     var completed = e.target.checked;
 
@@ -104,6 +112,15 @@ export default class Details extends Component {
     this.props.setItemDueDate(this.props.listName, this.state.itemID, date);
   }
 
+  handlePriorityChange(priority) {
+    this.props.setItemPriority(
+      this.props.listName,
+      this.state.itemID,
+      priority
+    );
+    this.setState({ priority: priority, prioritiesOverlayDisplaying: false });
+  }
+
   render() {
     var priorityPickerClasses = "col-2 offset-md-5 details-priority-picker";
     if (this.state.priority === "high") priorityPickerClasses += " text-danger";
@@ -113,6 +130,9 @@ export default class Details extends Component {
       priorityPickerClasses += " text-info";
 
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
+      ? ""
+      : "d-none";
+    const prioritiesOverlayClasslist = this.state.prioritiesOverlayDisplaying
       ? ""
       : "d-none";
 
@@ -141,7 +161,9 @@ export default class Details extends Component {
                 "details-date-picker col-4" +
                 (getIsLate(this.state.dueDate)
                   ? " text-danger"
-                  : this.state.dueDate === ""
+                  : this.state.dueDate === "" ||
+                    this.state.dueDate === undefined ||
+                    this.state.dueDate === null
                   ? ""
                   : " text-primary")
               }
@@ -153,7 +175,10 @@ export default class Details extends Component {
               {formatDate(this.state.dueDate)}
             </div>
             {/* <div className="col-5"></div> */}
-            <div className={priorityPickerClasses}>
+            <div
+              className={priorityPickerClasses}
+              onClick={() => this.handleShowPrioritiesOverlay()}
+            >
               <i className="fas fa-balance-scale-left"></i>
             </div>
           </div>
@@ -165,6 +190,14 @@ export default class Details extends Component {
                 this.handleCalendarOverlayClear()
               }
               currentlySelectedDate={this.state.dueDate}
+            />
+          </div>
+          <div id="priorities-overlay" className={prioritiesOverlayClasslist}>
+            <PrioritiesOverlay
+              handlePrioritiesOverlayClick={(priority) =>
+                this.handlePriorityChange(priority)
+              }
+              currentlySelectedPriority={this.state.priority}
             />
           </div>
           <div id="details-title-input-container" className="mb-2">
@@ -214,7 +247,7 @@ export default class Details extends Component {
 }
 
 function formatDate(str) {
-  if (str === "" || str === undefined) return "Due Date";
+  if (str === "" || str === undefined || str === null) return "Due Date";
   const today = new Date();
   const currYear = today.getFullYear();
 

@@ -261,7 +261,41 @@ export default class App extends Component {
     });
   }
 
-  setItemPriority(priority) {}
+  setItemPriority(listName, itemID, priority) {
+    const lists = this.state.lists.slice();
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        const items = lists[i].items;
+        for (let j = 0; j < items.length; j++) {
+          if (items[j].itemID === itemID) {
+            items[j].priority = priority;
+            items.sort(sortListItems);
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    this.setState({ lists: lists });
+
+    const url = domain + "/setItemPriority";
+    const body = JSON.stringify({
+      username: "Jasper",
+      listName: listName,
+      itemID: itemID,
+      priority: priority,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    });
+  }
 
   setItemDescription(listName, itemID, description) {
     const lists = this.state.lists.slice();

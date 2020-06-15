@@ -5,6 +5,7 @@ export default function DateParser(str) {
     "today",
     "tomorrow",
     "yesterday",
+    "yday",
     "tmr",
     "monday",
     "tuesday",
@@ -170,7 +171,7 @@ export default function DateParser(str) {
         date: getFormattedDate(currYear, currMonth, currDate),
         keywords: keywords,
       };
-    } else if (keywords === "yesterday") {
+    } else if (keywords === "yesterday" || keywords === "yday") {
       var yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       return {

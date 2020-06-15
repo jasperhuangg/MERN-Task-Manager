@@ -132,7 +132,7 @@ export default class ListItem extends Component {
 }
 
 function formatDate(str) {
-  if (str === "") return "";
+  if (str === "" || str === undefined || str === null) return "";
   const today = new Date();
   const currYear = today.getFullYear();
 
