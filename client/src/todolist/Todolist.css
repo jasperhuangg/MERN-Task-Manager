@@ -229,7 +229,7 @@ select:focus {
   cursor: pointer;
 }
 
-.details-priority-picker {
+.details-priority-picker:hover {
   cursor: pointer;
 }
 
@@ -245,4 +245,14 @@ select:focus {
 
 .form-check-input {
   margin-top: 0.45rem !important;
+}
+
+.details-delete-btn {
+  color: rgb(73, 80, 87);
+  font-size: 14px;
+  border-left: 0.25px rgb(240, 240, 240) solid;
+}
+
+.details-delete-btn:hover {
+  cursor: pointer;
 }

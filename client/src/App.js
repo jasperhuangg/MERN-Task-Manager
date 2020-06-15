@@ -400,7 +400,7 @@ export default class App extends Component {
                   setItemDescription={(listName, itemID, description) =>
                     this.setItemDescription(listName, itemID, description)
                   }
-                  deleteListItem={(listName, itemID) =>
+                  handleDelete={(listName, itemID) =>
                     this.deleteListItem(listName, itemID)
                   }
                 />
