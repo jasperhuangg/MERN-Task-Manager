@@ -54,26 +54,6 @@ export default class Details extends Component {
     }
   };
 
-  componentDidUpdate(prevProp) {
-    if (
-      prevProp.selectedItemTitle === this.props.selectedItemTitle &&
-      prevProp.selectedItemDueDate === this.props.selectedItemDueDate &&
-      prevProp.selectedItemCompleted === this.props.selectedItemCompleted &&
-      prevProp.selectedItemDescription === this.props.selectedItemDescription &&
-      prevProp.selectedItemPriority === this.props.selectedItemPriority &&
-      prevProp.selectedItemID === this.props.selectedItemID
-    )
-      return;
-    this.setState({
-      title: this.props.selectedItemTitle,
-      dueDate: this.props.selectedItemDueDate,
-      completed: this.props.selectedItemCompleted,
-      description: this.props.selectedItemDescription,
-      priority: this.props.selectedItemPriority,
-      itemID: this.props.selectedItemID,
-    });
-  }
-
   handleCalendarOverlayOK() {
     this.setState({ calendarOverlayDisplaying: false });
   }
@@ -118,7 +98,30 @@ export default class Details extends Component {
       this.state.itemID,
       priority
     );
-    this.setState({ priority: priority, prioritiesOverlayDisplaying: false });
+    this.setState({
+      priority: priority,
+      prioritiesOverlayDisplaying: false,
+    });
+  }
+
+  componentDidUpdate(prevProp) {
+    if (
+      prevProp.selectedItemTitle === this.props.selectedItemTitle &&
+      prevProp.selectedItemDueDate === this.props.selectedItemDueDate &&
+      prevProp.selectedItemCompleted === this.props.selectedItemCompleted &&
+      prevProp.selectedItemDescription === this.props.selectedItemDescription &&
+      prevProp.selectedItemPriority === this.props.selectedItemPriority &&
+      prevProp.selectedItemID === this.props.selectedItemID
+    )
+      return;
+    this.setState({
+      title: this.props.selectedItemTitle,
+      dueDate: this.props.selectedItemDueDate,
+      completed: this.props.selectedItemCompleted,
+      description: this.props.selectedItemDescription,
+      priority: this.props.selectedItemPriority,
+      itemID: this.props.selectedItemID,
+    });
   }
 
   render() {
@@ -191,7 +194,7 @@ export default class Details extends Component {
           </div>
           <div id="calendar-overlay" className={calendarOverlayClasslist}>
             <CalendarOverlay
-              setAddItemDate={(date) => this.handleCalendarChange(date)}
+              setDueDate={(date) => this.handleCalendarChange(date)}
               handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
               handleCalendarOverlayClear={() =>
                 this.handleCalendarOverlayClear()
@@ -296,6 +299,7 @@ function formatDate(str) {
 
   return formatted;
 }
+
 function getIsLate(date) {
   if (date === "" || date === undefined) return false;
   const today = new Date() - 1;

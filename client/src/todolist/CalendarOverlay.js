@@ -10,7 +10,7 @@ export default class CalendarOverlay extends Component {
 
   setDate(date) {
     var formatted = formatDate(date);
-    this.props.setAddItemDate(formatted);
+    this.props.setDueDate(formatted);
   }
 
   render() {

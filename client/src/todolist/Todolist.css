@@ -84,6 +84,7 @@ select:focus {
 
 .priorities-overlay {
   position: absolute;
+  top: 50px;
   z-index: 1000;
   background-color: white;
   border: solid 0.25px rgb(240, 240, 240);
@@ -218,19 +219,25 @@ select:focus {
 .details-date-picker {
   font-size: 14px;
   color: rgb(73, 80, 87);
+  transition: ease 0.2s;
 }
 
 .details-priority-picker {
   font-size: 14px;
   color: rgb(73, 80, 87);
+  transition: ease 0.2s;
 }
 
 .details-date-picker:hover {
   cursor: pointer;
+  transition: ease 0.2s;
+  opacity: 0.7;
 }
 
 .details-priority-picker:hover {
   cursor: pointer;
+  transition: ease 0.2s;
+  opacity: 0.7;
 }
 
 #details-placeholder {
@@ -251,8 +258,11 @@ select:focus {
   color: rgb(73, 80, 87);
   font-size: 14px;
   border-left: 0.25px rgb(240, 240, 240) solid;
+  transition: ease 0.2s;
 }
 
 .details-delete-btn:hover {
   cursor: pointer;
+  color: rgb(130, 142, 153);
+  transition: ease 0.2s;
 }

@@ -99,13 +99,17 @@ export default class Todolist extends Component {
     });
   }
 
-  handleShowCalendarOverlay() {
+  handleShowCalendarOverlay(e) {
+    const xCoord = (e.clientX * 7) / 12;
+    $(".calendar-overlay").css("left", xCoord + "px");
     if (this.state.calendarOverlayDisplaying)
       this.setState({ calendarOverlayDisplaying: false });
     else this.setState({ calendarOverlayDisplaying: true });
   }
 
-  handleShowPrioritiesOverlay() {
+  handleShowPrioritiesOverlay(e) {
+    const xCoord = (e.clientX * 7) / 12;
+    $(".priorities-overlay").css("left", xCoord + "px");
     if (this.state.prioritiesOverlayDisplaying)
       this.setState({ prioritiesOverlayDisplaying: false });
     else this.setState({ prioritiesOverlayDisplaying: true });
@@ -178,6 +182,7 @@ export default class Todolist extends Component {
   }
 
   render() {
+    // important variables used for render setup
     var name = this.props.name;
     const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
@@ -194,16 +199,18 @@ export default class Todolist extends Component {
       (dueDateFormatted === "" ? "" : " on " + dueDateFormatted);
     var addItemText = this.state.addItemValue;
 
+    // classes used for rendering the icons used for accessing the calendar/priority overlays
     const priorityIconClasses = this.getPriorityIconClasses();
     const calendarIconClasses = this.getCalendarIconClasses();
 
+    // used so placeholder text stays in title input when it is focused but empty
     $(document).find(".add-item-input-container").show();
 
+    // split the list items into two categories: incompleted items and completed items
+    // supports functionality of hiding/showing completed items
     const firstCompletedIndex = this.getIndexOfFirstCompletedItem();
-
     var incompletedItems = [];
     var completedItems = [];
-
     if (firstCompletedIndex !== -1) {
       incompletedItems = this.state.listItems.slice(0, firstCompletedIndex);
       completedItems = this.state.listItems.slice(
@@ -239,7 +246,7 @@ export default class Todolist extends Component {
             ></input>
             <div
               className="input-group-append"
-              onClick={() => this.handleShowPrioritiesOverlay()}
+              onClick={(e) => this.handleShowPrioritiesOverlay(e)}
             >
               <span className="input-group-text icon">
                 <i className={priorityIconClasses}></i>
@@ -255,7 +262,7 @@ export default class Todolist extends Component {
             </div>
             <div
               className="input-group-append"
-              onClick={() => this.handleShowCalendarOverlay()}
+              onClick={(e) => this.handleShowCalendarOverlay(e)}
             >
               <span className="input-group-text icon">
                 <i className={calendarIconClasses}></i>
@@ -265,7 +272,7 @@ export default class Todolist extends Component {
         </div>
         <div id="calendar-overlay" className={calendarOverlayClasslist}>
           <CalendarOverlay
-            setAddItemDate={(date) => this.setAddItemDate(date)}
+            setDueDate={(date) => this.setAddItemDate(date)}
             handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}
             handleCalendarOverlayClear={() => this.handleCalendarOverlayClear()}
             currentlySelectedDate={this.state.addItemDate}
@@ -396,6 +403,8 @@ export default class Todolist extends Component {
   }
 }
 
+// takes in a string (e.g. '01-23-2020') and returns its equivalent 'Jan 23'
+// omits year if year is the same as the current year
 function formatDate(str) {
   if (str === "") return "";
   const today = new Date();
@@ -426,7 +435,7 @@ function formatDate(str) {
   return formatted;
 }
 
-// toRemove is all lowercase letters, str could have uppercase letters
+// removes the first occurence of toRemove in str, returns the modified version
 function removeOccurence(str, toRemove) {
   if (toRemove === "") return str;
   var lowerCase = str.toLowerCase();
@@ -438,6 +447,7 @@ function removeOccurence(str, toRemove) {
   return res;
 }
 
+// removes any duplicate, leading, and trailing whitespaces in str
 function removeExtraWhitespace(str) {
   str = str.replace(/\s+/g, " ");
   str = str.trim();

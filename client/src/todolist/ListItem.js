@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import "./Todolist.css";
-import "./Checkbox.css";
 
 export default class ListItem extends Component {
   constructor(props) {
@@ -19,7 +18,7 @@ export default class ListItem extends Component {
     this.handleCheck = this.handleCheck.bind(this);
   }
 
-  async handleCheck(e) {
+  handleCheck(e) {
     var completed = e.target.checked;
 
     this.props.setItemCompleted(

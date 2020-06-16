@@ -4,6 +4,13 @@ export default class PrioritiesOverlay extends Component {
   state = {
     selectedPriority: this.props.currentlySelectedPriority,
   };
+
+  handlePriorityItemClick(e) {
+    const priority = e.target.innerHTML.toLowerCase();
+    this.setState({ selectedPriority: priority });
+    this.props.handlePrioritiesOverlayClick(priority);
+  }
+
   render() {
     const highPriorityClasslist =
       "priorities-overlay-item text-left" +
@@ -38,11 +45,5 @@ export default class PrioritiesOverlay extends Component {
         </div>
       </div>
     );
-  }
-
-  handlePriorityItemClick(e) {
-    const priority = e.target.innerHTML.toLowerCase();
-    this.setState({ selectedPriority: priority });
-    this.props.handlePrioritiesOverlayClick(priority);
   }
 }

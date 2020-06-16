@@ -1,5 +1,9 @@
-// only call this function if a date hasn't already been parsed from the string in TodoList
-
+// takes in any string and parses out any keywords that can be used to construct a date string
+// returns a date in the format YYYY - MM - DD and the keywords that indicated the date
+// if nothing was found, returns an empty string for both keywords and date
+// examples:
+// - "take out the trash tomorrow" => returns tomorrow's date, "tomorrow"
+// - "math test January 15th" => returns "2020-01-15", "January 15th"
 export default function DateParser(str) {
   const spokenWords = [
     "today",
@@ -72,7 +76,7 @@ export default function DateParser(str) {
     "31st",
   ];
 
-  var words = str.toLowerCase().split(" ");
+  var words = str.toLowerCase().split(" "); // get an array of all the words the string in lowercase
 
   var isSpokenWord = false;
   var isStringDate = false;
@@ -82,7 +86,7 @@ export default function DateParser(str) {
   var monthCandidates = [];
   var day = "";
 
-  // search for any occurences of commonly spoken words
+  // search for any occurences of commonly spoken words (e.g. tmr, today)
   for (let i = 0; i < words.length; i++) {
     var word = words[i];
     if (spokenWords.indexOf(word) !== -1) {
@@ -94,7 +98,8 @@ export default function DateParser(str) {
 
   // if we don't find any commonly spoken words, look for string representations of dates
   if (isSpokenWord === false) {
-    // look for months
+    // look for month candidates
+    // (could be multiple months in the string, want the first one that is part of a valid date)
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
       if (months.indexOf(word) !== -1) {
@@ -120,7 +125,7 @@ export default function DateParser(str) {
             date: words[monthIndex + 1],
           });
 
-        // check to see if either of these dateCandidates are actual dates with suffixes
+        // check to see if either of these dateCandidates are dates with suffixes (e.g. 23rd, 31st)
         for (let i = 0; i < dateCandidates.length; i++) {
           const dateCandidate = dateCandidates[i].date;
           const idx = dateCandidates[i].index;
@@ -132,7 +137,7 @@ export default function DateParser(str) {
           }
         }
 
-        // if nothing was found, then we look for numeric representations
+        // if nothing was found, then we look for numeric representations of dates
         if (day === "") {
           for (let i = 0; i < dateCandidates.length; i++) {
             const dateCandidate = parseInt(dateCandidates[i].date);
@@ -156,15 +161,15 @@ export default function DateParser(str) {
     }
   }
 
+  // using parsed data, create and return the parsed date
   var today = new Date();
   var currYear = today.getFullYear();
   var currMonth = today.getMonth() + 1;
   var currDate = today.getDate();
   var currDayOfTheWeek = today.getDay() + 1;
 
-  // create and return the parsed date
-  if (!isSpokenWord && !isStringDate) return { date: "", keywords: "" };
   // no date found
+  if (!isSpokenWord && !isStringDate) return { date: "", keywords: "" };
   else if (isSpokenWord && !isStringDate) {
     if (keywords === "today") {
       return {
@@ -194,7 +199,11 @@ export default function DateParser(str) {
         keywords: keywords,
       };
     } else {
-      var dayOfTheWeek = dayOfTheWeekToNumber(keywords); // always going to assume its the next upcoming day
+      // str specifies a day of the week
+      // always going to assume its the next upcoming day
+      // (e.g. if today is Tuesday, Monday is in 6 days, if today is Sunday, Monday means tomorrow)
+      // if day of the week is the same as the current day, returns date 7 days ahead
+      var dayOfTheWeek = dayOfTheWeekToNumber(keywords);
       var difference = distanceToNextDay(currDayOfTheWeek, dayOfTheWeek);
       var nextGivenDay = new Date();
       nextGivenDay.setDate(nextGivenDay.getDate() + difference);
@@ -209,6 +218,7 @@ export default function DateParser(str) {
       };
     }
   } else if (isStringDate && !isSpokenWord) {
+    // format string dates
     var currDay = today.getDate();
 
     var monthNum = convertMonthToNumber(month);
