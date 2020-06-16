@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cookierParser = require("cookie-parser");
 var cors = require("cors");
 
 var appRouter = require("./routes/app");
@@ -16,7 +17,7 @@ var setItemDescription = require("./routes/setItemDescription");
 var setItemDueDate = require("./routes/setItemDueDate");
 var setItemPriority = require("./routes/setItemPriority");
 var setItemTitle = require("./routes/setItemTitle");
-var accountRouter = require("./routes/account.js");
+var verifyLoginRouter = require("./routes/verifyLogin.js");
 
 var app = express();
 
@@ -30,9 +31,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookierParser("abcdef-12345"));
 
+app.use("/verifyLogin", verifyLoginRouter);
 app.use("/app", appRouter);
-app.use("/account", accountRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/getLists", getListsRouter);

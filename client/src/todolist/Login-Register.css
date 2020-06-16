@@ -1,0 +1,26 @@
+#login-register {
+  height: 100vh;
+  background-color: red;
+  background-attachment: fixed;
+
+  padding: 0 !important;
+}
+
+.Login {
+  height: 100vh;
+  background-color: white;
+}
+
+.Register {
+  height: 100vh;
+  background-color: white;
+}
+.login-section {
+  width: 35vw;
+  float: left;
+}
+
+.register-section {
+  width: 65vw;
+  float: right;
+}

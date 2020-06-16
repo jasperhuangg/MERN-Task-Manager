@@ -2,25 +2,64 @@ import React, { Component } from "react";
 import "./App.css";
 import Todolist from "./todolist/Todolist.js";
 import Details from "./todolist/Details.js";
+import Login from "./todolist/Login.js";
+import Register from "./todolist/Register.js";
+
+var ObjectID = require("bson-objectid");
 
 const domain = "http://localhost:9000";
-var ObjectID = require("bson-objectid");
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoaded: false,
+      docTitle: "Log in | Doozy",
+      loggedIn: "not yet",
+      loginOrRegister: "login",
       error: null,
       lists: [],
-      username: this.state.username,
+      username: "Jasper",
       currentlySelectedList: 0,
       currentlySelectedItemID: "",
     };
   }
 
   componentDidMount() {
-    this.getLists();
+    // this will be where you check for the cookie
+    // if the cookie is valid, then
+    // this.setState({
+    //   loggedIn: "successful",
+    //   username: "[whatever was in the cookie]",
+    // });
+  }
+
+  verifyLogin(username, password) {
+    console.log("/verifyLogin called with: " + username + ", " + password);
+
+    const url = domain + "/verifyLogin";
+    const body = JSON.stringify({
+      username: username,
+      password: password,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          this.getLists();
+          this.setState({ docTitle: "Lists | Doozy", loggedIn: "successful" });
+        } else if (res.info === "username does not exist")
+          this.setState({ loggedIn: "username does not exist" });
+        else if (res.info === "incorrect password")
+          this.setState({ loggedIn: "incorrect password" });
+      });
   }
 
   setSelectedItem(itemID) {
@@ -64,7 +103,7 @@ export default class App extends Component {
       .then((res) => res.json())
       .then((res) => {
         var lists = res;
-        this.setState({ lists: lists, isLoaded: true });
+        this.setState({ lists: lists });
       });
   }
 
@@ -291,6 +330,17 @@ export default class App extends Component {
     });
   }
 
+  verifyCookie() {}
+
+  toggleLoginRegister() {
+    if (this.state.loginOrRegister === "login")
+      this.setState({ loginOrRegister: "register" });
+    else if (this.state.loginOrRegister === "register")
+      this.setState({
+        loginOrRegister: "login",
+      });
+  }
+
   setItemDescription(listName, itemID, description) {
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
@@ -326,82 +376,116 @@ export default class App extends Component {
   }
 
   render() {
+    document.title = this.state.docTitle;
+
     const listArr = this.state.lists.slice(this.state.currentlySelectedList, 1);
 
     const selectedItem = this.getCurrentlySelectedItem();
+    const appClasses =
+      "container-fluid row" +
+      (this.state.loggedIn === "successful" ? "" : " d-none");
+    const loginClasses =
+      "container-fluid" +
+      (this.state.loggedIn === "successful" ? " d-none" : "");
 
     return (
-      <div className="container-fluid row">
-        <div id="sidebar" className="col-2"></div>
-        {listArr.map((list, i) => {
-          return (
-            <React.Fragment key={list.name}>
-              <div id="todolist" className="col-6">
-                <Todolist
-                  color={list.color}
-                  name={list.name}
-                  items={list.items}
-                  addListItem={(
-                    listName,
-                    title,
-                    dueDate,
-                    description,
-                    priority
-                  ) =>
-                    this.addListItem(
+      <>
+        <div id="login-register" className={loginClasses}>
+          <div
+            className={
+              "login-section" +
+              (this.state.loginOrRegister === "login" ? "" : " invisible")
+            }
+          >
+            <Login
+              loginInfo={this.state.loggedIn}
+              verifyLogin={(username, password) =>
+                this.verifyLogin(username, password)
+              }
+              switchToRegister={() => this.toggleLoginRegister()}
+            />
+          </div>
+          <div
+            className={
+              "register-section" +
+              (this.state.loginOrRegister === "register" ? "" : " invisible")
+            }
+          >
+            <Register switchToLogin={() => this.toggleLoginRegister()} />
+          </div>
+        </div>
+        <div id="app" className={appClasses}>
+          <div id="sidebar" className="col-2"></div>
+          {listArr.map((list, i) => {
+            return (
+              <React.Fragment key={list.name}>
+                <div id="todolist" className="col-6">
+                  <Todolist
+                    color={list.color}
+                    name={list.name}
+                    items={list.items}
+                    addListItem={(
                       listName,
                       title,
                       dueDate,
                       description,
                       priority
-                    )
-                  }
-                  deleteListItem={(listName, itemID) =>
-                    this.deleteListItem(listName, itemID)
-                  }
-                  setItemTitle={(listName, itemID, title) =>
-                    this.setItemTitle(listName, itemID, title)
-                  }
-                  setItemCompleted={(listName, itemID, completed) =>
-                    this.setItemCompleted(listName, itemID, completed)
-                  }
-                  setSelectedItem={(itemID) => this.setSelectedItem(itemID)}
-                  selectedItemID={this.state.currentlySelectedItemID}
-                />
-              </div>
-              <div id="details" className="col-4">
-                <Details
-                  listName={list.name}
-                  selectedItemID={selectedItem.itemID}
-                  selectedItemTitle={selectedItem.title}
-                  selectedItemDueDate={selectedItem.dueDate}
-                  selectedItemDescription={selectedItem.description}
-                  selectedItemPriority={selectedItem.priority}
-                  selectedItemCompleted={selectedItem.completed}
-                  setItemTitle={(listName, itemID, title) =>
-                    this.setItemTitle(listName, itemID, title)
-                  }
-                  setItemCompleted={(listName, itemID, completed) =>
-                    this.setItemCompleted(listName, itemID, completed)
-                  }
-                  setItemDueDate={(listName, itemID, dueDate) =>
-                    this.setItemDueDate(listName, itemID, dueDate)
-                  }
-                  setItemPriority={(listName, itemID, priority) =>
-                    this.setItemPriority(listName, itemID, priority)
-                  }
-                  setItemDescription={(listName, itemID, description) =>
-                    this.setItemDescription(listName, itemID, description)
-                  }
-                  handleDelete={(listName, itemID) =>
-                    this.deleteListItem(listName, itemID)
-                  }
-                />
-              </div>
-            </React.Fragment>
-          );
-        })}
-      </div>
+                    ) =>
+                      this.addListItem(
+                        listName,
+                        title,
+                        dueDate,
+                        description,
+                        priority
+                      )
+                    }
+                    deleteListItem={(listName, itemID) =>
+                      this.deleteListItem(listName, itemID)
+                    }
+                    setItemTitle={(listName, itemID, title) =>
+                      this.setItemTitle(listName, itemID, title)
+                    }
+                    setItemCompleted={(listName, itemID, completed) =>
+                      this.setItemCompleted(listName, itemID, completed)
+                    }
+                    setSelectedItem={(itemID) => this.setSelectedItem(itemID)}
+                    selectedItemID={this.state.currentlySelectedItemID}
+                  />
+                </div>
+                <div id="details" className="col-4">
+                  <Details
+                    listName={list.name}
+                    selectedItemID={selectedItem.itemID}
+                    selectedItemTitle={selectedItem.title}
+                    selectedItemDueDate={selectedItem.dueDate}
+                    selectedItemDescription={selectedItem.description}
+                    selectedItemPriority={selectedItem.priority}
+                    selectedItemCompleted={selectedItem.completed}
+                    setItemTitle={(listName, itemID, title) =>
+                      this.setItemTitle(listName, itemID, title)
+                    }
+                    setItemCompleted={(listName, itemID, completed) =>
+                      this.setItemCompleted(listName, itemID, completed)
+                    }
+                    setItemDueDate={(listName, itemID, dueDate) =>
+                      this.setItemDueDate(listName, itemID, dueDate)
+                    }
+                    setItemPriority={(listName, itemID, priority) =>
+                      this.setItemPriority(listName, itemID, priority)
+                    }
+                    setItemDescription={(listName, itemID, description) =>
+                      this.setItemDescription(listName, itemID, description)
+                    }
+                    handleDelete={(listName, itemID) =>
+                      this.deleteListItem(listName, itemID)
+                    }
+                  />
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </>
     );
   }
 }
