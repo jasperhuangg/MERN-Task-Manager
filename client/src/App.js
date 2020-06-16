@@ -13,6 +13,7 @@ export default class App extends Component {
       isLoaded: false,
       error: null,
       lists: [],
+      username: this.state.username,
       currentlySelectedList: 0,
       currentlySelectedItemID: "",
     };
@@ -50,14 +51,13 @@ export default class App extends Component {
   getLists() {
     const url = domain + "/getLists";
     const body = JSON.stringify({
-      username: "Jasper" /*this.props.username*/,
+      username: this.state.username /*this.props.username*/,
     });
 
     fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     })
@@ -93,7 +93,7 @@ export default class App extends Component {
 
     const url = domain + "/addListItem";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       title: title,
       dueDate: dueDate,
@@ -106,7 +106,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     });
@@ -133,7 +132,7 @@ export default class App extends Component {
 
     const url = domain + "/deleteListItem";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       itemID: itemID,
     });
@@ -142,7 +141,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     })
@@ -169,7 +167,7 @@ export default class App extends Component {
 
     const url = domain + "/setItemTitle";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       itemID: itemID,
       title: title,
@@ -179,7 +177,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     })
@@ -207,7 +204,7 @@ export default class App extends Component {
 
     const url = domain + "/setItemCompleted";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       itemID: itemID,
       completed: completed,
@@ -217,7 +214,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     });
@@ -245,7 +241,7 @@ export default class App extends Component {
 
     const url = domain + "/setItemDueDate";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       itemID: itemID,
       dueDate: dueDate,
@@ -255,7 +251,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     });
@@ -281,7 +276,7 @@ export default class App extends Component {
 
     const url = domain + "/setItemPriority";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       itemID: itemID,
       priority: priority,
@@ -291,7 +286,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     });
@@ -316,7 +310,7 @@ export default class App extends Component {
 
     const url = domain + "/setItemDescription";
     const body = JSON.stringify({
-      username: "Jasper",
+      username: this.state.username,
       listName: listName,
       itemID: itemID,
       description: description,
@@ -326,7 +320,6 @@ export default class App extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body,
     });

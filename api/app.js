@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
-var indexRouter = require("./routes/index");
+var appRouter = require("./routes/app");
 var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
 var getListsRouter = require("./routes/getLists");
@@ -16,6 +16,7 @@ var setItemDescription = require("./routes/setItemDescription");
 var setItemDueDate = require("./routes/setItemDueDate");
 var setItemPriority = require("./routes/setItemPriority");
 var setItemTitle = require("./routes/setItemTitle");
+var accountRouter = require("./routes/account.js");
 
 var app = express();
 
@@ -30,7 +31,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
+app.use("/app", appRouter);
+app.use("/account", accountRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/getLists", getListsRouter);
