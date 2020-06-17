@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 
-import $ from "jquery";
+// import $ from "jquery";
 
 import Todolist from "./todolist/Todolist.js";
 import Details from "./todolist/Details.js";
@@ -520,6 +520,20 @@ export default class App extends Component {
                       this.deleteListItem(listName, itemID)
                     }
                   />
+                </div>
+                <div
+                  id="toolbar"
+                  className="pl-5 col-1 h-25 row justify-content-center"
+                >
+                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+                    <i class="fas fa-cogs"></i>
+                  </div>
+                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+                    <i class="fas fa-hand-sparkles"></i>
+                  </div>
+                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+                    <i class="fas fa-sign-out-alt"></i>
+                  </div>
                 </div>
               </React.Fragment>
             );

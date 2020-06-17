@@ -18,6 +18,7 @@ var setItemDueDate = require("./routes/setItemDueDate");
 var setItemPriority = require("./routes/setItemPriority");
 var setItemTitle = require("./routes/setItemTitle");
 var verifyLoginRouter = require("./routes/verifyLogin.js");
+var createAccountRouter = require("./routes/createAccount");
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookierParser("abcdef-12345"));
 
 app.use("/verifyLogin", verifyLoginRouter);
+app.use("/createAccount", createAccountRouter);
 app.use("/app", appRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
@@ -45,6 +47,7 @@ app.use("/setItemDescription", setItemDescription);
 app.use("/setItemDueDate", setItemDueDate);
 app.use("/setItemPriority", setItemPriority);
 app.use("/setItemTitle", setItemTitle);
+app;
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

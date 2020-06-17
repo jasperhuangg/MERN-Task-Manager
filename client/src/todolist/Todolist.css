@@ -308,3 +308,22 @@ textarea:focus,
 select:focus {
   outline: none;
 }
+
+#toolbar {
+  position: absolute;
+  top: 1.5em;
+  right: 1.5em;
+}
+
+.toolbar-icon {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 25px;
+  transition: 0.2s ease;
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-icon:hover {
+  color: rgba(255, 255, 255, 1);
+  transition: 0.2s ease;
+  cursor: pointer;
+}
