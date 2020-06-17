@@ -18,6 +18,7 @@
 .Register {
   border-radius: 7px;
   height: 90vh;
+  width: 370px;
   background-color: rgba(255, 255, 255, 0.9);
 }
 .login-section {
@@ -26,7 +27,7 @@
 }
 
 .register-section {
-  width: 74vw;
+  width: 74vw !important;
   float: right;
 }
 

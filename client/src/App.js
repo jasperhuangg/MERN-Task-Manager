@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
+
+import $ from "jquery";
+
 import Todolist from "./todolist/Todolist.js";
 import Details from "./todolist/Details.js";
 import Login from "./todolist/Login.js";
 import Register from "./todolist/Register.js";
-import $ from "jquery";
+import Sidebar from "./todolist/Sidebar.js";
 
 var ObjectID = require("bson-objectid");
 
@@ -17,6 +20,7 @@ export default class App extends Component {
     this.state = {
       docTitle: "Log in | Doozy",
       loggedIn: "not yet",
+      registered: "not yet",
       loginOrRegister: "login",
       error: null,
       lists: [],
@@ -48,6 +52,7 @@ export default class App extends Component {
       "https://iili.io/J4z3Tx.jpg",
       "https://iili.io/J4zJkb.jpg",
       "https://iili.io/J4zHYu.jpg",
+      "https://iili.io/J4zWZl.jpg",
     ];
     var currBackground = Math.floor(
       Math.random() * Math.floor(backgroundURLs.length)
@@ -426,11 +431,12 @@ export default class App extends Component {
           <div
             className={
               "login-section" +
-              (this.state.loginOrRegister === "login" ? "" : " invisible")
+              (this.state.loginOrRegister === "login" ? "" : " d-none")
             }
           >
             <Login
               loginInfo={this.state.loggedIn}
+              registerInfo={this.state.registered}
               verifyLogin={(username, password) =>
                 this.verifyLogin(username, password)
               }
@@ -440,7 +446,7 @@ export default class App extends Component {
           <div
             className={
               "register-section" +
-              (this.state.loginOrRegister === "register" ? "" : " invisible")
+              (this.state.loginOrRegister === "register" ? "" : " d-none")
             }
           >
             <Register switchToLogin={() => this.toggleLoginRegister()} />
@@ -451,7 +457,9 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
         >
-          <div id="sidebar" className="col-2"></div>
+          <div id="sidebar" className="col-2">
+            <Sidebar />
+          </div>
           {listArr.map((list, i) => {
             return (
               <React.Fragment key={list.name}>

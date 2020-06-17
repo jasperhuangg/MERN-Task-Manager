@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import ListItem from "./ListItem.js";
-import CalendarOverlay from "./CalendarOverlay.js";
-import PrioritiesOverlay from "./PrioritiesOverlay.js";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import $ from "jquery";
 
-import "./Todolist.css";
+import ListItem from "./ListItem.js";
+import CalendarOverlay from "./CalendarOverlay.js";
+import PrioritiesOverlay from "./PrioritiesOverlay.js";
 import DateParser from "./DateParser.js";
+
+import "./Todolist.css";
 
 export default class Todolist extends Component {
   constructor(props) {
