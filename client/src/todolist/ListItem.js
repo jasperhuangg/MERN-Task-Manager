@@ -83,14 +83,14 @@ export default class ListItem extends Component {
       (isLate ? " text-danger" : "");
 
     const rowClasses =
-      "row justify-content-center pt-2 pb-2 pl-4 pr-1 align-items-center todo-item" +
+      "row justify-content-center pt-1 pb-1 pl-4 pr-1 align-items-center todo-item" +
       (this.state.completed ? " completed" : "") +
       (this.state.itemID === this.props.selectedItemID ? " selected-item" : "");
 
     const rowBorderColor = getRowBorderColor(this.state.priority);
 
     const titleInputClasses =
-      "ml-2 title-input" +
+      "ml-2 form-control-sm title-input" +
       (this.state.itemID === this.props.selectedItemID
         ? " selected-item-input"
         : "");

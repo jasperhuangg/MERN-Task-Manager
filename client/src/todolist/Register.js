@@ -18,7 +18,7 @@ export default class Register extends Component {
   render() {
     return (
       <div className="Register py-5 px-4">
-        <h1>LOGO</h1>
+        <h1>Doozy</h1>
         <br />
         <br />
         <h3>Create your account</h3>
@@ -46,7 +46,7 @@ export default class Register extends Component {
               onClick={() => {
                 this.props.switchToLogin();
               }}
-              className="text-primary"
+              className="text-primary toggle-prompt-text"
               style={{ cursor: "pointer" }}
             >
               Log in now

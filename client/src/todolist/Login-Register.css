@@ -1,26 +1,77 @@
 #login-register {
   height: 100vh;
-  background-color: red;
+  /* background-color: red; */
+  background-image: url("../assets/boats.jpg");
   background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
 
   padding: 0 !important;
 }
 
 .Login {
-  height: 100vh;
-  background-color: white;
+  border-radius: 7px;
+  height: 90vh;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .Register {
-  height: 100vh;
-  background-color: white;
+  border-radius: 7px;
+  height: 90vh;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 .login-section {
-  width: 35vw;
+  width: 370px;
   float: left;
 }
 
 .register-section {
-  width: 65vw;
+  width: 74vw;
   float: right;
+}
+
+.toggle-prompt-text {
+  transition: 0.2s ease;
+}
+
+.toggle-prompt-text:hover {
+  transition: 0.2s ease;
+  color: rgb(40, 40, 109) !important;
+}
+
+.font-grey {
+  color: rgb(73, 80, 87);
+}
+
+.info-icon {
+  color: rgb(122, 134, 146) !important;
+}
+
+.font-small {
+  font-size: 14px;
+}
+
+.btn {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}
+
+.or-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: rgb(122, 131, 139);
+  font-size: 12px;
+}
+.or-separator::before,
+.or-separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgb(178, 186, 194) !important;
+}
+.or-separator::before {
+  margin-right: 0.25em;
+}
+.or-separator::after {
+  margin-left: 0.25em;
 }

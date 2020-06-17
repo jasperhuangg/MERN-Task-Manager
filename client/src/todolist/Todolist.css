@@ -1,6 +1,31 @@
+#app {
+  background-image: url("../assets/trail.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#details {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 7px;
+  height: 90vh;
+}
+
+#sidebar {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 7px;
+  height: 90vh;
+}
+
 .todolist {
   height: 100vh;
   border: solid 0.25px rgb(240, 240, 240);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.9);
+  height: 90vh;
 }
 
 .todolist-items {
@@ -11,6 +36,8 @@
 
 #addItemInput {
   cursor: text;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
 }
 
 [contenteditable]:focus {
@@ -36,6 +63,9 @@
 .icon {
   font-size: 14px;
   transition: 0.3s ease;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  border-left: 0.25px rgba(187, 187, 187, 0.4) solid;
 }
 
 .completed {
@@ -43,7 +73,7 @@
 }
 
 .list-item {
-  border-bottom: 0.25px rgb(240, 240, 240) solid;
+  border-bottom: 0.25px rgb(187, 187, 187, 0.4) solid;
   box-sizing: border-box;
 }
 
@@ -51,6 +81,7 @@
   width: 100%;
   text-overflow: ellipsis;
   border: 0;
+  background: rgba(255, 255, 255, 0);
 }
 
 input:focus,
@@ -177,7 +208,7 @@ select:focus {
 
 .selected-item {
   /* transition: 0.1s ease; */
-  background-color: rgb(240, 240, 240, 0.6) !important;
+  background-color: rgba(216, 214, 214, 0.3) !important;
 
   box-sizing: border-box;
 }
@@ -194,14 +225,15 @@ select:focus {
   border: 0;
   font-weight: 700;
   font-size: 16px;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 #details-top-row {
-  border-bottom: 0.25px rgb(240, 240, 240) solid;
+  border-bottom: 0.25px rgb(187, 187, 187, 0.4) solid;
 }
 
 .details-top-row-check {
-  border-right: 0.25px rgb(240, 240, 240) solid;
+  border-right: 0.25px rgb(187, 187, 187, 0.4) solid;
 }
 
 #details-desc-input {
@@ -210,6 +242,7 @@ select:focus {
   border: 0;
   font-size: 14px;
   resize: none;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 #details-desc-input-container {
@@ -257,7 +290,7 @@ select:focus {
 .details-delete-btn {
   color: rgb(73, 80, 87);
   font-size: 14px;
-  border-left: 0.25px rgb(240, 240, 240) solid;
+  border-left: 0.25px rgb(187, 187, 187, 0.4) solid;
   transition: ease 0.2s;
 }
 
@@ -265,4 +298,14 @@ select:focus {
   cursor: pointer;
   color: rgb(130, 142, 153);
   transition: ease 0.2s;
+}
+
+.email-check {
+  color: rgb(48, 166, 74);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
 }

@@ -4,6 +4,7 @@ import Todolist from "./todolist/Todolist.js";
 import Details from "./todolist/Details.js";
 import Login from "./todolist/Login.js";
 import Register from "./todolist/Register.js";
+import $ from "jquery";
 
 var ObjectID = require("bson-objectid");
 
@@ -12,15 +13,17 @@ const domain = "http://localhost:9000";
 export default class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       docTitle: "Log in | Doozy",
       loggedIn: "not yet",
       loginOrRegister: "login",
       error: null,
       lists: [],
-      username: "Jasper",
+      username: "jasperhu@usc.edu",
       currentlySelectedList: 0,
       currentlySelectedItemID: "",
+      bgURL: "",
     };
   }
 
@@ -31,11 +34,33 @@ export default class App extends Component {
     //   loggedIn: "successful",
     //   username: "[whatever was in the cookie]",
     // });
+
+    // visit https://freeimage.host/ to host more background images
+    const backgroundURLs = [
+      "https://iili.io/J4xbBS.jpg",
+      "https://iili.io/J4xtQ2.jpg",
+      "https://iili.io/J4xZhl.jpg",
+      "https://iili.io/J4xp49.jpg",
+      "https://iili.io/J4xQI4.jpg",
+      "https://iili.io/J4xmE7.jpg",
+      "https://iili.io/J4z92e.jpg",
+      "https://iili.io/J4zdpj.jpg",
+      "https://iili.io/J4z3Tx.jpg",
+      "https://iili.io/J4zJkb.jpg",
+      "https://iili.io/J4zHYu.jpg",
+    ];
+    var currBackground = Math.floor(
+      Math.random() * Math.floor(backgroundURLs.length)
+    );
+
+    const bgURL = 'url("' + backgroundURLs[currBackground] + '")';
+
+    console.log(bgURL);
+
+    this.setState({ bgURL: bgURL });
   }
 
   verifyLogin(username, password) {
-    console.log("/verifyLogin called with: " + username + ", " + password);
-
     const url = domain + "/verifyLogin";
     const body = JSON.stringify({
       username: username,
@@ -51,7 +76,6 @@ export default class App extends Component {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (res.success) {
           this.getLists();
           this.setState({ docTitle: "Lists | Doozy", loggedIn: "successful" });
@@ -334,9 +358,13 @@ export default class App extends Component {
 
   toggleLoginRegister() {
     if (this.state.loginOrRegister === "login")
-      this.setState({ loginOrRegister: "register" });
+      this.setState({
+        docTitle: "Sign Up | Doozy",
+        loginOrRegister: "register",
+      });
     else if (this.state.loginOrRegister === "register")
       this.setState({
+        docTitle: "Log In | Doozy",
         loginOrRegister: "login",
       });
   }
@@ -382,15 +410,19 @@ export default class App extends Component {
 
     const selectedItem = this.getCurrentlySelectedItem();
     const appClasses =
-      "container-fluid row" +
+      "row align-items-center" +
       (this.state.loggedIn === "successful" ? "" : " d-none");
-    const loginClasses =
-      "container-fluid" +
-      (this.state.loggedIn === "successful" ? " d-none" : "");
+    const loginRegClasses =
+      "container-fluid align-items-center" +
+      (this.state.loggedIn === "successful" ? " d-none" : " d-flex ");
 
     return (
       <>
-        <div id="login-register" className={loginClasses}>
+        <div
+          id="login-register"
+          style={{ backgroundImage: this.state.bgURL }}
+          className={loginRegClasses}
+        >
           <div
             className={
               "login-section" +
@@ -414,7 +446,11 @@ export default class App extends Component {
             <Register switchToLogin={() => this.toggleLoginRegister()} />
           </div>
         </div>
-        <div id="app" className={appClasses}>
+        <div
+          id="app"
+          style={{ backgroundImage: this.state.bgURL }}
+          className={appClasses}
+        >
           <div id="sidebar" className="col-2"></div>
           {listArr.map((list, i) => {
             return (

@@ -238,7 +238,7 @@ export default class Todolist extends Component {
               suppressContentEditableWarning={true}
               id="addItemInput"
               placeholder={placeholder}
-              className="form-control text-left editable"
+              className="form-control form-control-sm text-left editable"
               type="text"
               defaultValue={addItemText}
               onInput={(e) => this.handleInput(e)}
