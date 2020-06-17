@@ -183,6 +183,6 @@ function getIsLate(date) {
 
 function getRowBorderColor(priority) {
   if (priority === "high") return "rgb(218, 56, 73)";
-  else if (priority === "medium") return "rgb(21, 127, 251)";
-  else if (priority === "low") return "rgb(37, 162, 183)";
+  else if (priority === "medium") return "rgb(254, 192, 47)";
+  else if (priority === "low") return "rgb(21, 127, 251)";
 }

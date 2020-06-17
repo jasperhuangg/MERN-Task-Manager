@@ -18,11 +18,11 @@ export default class PrioritiesOverlay extends Component {
     const mediumPriorityClasslist =
       "priorities-overlay-item text-left" +
       (this.props.currentlySelectedPriority === "medium"
-        ? " text-primary"
+        ? " text-warning"
         : "");
     const lowPriorityClasslist =
       "priorities-overlay-item text-left" +
-      (this.props.currentlySelectedPriority === "low" ? " text-info" : "");
+      (this.props.currentlySelectedPriority === "low" ? " text-primary" : "");
     return (
       <div className="overlay priorities-overlay">
         <div

@@ -17,7 +17,7 @@ export default class Todolist extends Component {
       prioritiesOverlayDisplaying: false,
       addItemValue: "",
       addItemDate: "",
-      addItemPriority: "medium",
+      addItemPriority: "low",
       listItems: this.props.items,
       addItemDateKeywords: "",
       completedItemsShowing: false,
@@ -33,7 +33,8 @@ export default class Todolist extends Component {
 
   keyPress(e) {
     var val = document.getElementById("addItemInput").value;
-    val = removeOccurence(val, this.state.addItemDateKeywords);
+    if (this.state.addItemDate !== "")
+      val = removeOccurence(val, this.state.addItemDateKeywords);
     val = removeExtraWhitespace(val);
 
     // hardcoded date and priority values as UI components not yet implemented
@@ -51,7 +52,7 @@ export default class Todolist extends Component {
         addItemDate: "",
         addItemValue: "",
         addItemDateKeywords: "",
-        addItemPriority: "medium",
+        addItemPriority: "low",
         keywordSet: false,
       });
       $(document).find(".add-item-input-container").show();
@@ -139,9 +140,9 @@ export default class Todolist extends Component {
     if (this.state.addItemPriority === "high") {
       classes += " text-danger";
     } else if (this.state.addItemPriority === "medium") {
-      classes += " text-primary";
+      classes += " text-warning";
     } else if (this.state.addItemPriority === "low") {
-      classes += " text-info";
+      classes += " text-primary";
     }
 
     return classes;

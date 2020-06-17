@@ -1,3 +1,5 @@
+// TODO: check for duplicate username
+
 var express = require("express");
 var router = express.Router();
 
@@ -37,53 +39,64 @@ router.post("/", (req, res, next) => {
   try {
     MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
       if (err) throw err;
-
-      var userObj = {
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-        password: encryptedPass,
-        lists: [
-          {
-            name: "How to Doozy",
-            color: "blue",
-            items: [
-              {
-                title: "Add items by typing them in above.",
-                description: "Add a description here!",
-                dueDate: "",
-                priority: "high",
-                completed: false,
-                itemID: "0",
-              },
-              {
-                title: "Keywords set due dates automatically when adding.",
-                description: 'Try adding "Get groceries tmr"',
-                dueDate: "",
-                priority: "medium",
-                completed: false,
-                itemID: "1",
-              },
-              {
-                title: "Set item priorities to affect sorting.",
-                description: "",
-                dueDate: "",
-                priority: "low",
-                completed: false,
-                itemID: "2",
-              },
-            ],
-          },
-        ],
-      };
       var dbo = db.db("Todolist");
-      dbo.collection("Users").insertOne(userObj, (err, result) => {
-        if (err) {
-          res.send({ successful: false });
-          throw err;
-        }
-        res.send({ successful: true });
-      });
+
+      dbo
+        .collection("Users")
+        .find({ username: username })
+        .toArray((err, result) => {
+          if (result.length)
+            res.send({ successful: false, info: "username already exists" });
+          else {
+            var userObj = {
+              username: username,
+              firstName: firstName,
+              lastName: lastName,
+              password: encryptedPass,
+              lists: [
+                {
+                  name: "How to Doozy",
+                  color: "blue",
+                  items: [
+                    {
+                      title: "Add items by typing them in above.",
+                      description: "Add a description here!",
+                      dueDate: "",
+                      priority: "high",
+                      completed: false,
+                      itemID: "0",
+                    },
+                    {
+                      title:
+                        "Keywords set due dates automatically when adding.",
+                      description: 'Try adding "Get groceries tmr"',
+                      dueDate: "",
+                      priority: "medium",
+                      completed: false,
+                      itemID: "1",
+                    },
+                    {
+                      title: "Set item priorities to affect sorting.",
+                      description: "",
+                      dueDate: "",
+                      priority: "low",
+                      completed: false,
+                      itemID: "2",
+                    },
+                  ],
+                },
+              ],
+            };
+
+            dbo.collection("Users").insertOne(userObj, (err, result) => {
+              if (err) {
+                res.send({ successful: false, info: err });
+                throw err;
+              }
+              res.send({ successful: true });
+            });
+          }
+        });
     });
   } catch (e) {
     console.error(e);

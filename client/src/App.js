@@ -25,9 +25,12 @@ export default class App extends Component {
       error: null,
       lists: [],
       username: "",
-      currentlySelectedList: 0,
+      currentlySelectedListIndex: 0,
+      currentlySelectedListName: "MATH226",
       currentlySelectedItemID: "",
       bgURL: "",
+      firstName: "",
+      lastName: "",
     };
   }
 
@@ -43,15 +46,26 @@ export default class App extends Component {
     const backgroundURLs = [
       "https://iili.io/J4xbBS.jpg",
       "https://iili.io/J4xtQ2.jpg",
-      "https://iili.io/J4xZhl.jpg",
       "https://iili.io/J4xp49.jpg",
-      "https://iili.io/J4xmE7.jpg",
       "https://iili.io/J4z92e.jpg",
       "https://iili.io/J4zdpj.jpg",
       "https://iili.io/J4zJkb.jpg",
       "https://iili.io/J4zHYu.jpg",
       "https://iili.io/J4zWZl.jpg",
       "https://iili.io/J4IBt4.jpg",
+      "https://iili.io/J4Weln.jpg",
+      "https://iili.io/J4WWtp.jpg",
+      "https://iili.io/J4WjVI.jpg",
+      "https://iili.io/J4WhoN.jpg",
+      "https://iili.io/J4WwPt.jpg",
+      "https://iili.io/J4WOKX.jpg",
+      "https://iili.io/J4WUN4.jpg",
+      "https://iili.io/J4WgDl.jpg",
+      "https://iili.io/J4WSRf.jpg",
+      "https://iili.io/J4WmDQ.jpg",
+      "https://iili.io/J4X9WB.jpg",
+      "https://iili.io/J4XHiP.jpg",
+      "https://iili.io/J4WyxV.jpg",
     ];
     var currBackground = Math.floor(
       Math.random() * Math.floor(backgroundURLs.length)
@@ -83,6 +97,8 @@ export default class App extends Component {
             docTitle: "Lists | Doozy",
             loggedIn: "successful",
             username: username,
+            firstName: res.firstName,
+            lastName: res.lastName,
           });
           this.getLists();
         } else if (res.info === "username does not exist")
@@ -96,6 +112,25 @@ export default class App extends Component {
     this.setState({ currentlySelectedItemID: itemID });
   }
 
+  setSelectedList(listName) {
+    this.setState({ currentlySelectedListName: listName });
+  }
+
+  verifyCookie() {}
+
+  toggleLoginRegister() {
+    if (this.state.loginOrRegister === "login")
+      this.setState({
+        docTitle: "Sign Up | Doozy",
+        loginOrRegister: "register",
+      });
+    else if (this.state.loginOrRegister === "register")
+      this.setState({
+        docTitle: "Log In | Doozy",
+        loginOrRegister: "login",
+      });
+  }
+
   getCurrentlySelectedItem() {
     if (this.state.currentlySelectedItemID === "")
       return {
@@ -107,7 +142,7 @@ export default class App extends Component {
         itemID: "",
       };
 
-    var items = this.state.lists.slice(this.state.currentlySelectedList)[0]
+    var items = this.state.lists.slice(this.state.currentlySelectedListIndex)[0]
       .items;
 
     for (let i = 0; i < items.length; i++)
@@ -355,21 +390,6 @@ export default class App extends Component {
     });
   }
 
-  verifyCookie() {}
-
-  toggleLoginRegister() {
-    if (this.state.loginOrRegister === "login")
-      this.setState({
-        docTitle: "Sign Up | Doozy",
-        loginOrRegister: "register",
-      });
-    else if (this.state.loginOrRegister === "register")
-      this.setState({
-        docTitle: "Log In | Doozy",
-        loginOrRegister: "login",
-      });
-  }
-
   setItemDescription(listName, itemID, description) {
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
@@ -407,7 +427,10 @@ export default class App extends Component {
   render() {
     document.title = this.state.docTitle;
 
-    const listArr = this.state.lists.slice(this.state.currentlySelectedList, 1);
+    const listArr = this.state.lists.slice(
+      this.state.currentlySelectedListIndex,
+      1
+    );
 
     const selectedItem = this.getCurrentlySelectedItem();
     const appClasses =
@@ -453,8 +476,14 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
         >
-          <div id="sidebar" className="col-2">
-            <Sidebar />
+          <div id="sidebar" className="col-2 p-0">
+            <Sidebar
+              lists={this.state.lists}
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              currentlySelectedListName={this.state.currentlySelectedListName}
+              setSelectedList={(listName) => this.setSelectedList(listName)}
+            />
           </div>
           {listArr.map((list, i) => {
             return (
@@ -526,13 +555,13 @@ export default class App extends Component {
                   className="pl-5 col-1 h-25 row justify-content-center"
                 >
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
-                    <i class="fas fa-cogs"></i>
+                    <i className="fas fa-cogs"></i>
                   </div>
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
-                    <i class="fas fa-hand-sparkles"></i>
+                    <i className="fas fa-hand-sparkles"></i>
                   </div>
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
-                    <i class="fas fa-sign-out-alt"></i>
+                    <i className="fas fa-sign-out-alt"></i>
                   </div>
                 </div>
               </React.Fragment>

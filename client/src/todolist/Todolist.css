@@ -17,6 +17,7 @@
   background: rgba(255, 255, 255, 0.9);
   border-radius: 7px;
   height: 90vh;
+  overflow-x: hidden;
 }
 
 .todolist {
@@ -28,7 +29,7 @@
 }
 
 .todolist-items {
-  height: 78vh;
+  height: 71vh;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -316,8 +317,8 @@ select:focus {
 }
 
 .toolbar-icon {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 25px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 27px;
   transition: 0.2s ease;
   text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.1);
 }
@@ -326,4 +327,43 @@ select:focus {
   color: rgba(255, 255, 255, 1);
   transition: 0.2s ease;
   cursor: pointer;
+}
+
+.sidebar-item {
+  border-bottom: 0.25px rgb(187, 187, 187, 0.4) solid;
+  box-sizing: border-box;
+  color: rgb(73, 80, 87);
+  font-size: 15px;
+  transition: 0.2s ease;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+  color: rgb(113, 123, 133);
+}
+
+.sidebar-item:hover {
+  cursor: pointer;
+  transition: 0.2s ease;
+  background-color: rgb(235, 232, 232);
+}
+
+.selected-sidebar-item {
+  background-color: rgb(21, 127, 251);
+  color: white;
+}
+
+.selected-sidebar-item:hover {
+  background-color: rgb(21, 127, 251) !important;
+  color: white !important;
+}
+
+.selected-sidebar-item > .sidebar-icon {
+  color: white;
+}
+
+.profile-icon {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }

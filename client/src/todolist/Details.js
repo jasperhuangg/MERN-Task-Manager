@@ -128,9 +128,9 @@ export default class Details extends Component {
     var priorityPickerClasses = "col-1 offset-md-4 details-priority-picker";
     if (this.state.priority === "high") priorityPickerClasses += " text-danger";
     else if (this.state.priority === "medium")
-      priorityPickerClasses += " text-primary";
+      priorityPickerClasses += " text-warning";
     else if (this.state.priority === "low")
-      priorityPickerClasses += " text-info";
+      priorityPickerClasses += " text-primary";
 
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
       ? ""

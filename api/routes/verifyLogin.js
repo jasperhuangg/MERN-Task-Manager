@@ -46,9 +46,16 @@ router.post("/", (req, res, next) => {
             if (result.length === 0)
               res.send({ success: false, info: "username does not exist" });
             else {
+              const firstName = result[0].firstName;
+              const lastName = result[0].lastName;
               const decryptedPass = key.decrypt(result[0].password, "utf8");
               if (decryptedPass === password)
-                res.send({ success: true, info: "login successful" });
+                res.send({
+                  success: true,
+                  info: "login successful",
+                  firstName: firstName,
+                  lastName: lastName,
+                });
               else
                 res.send({
                   success: false,
