@@ -22,6 +22,7 @@ export default class Todolist extends Component {
       addItemDateKeywords: "",
       completedItemsShowing: false,
     };
+    this.inputRef = React.createRef();
   }
 
   componentDidMount() {
@@ -167,6 +168,7 @@ export default class Todolist extends Component {
         this.setState({
           calendarOverlayDisplaying: false,
         });
+      this.inputRef.current.focus();
     }
   }
 
@@ -244,6 +246,7 @@ export default class Todolist extends Component {
               defaultValue={addItemText}
               onInput={(e) => this.handleInput(e)}
               onKeyDown={(e) => this.keyPress(e)}
+              ref={this.inputRef}
             ></input>
             <div
               className="input-group-append"

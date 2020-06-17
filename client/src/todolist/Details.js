@@ -210,7 +210,7 @@ export default class Details extends Component {
               currentlySelectedPriority={this.state.priority}
             />
           </div>
-          <div id="details-title-input-container" className="mb-2">
+          <div id="details-title-input-container" className="mb-4">
             <input
               spellCheck="false"
               className="details-title-input"
@@ -228,6 +228,7 @@ export default class Details extends Component {
           >
             <textarea
               id="details-desc-input"
+              spellCheck="false"
               value={this.state.description}
               placeholder="Description"
               ref={this.descInputRef}

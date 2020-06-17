@@ -29,7 +29,6 @@ export default class ListItem extends Component {
   }
 
   handleItemSelection(e) {
-    console.log(this.state.itemID);
     this.props.setSelectedItem(this.state.itemID);
   }
 
@@ -40,7 +39,6 @@ export default class ListItem extends Component {
   };
 
   handleCmdDelete(e) {
-    console.log(this.state.itemID);
     const map = this.state.pressedKeys;
     // e = e || event;
     map[e.keyCode] = e.type === "keydown";
@@ -79,11 +77,11 @@ export default class ListItem extends Component {
     const isLate = getIsLate(dueDate);
 
     var dueDateClassList =
-      "col-2 text-right item-due-date font-small" +
+      "pr-2 col-2 text-right item-due-date font-small" +
       (isLate ? " text-danger" : "");
 
     const rowClasses =
-      "row justify-content-center pt-1 pb-1 pl-4 pr-1 align-items-center todo-item" +
+      "row no-gutters justify-content-center pt-1 pb-1 pl-4 pr-1 align-items-center todo-item" +
       (this.state.completed ? " completed" : "") +
       (this.state.itemID === this.props.selectedItemID ? " selected-item" : "");
 

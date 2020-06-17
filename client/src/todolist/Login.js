@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import "./Login-Register.css";
 import $ from "jquery";
-import "jquery-ui/themes/base/theme.css";
-import "jquery-ui/themes/base/tooltip.css";
-import "jquery-ui/ui/widgets/tooltip";
 
 export default class Login extends Component {
   constructor(props) {
@@ -62,17 +59,11 @@ export default class Login extends Component {
   }
 
   render() {
-    console.log(this.props.loginInfo);
-
     const sentBack = this.props.loginInfo !== "not yet";
 
     if (this.state.nextClicked && !sentBack) {
       this.passwordInput.current.focus();
     }
-
-    $(document).ready(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
 
     return (
       <div className="Login py-5 px-4">
@@ -90,22 +81,16 @@ export default class Login extends Component {
 
         <div
           className={
-            "font-small text-danger" +
+            "font-small-login-reg text-danger" +
             (this.props.loginInfo === "not yet" ? " d-none" : "")
           }
         >
           Please provide a valid username and password.
         </div>
         <br />
-        <form className="font-grey font-small">
+        <form className="font-grey font-small-login-reg">
           <label htmlFor="login-email-input" style={{ fontWeight: "500" }}>
             Email Address{" "}
-            {/* <i
-              className="ml-1 info-icon fas fa-info-circle"
-              // data-toggle="tooltip"
-              // data-placement="right"
-              // title="This is the email address you used when you signed up."
-            ></i> */}
           </label>
           <div className="input-group input-group-sm">
             <input
@@ -174,7 +159,7 @@ export default class Login extends Component {
             {this.state.nextClicked ? "Log In" : "Next"}
           </button>
 
-          <span className="ml-3 font-small">
+          <span className="ml-3 font-small-login-reg">
             Don't have an account?{" "}
             <span
               onClick={() => {

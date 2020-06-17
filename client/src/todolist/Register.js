@@ -45,12 +45,6 @@ export default class Register extends Component {
         <form className="font-grey font-small">
           <label htmlFor="login-email-input" style={{ fontWeight: "500" }}>
             Email Address{" "}
-            {/* <i
-              className="ml-1 info-icon fas fa-info-circle"
-              // data-toggle="tooltip"
-              // data-placement="right"
-              // title="This is the email address you used when you signed up."
-            ></i> */}
           </label>
           <div className="input-group input-group-sm">
             <input

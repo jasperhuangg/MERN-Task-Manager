@@ -1,7 +1,5 @@
 #login-register {
   height: 100vh;
-  /* background-color: red; */
-  background-image: url("../assets/boats.jpg");
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -12,14 +10,14 @@
 .Login {
   border-radius: 7px;
   height: 90vh;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.85);
 }
 
 .Register {
   border-radius: 7px;
   height: 90vh;
   width: 370px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.85);
 }
 .login-section {
   width: 370px;
@@ -48,7 +46,7 @@
   color: rgb(122, 134, 146) !important;
 }
 
-.font-small {
+.font-small-login-reg {
   font-size: 14px;
 }
 

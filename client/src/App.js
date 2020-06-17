@@ -24,7 +24,7 @@ export default class App extends Component {
       loginOrRegister: "login",
       error: null,
       lists: [],
-      username: "jasperhu@usc.edu",
+      username: "",
       currentlySelectedList: 0,
       currentlySelectedItemID: "",
       bgURL: "",
@@ -45,22 +45,19 @@ export default class App extends Component {
       "https://iili.io/J4xtQ2.jpg",
       "https://iili.io/J4xZhl.jpg",
       "https://iili.io/J4xp49.jpg",
-      "https://iili.io/J4xQI4.jpg",
       "https://iili.io/J4xmE7.jpg",
       "https://iili.io/J4z92e.jpg",
       "https://iili.io/J4zdpj.jpg",
-      "https://iili.io/J4z3Tx.jpg",
       "https://iili.io/J4zJkb.jpg",
       "https://iili.io/J4zHYu.jpg",
       "https://iili.io/J4zWZl.jpg",
+      "https://iili.io/J4IBt4.jpg",
     ];
     var currBackground = Math.floor(
       Math.random() * Math.floor(backgroundURLs.length)
     );
 
     const bgURL = 'url("' + backgroundURLs[currBackground] + '")';
-
-    console.log(bgURL);
 
     this.setState({ bgURL: bgURL });
   }
@@ -82,8 +79,12 @@ export default class App extends Component {
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
+          this.setState({
+            docTitle: "Lists | Doozy",
+            loggedIn: "successful",
+            username: username,
+          });
           this.getLists();
-          this.setState({ docTitle: "Lists | Doozy", loggedIn: "successful" });
         } else if (res.info === "username does not exist")
           this.setState({ loggedIn: "username does not exist" });
         else if (res.info === "incorrect password")
@@ -180,7 +181,6 @@ export default class App extends Component {
   }
 
   deleteListItem(listName, itemID) {
-    console.log("/deleteListItem called with " + itemID);
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
@@ -211,9 +211,7 @@ export default class App extends Component {
         "Content-Type": "application/json",
       },
       body: body,
-    })
-      .then((res) => res.text())
-      .then((res) => console.log(res));
+    }).then((res) => res.text());
   }
 
   setItemTitle(listName, itemID, title) {
@@ -247,9 +245,7 @@ export default class App extends Component {
         "Content-Type": "application/json",
       },
       body: body,
-    })
-      .then((res) => res.text())
-      .then((res) => console.log(res));
+    }).then((res) => res.text());
   }
 
   setItemCompleted(listName, itemID, completed) {
@@ -463,7 +459,7 @@ export default class App extends Component {
           {listArr.map((list, i) => {
             return (
               <React.Fragment key={list.name}>
-                <div id="todolist" className="col-6">
+                <div id="todolist" className="col-5">
                   <Todolist
                     color={list.color}
                     name={list.name}

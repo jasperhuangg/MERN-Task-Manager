@@ -1,5 +1,4 @@
 #app {
-  background-image: url("../assets/trail.jpg");
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -203,7 +202,7 @@ select:focus {
 
 .todo-item {
   /* transition: 0.1s ease; */
-  border-right: 18px solid rgb(21, 127, 251);
+  border-right: 2px solid rgb(21, 127, 251);
 }
 
 .selected-item {
