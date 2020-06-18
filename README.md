@@ -1,2 +1,2 @@
-# MERN-Todolist
-A todolist app inspired by TickTick.
+# Doozy Task Manager
+A task manager app inspired by TickTick.
