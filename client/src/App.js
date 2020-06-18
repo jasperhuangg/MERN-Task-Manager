@@ -379,15 +379,12 @@ export default class App extends Component {
       }
     }
 
-    console.log(dueDate);
-
     var today = dateToStr(new Date());
     if (dueDate === today) {
       lists[lists.length - 3].items.push(item);
       lists[lists.length - 3].items.sort(sortListItems);
     }
     if (checkIfNext7Days(dueDate)) {
-      console.log("here");
       lists[lists.length - 2].items.push(item);
       lists[lists.length - 2].items.sort(sortListItems);
     }
@@ -524,7 +521,6 @@ export default class App extends Component {
         const items = lists[i].items;
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
-            console.log("updating lists");
             items[j].completed = completed;
             items.sort(sortListItems);
             break;
