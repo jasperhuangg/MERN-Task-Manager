@@ -9,7 +9,9 @@ export default class Sidebar extends Component {
   }
 
   selectList(e) {
-    var listName = e.target.innerText;
+    var listName = e.currentTarget.getElementsByClassName(
+      "sidebar-list-name"
+    )[0].innerText;
 
     if (listName.indexOf("\n") !== -1)
       listName = listName.substring(0, listName.indexOf("\n"));
@@ -39,47 +41,55 @@ export default class Sidebar extends Component {
         </div>
         <div
           className={
-            "sidebar-item py-2 pl-5 row align-items-center" +
+            "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "Today" ? " selected-sidebar-item" : "")
           }
           style={{ borderTop: "0.25px solid rgb(187, 187, 187, 0.4)" }}
           onClick={(e) => this.selectList(e)}
         >
-          <i className="fas fa-calendar-day sidebar-icon"></i>Today
+          <i className="fas fa-calendar-day sidebar-icon col-1 mr-1"></i>
+          <div className="col-6 text-left p-0 sidebar-list-name">Today</div>
+          <div className="col-4 font-small">n</div>
         </div>
         <div
           className={
-            "sidebar-item py-2 pl-5 row align-items-center" +
+            "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "Next 7 Days" ? " selected-sidebar-item" : "")
           }
           onClick={(e) => this.selectList(e)}
         >
-          <i className="fas fa-calendar-week sidebar-icon"></i>Next 7 Days
+          <i className="fas fa-calendar-week sidebar-icon col-1 mr-1"></i>
+          <div className="col-6 text-left p-0 sidebar-list-name">
+            Next 7 Days
+          </div>
+          <div className="col-4 font-small">n</div>
         </div>
         <div
           className={
-            "sidebar-item py-2 pl-5 row align-items-center" +
+            "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "All" ? " selected-sidebar-item" : "")
           }
           onClick={(e) => this.selectList(e)}
         >
-          <i className="fas fa-calendar sidebar-icon"></i>All
+          <i className="fas fa-calendar sidebar-icon col-1 mr-1"></i>
+          <div className="col-6 text-left p-0 sidebar-list-name">All</div>
+          <div className="col-4 font-small">n</div>
         </div>
         {this.props.lists.map((list, index) => {
+          const count = countIncompletedItems(list);
           return (
             <div
               className={
-                "sidebar-item py-2 pl-5 row align-items-center" +
+                "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
                 (selectedList === list.name ? " selected-sidebar-item" : "")
               }
               onClick={(e) => this.selectList(e)}
-              key={list.name}
             >
-              <i className="fas fa-bars sidebar-icon"></i>
-              {list.name}
-              <span className="ml-4 sidebar-count">
-                {countIncompletedItems(list)}
-              </span>
+              <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
+              <div className="col-6 text-left p-0 sidebar-list-name">
+                {list.name}
+              </div>
+              <div className="col-4 font-small">{count > 0 ? count : ""}</div>
             </div>
           );
         })}

@@ -11,11 +11,13 @@
   background: rgba(255, 255, 255, 0.9);
   border-radius: 7px;
   height: 90vh;
+  margin-left: 35px !important;
 }
 
 #sidebar {
   background: rgba(255, 255, 255, 0.9);
-  border-radius: 7px;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
   height: 90vh;
   width: 200px !important;
   overflow-x: hidden;
@@ -27,6 +29,7 @@
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.9);
   height: 90vh;
+  margin-left: 17.5px !important;
 }
 
 .todolist-items {
@@ -285,7 +288,7 @@ select:focus {
 }
 
 .form-check-input {
-  margin-top: 0.45rem !important;
+  margin-top: 0.58rem !important;
 }
 
 .details-delete-btn {
@@ -316,6 +319,7 @@ select:focus {
   width: 100px !important;
   top: 1.5em;
   right: 1.5em;
+  padding-left: 30px;
 }
 
 .toolbar-icon {
@@ -335,13 +339,13 @@ select:focus {
   border-bottom: 0.25px rgb(187, 187, 187, 0.4) solid;
   box-sizing: border-box;
   color: rgb(73, 80, 87);
-  font-size: 15px;
+  font-size: 14px;
   transition: 0.2s ease;
   background-color: rgba(0, 0, 0, 0);
 }
 
 .sidebar-icon {
-  margin-right: 10px;
+  /* margin-right: 10px; */
   color: rgb(113, 123, 133);
 }
 

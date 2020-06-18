@@ -241,11 +241,14 @@ export default class Details extends Component {
         <div
           id="details-placeholder"
           className={
-            "row h-100 align-items-center justify-content-center font-italic " +
+            "row h-100 align-items-center justify-content-center font-italic" +
             (this.state.itemID !== "" ? "d-none" : "")
           }
         >
-          <div className="col-12 text-center my-auto">
+          <div
+            className="col-12 text-center my-auto"
+            style={{ fontSize: "14px" }}
+          >
             Click on an item to see it's details <br />
             <br />
             <i className="fas fa-tasks" style={{ fontSize: "20px" }}></i>

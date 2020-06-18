@@ -48,6 +48,7 @@ export default class App extends Component {
     var firstName = "";
     var lastName = "";
     var loggedIn = "not yet";
+    var docTitle = this.state.docTitle;
 
     if (cookies.get("DoozyLogin") !== undefined) {
       username = cookies.get("DoozyLogin").email;
@@ -66,6 +67,7 @@ export default class App extends Component {
           expires: aWeekFromNow,
         }
       );
+      docTitle = "Lists | Doozy";
     }
 
     const bgURL = getRandomBGURL();
@@ -76,6 +78,7 @@ export default class App extends Component {
       firstName: firstName,
       lastName: lastName,
       loggedIn: loggedIn,
+      docTitle: docTitle,
     });
   }
 
@@ -191,7 +194,18 @@ export default class App extends Component {
   }
 
   setSelectedList(listName) {
-    this.setState({ currentlySelectedListName: listName });
+    var index;
+    for (let i = 0; i < this.state.lists.length; i++) {
+      if (this.state.lists[i].name === listName) {
+        console.log("found at " + i);
+        index = i;
+        break;
+      }
+    }
+    this.setState({
+      currentlySelectedListName: listName,
+      currentlySelectedListIndex: index,
+    });
   }
 
   toggleLoginRegister() {
@@ -224,6 +238,15 @@ export default class App extends Component {
     for (let i = 0; i < items.length; i++)
       if (items[i].itemID === this.state.currentlySelectedItemID)
         return items[i];
+
+    return {
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "",
+      completed: false,
+      itemID: "",
+    };
   }
 
   // for now assume we are getting the user's username from the props
@@ -363,7 +386,6 @@ export default class App extends Component {
   }
 
   setItemCompleted(listName, itemID, completed) {
-    console.log(listName + " " + itemID + " " + completed);
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
@@ -534,7 +556,7 @@ export default class App extends Component {
 
     const listArr = this.state.lists.slice(
       this.state.currentlySelectedListIndex,
-      1
+      this.state.currentlySelectedListIndex + 1
     );
 
     const selectedItem = this.getCurrentlySelectedItem();
@@ -596,7 +618,6 @@ export default class App extends Component {
             />
           </div>
           {listArr.map((list, i) => {
-            console.log(list);
             return (
               <React.Fragment key={list.name}>
                 <div id="todolist" className="col-5">
@@ -661,10 +682,7 @@ export default class App extends Component {
                     }
                   />
                 </div>
-                <div
-                  id="toolbar"
-                  className="pl-2 pr-2 h-25 row justify-content-center"
-                >
+                <div id="toolbar" className="h-25 row justify-content-center">
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
                     <i className="fas fa-cogs"></i>
                   </div>

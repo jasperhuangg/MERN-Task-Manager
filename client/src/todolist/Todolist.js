@@ -188,7 +188,6 @@ export default class Todolist extends Component {
   render() {
     // important variables used for render setup
     const items = this.props.items;
-    // console.log(items);
     var name = this.props.name;
     const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
@@ -230,8 +229,6 @@ export default class Todolist extends Component {
     const completedSeparatorIconClasses =
       "fas fa-sort-down mr-2 base" +
       (this.state.completedItemsShowing ? "" : " icon-rotated");
-    console.log(incompletedItems);
-    console.log(completedItems);
     return (
       <div
         className="container-fluid todolist"
@@ -290,11 +287,11 @@ export default class Todolist extends Component {
           <div id="incompleted-items">
             <span
               className={
-                "pl-2 font-small font-italic " +
+                "pl-2 font-small font-grey " +
                 (this.props.items.length === 0 ? "" : "d-none")
               }
             >
-              Add an item above
+              <i class="fas fa-plus-square mr-2"></i>Add an item above
             </span>
             {incompletedItems.map((item, i) => {
               return (
