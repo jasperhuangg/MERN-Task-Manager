@@ -379,12 +379,15 @@ export default class App extends Component {
       }
     }
 
+    console.log(dueDate);
+
     var today = dateToStr(new Date());
     if (dueDate === today) {
       lists[lists.length - 3].items.push(item);
       lists[lists.length - 3].items.sort(sortListItems);
     }
     if (checkIfNext7Days(dueDate)) {
+      console.log("here");
       lists[lists.length - 2].items.push(item);
       lists[lists.length - 2].items.sort(sortListItems);
     }
@@ -702,8 +705,6 @@ export default class App extends Component {
       "container-fluid align-items-center" +
       (this.state.loggedIn === "successful" ? " d-none" : " d-flex ");
 
-    console.log(this.state.lists);
-
     return (
       <>
         <div
@@ -921,16 +922,15 @@ function dateToStr(date) {
 }
 
 function checkIfNext7Days(dateStr) {
-  var dates = [];
   var curr = new Date();
   for (let i = 0; i < 7; i++) {
-    curr.setDate(curr.getDate() + i);
-    dates.push(dateToStr(curr));
+    var d = dateToStr(curr);
+    if (dateStr === d) return true;
+    curr.setDate(curr.getDate() + 1);
   }
 
-  for (let i = 0; i < dates.length; i++) {
-    if (dateStr === dates[i]) return true;
-  }
+  var d = dateToStr(curr);
+  if (dateStr === d) return true;
 
   return false;
 }

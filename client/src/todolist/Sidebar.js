@@ -110,7 +110,11 @@ export default class Sidebar extends Component {
         </div>
         <div
           className="text-center font-small sidebar-item py-1 pt-5"
-          style={{ pointerEvents: "none", fontWeight: "600" }}
+          style={{
+            pointerEvents: "none",
+            fontWeight: "600",
+            color: "rgb(113, 123, 133)",
+          }}
         >
           Your Lists
         </div>

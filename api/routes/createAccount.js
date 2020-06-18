@@ -115,3 +115,33 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
+
+function dateToStr(date) {
+  var day = date.getDate();
+  if (day < 10) day = "0" + day.toString();
+
+  var month = date.getMonth() + 1;
+  if (month < 10) month = "0" + month.toString();
+
+  var year = date.getFullYear().toString();
+
+  var formatted = year + "-" + month + "-" + day;
+
+  return formatted;
+}
+
+function checkIfNext7Days(dateStr) {
+  var curr = new Date();
+  for (let i = 0; i < 7; i++) {
+    var d = dateToStr(curr);
+    if (dateStr === d) return true;
+    curr.setDate(curr.getDate() + 1);
+  }
+
+  var d = dateToStr(curr);
+  if (dateStr === d) return true;
+
+  return false;
+}
+
+console.log(checkIfNext7Days("2020-06-24"));
