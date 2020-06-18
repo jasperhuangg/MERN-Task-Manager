@@ -187,7 +187,6 @@ export default class Todolist extends Component {
 
   render() {
     // important variables used for render setup
-    const items = this.props.items;
     var name = this.props.name;
     const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
@@ -325,7 +324,7 @@ export default class Todolist extends Component {
                 (incompletedItems.length === 0 ? "" : "d-none")
               }
             >
-              <i class={emptyListIcon}></i>
+              <i className={emptyListIcon}></i>
               {emptyListText}
             </span>
             {incompletedItems.map((item, i) => {

@@ -25,7 +25,7 @@ export default class CalendarOverlay extends Component {
     }
 
     return (
-      <div className="calendar-overlay">
+      <div className="calendar-overlay shadow">
         <Calendar value={d} onChange={(date) => this.setDate(date)} />
         <div className="row mt-4">
           <div className="col-6">

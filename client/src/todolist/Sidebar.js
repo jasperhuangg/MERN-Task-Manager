@@ -13,8 +13,6 @@ export default class Sidebar extends Component {
       "sidebar-list-name"
     )[0].innerText;
 
-    var id = e.currentTarget.id;
-
     if (listName.indexOf("\n") !== -1)
       listName = listName.substring(0, listName.indexOf("\n"));
 

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Login-Register.css";
-import $ from "jquery";
 
 export default class Login extends Component {
   constructor(props) {

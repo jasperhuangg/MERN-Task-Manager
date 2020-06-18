@@ -9,6 +9,7 @@ import Details from "./todolist/Details.js";
 import Login from "./todolist/Login.js";
 import Register from "./todolist/Register.js";
 import Sidebar from "./todolist/Sidebar.js";
+import Notification from "./todolist/Notification.js";
 
 var ObjectID = require("bson-objectid");
 const cookies = new Cookies();
@@ -33,6 +34,9 @@ export default class App extends Component {
       firstName: "",
       lastName: "",
       loaded: false,
+      notificationDisplaying: false,
+      lastDeletedItem: {},
+      lastDeletedItemListName: "",
     };
   }
 
@@ -415,6 +419,7 @@ export default class App extends Component {
 
   deleteListItem(listName, itemID) {
     var dueDate = "";
+    var item;
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
@@ -424,6 +429,7 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             idx = j;
             dueDate = items[j].dueDate;
+            item = items[j];
             break;
           }
         }
@@ -462,7 +468,13 @@ export default class App extends Component {
     }
     items = items.splice(index, 1);
 
-    this.setState({ lists: lists, currentlySelectedItemID: "" });
+    console.log(item);
+    this.setState({
+      lists: lists,
+      currentlySelectedItemID: "",
+      lastDeletedItem: item,
+      lastDeletedItemListName: listName,
+    });
 
     const url = domain + "/deleteListItem";
     const body = JSON.stringify({
@@ -478,6 +490,7 @@ export default class App extends Component {
       },
       body: body,
     }).then((res) => res.text());
+    this.handleDisplayNotification();
   }
 
   setItemTitle(listName, itemID, title) {
@@ -678,11 +691,20 @@ export default class App extends Component {
       currentlySelectedListIndex: 0,
       currentlySelectedListName: "",
       currentlySelectedItemID: "",
-      // bgURL: bgURL,
+      bgURL: bgURL,
       firstName: "",
       lastName: "",
       loaded: false,
     });
+  }
+
+  handleDisplayNotification() {
+    console.log("in");
+    this.setState({ notificationDisplaying: true });
+    setTimeout(() => {
+      console.log("out");
+      this.setState({ notificationDisplaying: false });
+    }, 5000);
   }
 
   render() {
@@ -692,6 +714,10 @@ export default class App extends Component {
       this.state.currentlySelectedListIndex,
       this.state.currentlySelectedListIndex + 1
     );
+
+    var lastDeletedItemTitle = "";
+    if (this.state.lastDeletedItem !== undefined)
+      lastDeletedItemTitle = this.state.lastDeletedItem.title;
 
     const selectedItem = this.getCurrentlySelectedItem();
     const appClasses =
@@ -742,6 +768,11 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
         >
+          <Notification
+            displaying={this.state.notificationDisplaying}
+            title={lastDeletedItemTitle}
+            listName={this.state.lastDeletedItemListName}
+          />
           <div id="sidebar" className="p-0">
             <Sidebar
               lists={this.state.lists}
@@ -925,7 +956,7 @@ function checkIfNext7Days(dateStr) {
     curr.setDate(curr.getDate() + 1);
   }
 
-  var d = dateToStr(curr);
+  d = dateToStr(curr);
   if (dateStr === d) return true;
 
   return false;

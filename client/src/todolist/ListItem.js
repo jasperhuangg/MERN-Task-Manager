@@ -194,12 +194,3 @@ function getRowBorderColor(priority) {
   else if (priority === "medium") return "rgb(254, 192, 47)";
   else if (priority === "low") return "rgb(21, 127, 251)";
 }
-
-function shallowCopyMap(map) {
-  var copy = {};
-  for (var key in map) {
-    copy[key] = map[key];
-  }
-
-  return copy;
-}

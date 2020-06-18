@@ -24,7 +24,7 @@ export default class PrioritiesOverlay extends Component {
       "priorities-overlay-item text-left" +
       (this.props.currentlySelectedPriority === "low" ? " text-primary" : "");
     return (
-      <div className="overlay priorities-overlay">
+      <div className="overlay priorities-overlay shadow">
         <div
           className={highPriorityClasslist}
           onClick={(e) => this.handlePriorityItemClick(e)}
