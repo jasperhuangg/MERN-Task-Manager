@@ -195,11 +195,16 @@ export default class App extends Component {
 
   setSelectedList(listName) {
     var index;
-    for (let i = 0; i < this.state.lists.length; i++) {
-      if (this.state.lists[i].name === listName) {
-        console.log("found at " + i);
-        index = i;
-        break;
+
+    if (listName === "Today") index = this.state.lists.length - 3;
+    if (listName === "Next 7 Days") index = this.state.lists.length - 2;
+    if (listName === "All") index = this.state.lists.length - 1;
+    else {
+      for (let i = 0; i < this.state.lists.length; i++) {
+        if (this.state.lists[i].name === listName) {
+          index = i;
+          break;
+        }
       }
     }
     this.setState({
@@ -267,6 +272,9 @@ export default class App extends Component {
       .then((res) => res.json())
       .then((res) => {
         var lists = res;
+
+        lists = this.appendSmartLists(lists);
+
         this.setState({
           lists: lists,
           currentlySelectedListName: lists[0].name,
@@ -274,26 +282,114 @@ export default class App extends Component {
       });
   }
 
+  appendSmartLists(lists) {
+    var next7Days = this.getNext7Days(lists);
+    var today = this.getToday(lists);
+    var all = this.getAll(lists);
+
+    lists.push(today);
+    lists.push(next7Days);
+    lists.push(all);
+
+    return lists;
+  }
+
+  getNext7Days(lists) {
+    var next7Days = {
+      name: "Next 7 Days",
+      color: "",
+      items: [],
+    };
+
+    for (let i = 0; i < lists.length; i++) {
+      const items = lists[i].items;
+      for (let j = 0; j < items.length; j++) {
+        if (checkIfNext7Days(items[j].dueDate)) {
+          next7Days.items.push(items[j]);
+        }
+      }
+    }
+    next7Days.items.sort(sortListItems);
+
+    return next7Days;
+  }
+
+  getAll(lists) {
+    var all = {
+      name: "All",
+      color: "",
+      items: [],
+    };
+
+    for (let i = 0; i < lists.length; i++) {
+      // const items = lists[i].items;
+      // for (let j = 0; j < items.length; j++) {
+      //   if (!items[j].completed) {
+      //     all.items.push(items[j]);
+      //   }
+      // }
+      all.items = all.items.concat(lists[i].items);
+    }
+
+    all.items.sort(sortListItems);
+
+    return all;
+  }
+
+  getToday(lists) {
+    var today = {
+      name: "Today",
+      color: "",
+      items: [],
+    };
+
+    var t = dateToStr(new Date());
+
+    for (let i = 0; i < lists.length; i++) {
+      const items = lists[i].items;
+      for (let j = 0; j < items.length; j++) {
+        if (items[j].dueDate === t) {
+          today.items.push(items[j]);
+        }
+      }
+    }
+    today.items.sort(sortListItems);
+
+    return today;
+  }
+
   addListItem(listName, title, dueDate, description, priority) {
     const lists = this.state.lists.slice();
     var id = null;
+    var item = {
+      title: title,
+      description: description,
+      dueDate: dueDate,
+      priority: priority,
+      completed: false,
+      itemID: new ObjectID().toString(),
+    };
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
-        var item = {
-          title: title,
-          description: description,
-          dueDate: dueDate,
-          priority: priority,
-          completed: false,
-          itemID: new ObjectID().toString(),
-        };
         items.push(item);
         id = item.itemID;
         items.sort(sortListItems);
         break;
       }
     }
+
+    var today = dateToStr(new Date());
+    if (dueDate === today) {
+      lists[lists.length - 3].items.push(item);
+      lists[lists.length - 3].items.sort(sortListItems);
+    }
+    if (checkIfNext7Days(dueDate)) {
+      lists[lists.length - 2].items.push(item);
+      lists[lists.length - 2].items.sort(sortListItems);
+    }
+    lists[lists.length - 1].items.push(item);
+    lists[lists.length - 1].items.sort(sortListItems);
 
     this.setState({ lists: lists, currentlySelectedItemID: id });
 
@@ -318,6 +414,7 @@ export default class App extends Component {
   }
 
   deleteListItem(listName, itemID) {
+    var dueDate = "";
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
@@ -326,12 +423,44 @@ export default class App extends Component {
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             idx = j;
+            dueDate = items[j].dueDate;
             break;
           }
         }
         items = items.splice(idx, 1);
       }
     }
+
+    let index = -1;
+    var today = dateToStr(new Date());
+    if (dueDate === today) {
+      items = lists[lists.length - 3].items;
+      for (let j = 0; j < items.length; j++) {
+        if (items[j].itemID === itemID) {
+          index = j;
+          break;
+        }
+      }
+      items = items.splice(index, 1);
+    }
+    if (checkIfNext7Days(dueDate)) {
+      items = lists[lists.length - 2].items;
+      for (let j = 0; j < items.length; j++) {
+        if (items[j].itemID === itemID) {
+          index = j;
+          break;
+        }
+      }
+      items = items.splice(index, 1);
+    }
+    items = lists[lists.length - 1].items;
+    for (let j = 0; j < items.length; j++) {
+      if (items[j].itemID === itemID) {
+        index = j;
+        break;
+      }
+    }
+    items = items.splice(index, 1);
 
     this.setState({ lists: lists, currentlySelectedItemID: "" });
 
@@ -386,7 +515,7 @@ export default class App extends Component {
   }
 
   setItemCompleted(listName, itemID, completed) {
-    const lists = this.state.lists.slice();
+    var lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -401,6 +530,9 @@ export default class App extends Component {
         break;
       }
     }
+
+    lists = lists.slice(0, lists.length - 3);
+    lists = this.appendSmartLists(lists);
 
     this.setState({ lists: lists });
 
@@ -424,7 +556,7 @@ export default class App extends Component {
   setListName(oldListName, newListName) {}
 
   setItemDueDate(listName, itemID, dueDate) {
-    const lists = this.state.lists.slice();
+    var lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -438,6 +570,9 @@ export default class App extends Component {
         break;
       }
     }
+
+    lists = lists.slice(0, lists.length - 3);
+    lists = this.appendSmartLists(lists);
 
     this.setState({ lists: lists });
 
@@ -566,6 +701,8 @@ export default class App extends Component {
     const loginRegClasses =
       "container-fluid align-items-center" +
       (this.state.loggedIn === "successful" ? " d-none" : " d-flex ");
+
+    console.log(this.state.lists);
 
     return (
       <>
@@ -767,4 +904,33 @@ function getRandomBGURL() {
   );
 
   return 'url("' + backgroundURLs[currBackground] + '")';
+}
+
+function dateToStr(date) {
+  var day = date.getDate();
+  if (day < 10) day = "0" + day.toString();
+
+  var month = date.getMonth() + 1;
+  if (month < 10) month = "0" + month.toString();
+
+  var year = date.getFullYear().toString();
+
+  var formatted = year + "-" + month + "-" + day;
+
+  return formatted;
+}
+
+function checkIfNext7Days(dateStr) {
+  var dates = [];
+  var curr = new Date();
+  for (let i = 0; i < 7; i++) {
+    curr.setDate(curr.getDate() + i);
+    dates.push(dateToStr(curr));
+  }
+
+  for (let i = 0; i < dates.length; i++) {
+    if (dateStr === dates[i]) return true;
+  }
+
+  return false;
 }

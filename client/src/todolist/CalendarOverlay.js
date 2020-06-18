@@ -9,7 +9,7 @@ export default class CalendarOverlay extends Component {
   }
 
   setDate(date) {
-    var formatted = formatDate(date);
+    var formatted = dateToStr(date);
     this.props.setDueDate(formatted);
   }
 
@@ -52,7 +52,7 @@ export default class CalendarOverlay extends Component {
   }
 }
 
-function formatDate(date) {
+function dateToStr(date) {
   var day = date.getDate();
   if (day < 10) day = "0" + day.toString();
 

@@ -208,6 +208,23 @@ export default class Todolist extends Component {
     const priorityIconClasses = this.getPriorityIconClasses();
     const calendarIconClasses = this.getCalendarIconClasses();
 
+    var emptyListText = "";
+    var emptyListIcon = "fas fa-plus-square mr-2";
+
+    if (name === "Today") {
+      emptyListText = "Nothing due today, let's get ahead!";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    } else if (name === "All") {
+      emptyListText = "Nothing due, kick back and relax.";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    } else if (name === "Next 7 Days") {
+      emptyListText = "Nothing due in the next week, let's get ahead!";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    } else {
+      emptyListText = "Add an item above";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    }
+
     // used so placeholder text stays in title input when it is focused but empty
     $(document).find(".add-item-input-container").show();
 
@@ -242,7 +259,12 @@ export default class Todolist extends Component {
               suppressContentEditableWarning={true}
               id="addItemInput"
               placeholder={placeholder}
-              className="form-control form-control-sm text-left editable"
+              className={
+                "form-control form-control-sm text-left editable" +
+                (name === "Today" || name === "Next 7 Days" || name === "All"
+                  ? " d-none"
+                  : "")
+              }
               type="text"
               defaultValue={addItemText}
               onInput={(e) => this.handleInput(e)}
@@ -250,7 +272,12 @@ export default class Todolist extends Component {
               ref={this.inputRef}
             ></input>
             <div
-              className="input-group-append"
+              className={
+                "input-group-append" +
+                (name === "Today" || name === "Next 7 Days" || name === "All"
+                  ? " d-none"
+                  : "")
+              }
               onClick={(e) => this.handleShowPrioritiesOverlay(e)}
             >
               <span className="input-group-text icon">
@@ -269,7 +296,14 @@ export default class Todolist extends Component {
               className="input-group-append"
               onClick={(e) => this.handleShowCalendarOverlay(e)}
             >
-              <span className="input-group-text icon">
+              <span
+                className={
+                  "input-group-text icon" +
+                  (name === "Today" || name === "Next 7 Days" || name === "All"
+                    ? " d-none"
+                    : "")
+                }
+              >
                 <i className={calendarIconClasses}></i>
               </span>
             </div>
@@ -288,10 +322,11 @@ export default class Todolist extends Component {
             <span
               className={
                 "pl-2 font-small font-grey " +
-                (this.props.items.length === 0 ? "" : "d-none")
+                (incompletedItems.length === 0 ? "" : "d-none")
               }
             >
-              <i class="fas fa-plus-square mr-2"></i>Add an item above
+              <i class={emptyListIcon}></i>
+              {emptyListText}
             </span>
             {incompletedItems.map((item, i) => {
               return (
@@ -341,7 +376,12 @@ export default class Todolist extends Component {
             style={{ cursor: "pointer" }}
             className={
               "completed-separator mt-2 mb-2 font-small text-left " +
-              (completedItems.length === 0 ? "d-none" : "")
+              (completedItems.length === 0 ||
+              name === "Today" ||
+              name === "Next 7 Days" ||
+              name === "All"
+                ? "d-none"
+                : "")
             }
             onClick={() => this.handleCompletedSeparatorClick()}
           >
@@ -351,7 +391,14 @@ export default class Todolist extends Component {
             ></i>
             Completed
           </div>
-          <div id="completed-items">
+          <div
+            id="completed-items"
+            className={
+              name === "Today" || name === "Next 7 Days" || name === "All"
+                ? "d-none"
+                : ""
+            }
+          >
             {completedItems.map((item, i) => {
               return (
                 <div className={"list-item"} key={item.itemID}>
@@ -400,7 +447,11 @@ export default class Todolist extends Component {
             id="bottom-line"
             className={
               "list-item" +
-              (this.state.completedItemsShowing || completedItems.length === 0
+              (this.state.completedItemsShowing ||
+              completedItems.length === 0 ||
+              name === "Today" ||
+              name === "All" ||
+              name === "Next 7 Days"
                 ? " d-none"
                 : "")
             }

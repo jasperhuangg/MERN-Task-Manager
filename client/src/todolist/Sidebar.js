@@ -13,6 +13,8 @@ export default class Sidebar extends Component {
       "sidebar-list-name"
     )[0].innerText;
 
+    var id = e.currentTarget.id;
+
     if (listName.indexOf("\n") !== -1)
       listName = listName.substring(0, listName.indexOf("\n"));
 
@@ -22,6 +24,27 @@ export default class Sidebar extends Component {
 
   render() {
     const selectedList = this.props.currentlySelectedListName;
+
+    const personalLists = this.props.lists.slice(
+      0,
+      this.props.lists.length - 3
+    );
+
+    var incompletedCountToday = 0;
+    var incompletedCountNext7Days = 0;
+    var incompletedCountAll = 0;
+    if (this.props.lists.length > 0) {
+      incompletedCountToday = countIncompletedItems(
+        this.props.lists[this.props.lists.length - 3]
+      );
+      incompletedCountNext7Days = countIncompletedItems(
+        this.props.lists[this.props.lists.length - 2]
+      );
+      incompletedCountAll = countIncompletedItems(
+        this.props.lists[this.props.lists.length - 1]
+      );
+    }
+
     return (
       <div className="sidebar-container py-5">
         <div className="mb-4 pl-3">
@@ -33,6 +56,7 @@ export default class Sidebar extends Component {
               borderRadius: "50%",
               padding: "10px",
               fontSize: "14px",
+              pointerEvents: "none",
             }}
           >
             {this.props.firstName.toUpperCase()[0] +
@@ -40,6 +64,7 @@ export default class Sidebar extends Component {
           </span>
         </div>
         <div
+          id="sidebar-today"
           className={
             "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "Today" ? " selected-sidebar-item" : "")
@@ -49,9 +74,12 @@ export default class Sidebar extends Component {
         >
           <i className="fas fa-calendar-day sidebar-icon col-1 mr-1"></i>
           <div className="col-6 text-left p-0 sidebar-list-name">Today</div>
-          <div className="col-4 font-small">n</div>
+          <div className="col-4 font-small">
+            {incompletedCountToday > 0 ? incompletedCountToday : ""}
+          </div>
         </div>
         <div
+          id="sidebar-next-7-days"
           className={
             "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "Next 7 Days" ? " selected-sidebar-item" : "")
@@ -62,9 +90,12 @@ export default class Sidebar extends Component {
           <div className="col-6 text-left p-0 sidebar-list-name">
             Next 7 Days
           </div>
-          <div className="col-4 font-small">n</div>
+          <div className="col-4 font-small">
+            {incompletedCountNext7Days > 0 ? incompletedCountNext7Days : ""}
+          </div>
         </div>
         <div
+          id="sidebar-all"
           className={
             "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "All" ? " selected-sidebar-item" : "")
@@ -73,12 +104,21 @@ export default class Sidebar extends Component {
         >
           <i className="fas fa-calendar sidebar-icon col-1 mr-1"></i>
           <div className="col-6 text-left p-0 sidebar-list-name">All</div>
-          <div className="col-4 font-small">n</div>
+          <div className="col-4 font-small">
+            {incompletedCountAll > 0 ? incompletedCountAll : ""}
+          </div>
         </div>
-        {this.props.lists.map((list, index) => {
+        <div
+          className="text-center font-small sidebar-item py-1 pt-5"
+          style={{ pointerEvents: "none", fontWeight: "600" }}
+        >
+          Your Lists
+        </div>
+        {personalLists.map((list, index) => {
           const count = countIncompletedItems(list);
           return (
             <div
+              key={list.name}
               className={
                 "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
                 (selectedList === list.name ? " selected-sidebar-item" : "")
