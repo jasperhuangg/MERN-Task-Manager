@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Cookies from "universal-cookie";
 import "./App.css";
 
 // import $ from "jquery";
@@ -10,6 +11,7 @@ import Register from "./todolist/Register.js";
 import Sidebar from "./todolist/Sidebar.js";
 
 var ObjectID = require("bson-objectid");
+const cookies = new Cookies();
 
 const domain = "http://localhost:9000";
 
@@ -22,15 +24,15 @@ export default class App extends Component {
       loggedIn: "not yet",
       registered: "not yet",
       loginOrRegister: "login",
-      error: null,
       lists: [],
       username: "",
       currentlySelectedListIndex: 0,
-      currentlySelectedListName: "MATH226",
+      currentlySelectedListName: "",
       currentlySelectedItemID: "",
       bgURL: "",
       firstName: "",
       lastName: "",
+      loaded: false,
     };
   }
 
@@ -42,38 +44,46 @@ export default class App extends Component {
     //   username: "[whatever was in the cookie]",
     // });
 
-    // visit https://freeimage.host/ to host more background images
-    const backgroundURLs = [
-      "https://iili.io/J4xbBS.jpg",
-      "https://iili.io/J4xtQ2.jpg",
-      "https://iili.io/J4xp49.jpg",
-      "https://iili.io/J4z92e.jpg",
-      "https://iili.io/J4zdpj.jpg",
-      "https://iili.io/J4zJkb.jpg",
-      "https://iili.io/J4zHYu.jpg",
-      "https://iili.io/J4zWZl.jpg",
-      "https://iili.io/J4IBt4.jpg",
-      "https://iili.io/J4Weln.jpg",
-      "https://iili.io/J4WWtp.jpg",
-      "https://iili.io/J4WjVI.jpg",
-      "https://iili.io/J4WhoN.jpg",
-      "https://iili.io/J4WwPt.jpg",
-      "https://iili.io/J4WOKX.jpg",
-      "https://iili.io/J4WUN4.jpg",
-      "https://iili.io/J4WgDl.jpg",
-      "https://iili.io/J4WSRf.jpg",
-      "https://iili.io/J4WmDQ.jpg",
-      "https://iili.io/J4X9WB.jpg",
-      "https://iili.io/J4XHiP.jpg",
-      "https://iili.io/J4WyxV.jpg",
-    ];
-    var currBackground = Math.floor(
-      Math.random() * Math.floor(backgroundURLs.length)
-    );
+    var username = "";
+    var firstName = "";
+    var lastName = "";
+    var loggedIn = "not yet";
 
-    const bgURL = 'url("' + backgroundURLs[currBackground] + '")';
+    if (cookies.get("DoozyLogin") !== undefined) {
+      username = cookies.get("DoozyLogin").email;
+      firstName = cookies.get("DoozyLogin").firstName;
+      lastName = cookies.get("DoozyLogin").lastName;
+      loggedIn = "successful";
 
-    this.setState({ bgURL: bgURL });
+      // extend the expiration date of the cookie
+      var aWeekFromNow = new Date();
+      aWeekFromNow.setDate(aWeekFromNow.getDate() + 7);
+      cookies.set(
+        "DoozyLogin",
+        { email: username, firstName: firstName, lastName: lastName },
+        {
+          path: "/",
+          expires: aWeekFromNow,
+        }
+      );
+    }
+
+    const bgURL = getRandomBGURL();
+
+    this.setState({
+      bgURL: bgURL,
+      username: username,
+      firstName: firstName,
+      lastName: lastName,
+      loggedIn: loggedIn,
+    });
+  }
+
+  componentDidUpdate() {
+    if (this.state.loaded === false && this.state.loggedIn === "successful") {
+      this.setState({ loaded: true });
+      this.getLists();
+    }
   }
 
   verifyLogin(username, password) {
@@ -101,11 +111,79 @@ export default class App extends Component {
             lastName: res.lastName,
           });
           this.getLists();
+          // set a cookie
+          var aWeekFromNow = new Date();
+          aWeekFromNow.setDate(aWeekFromNow.getDate() + 7);
+          cookies.set(
+            "DoozyLogin",
+            {
+              email: username,
+              firstName: res.firstName,
+              lastName: res.lastName,
+            },
+            {
+              path: "/",
+              expires: aWeekFromNow,
+            }
+          );
         } else if (res.info === "username does not exist")
           this.setState({ loggedIn: "username does not exist" });
         else if (res.info === "incorrect password")
           this.setState({ loggedIn: "incorrect password" });
       });
+  }
+
+  createAccount(email, firstName, lastName, password) {
+    if (email === "" || firstName === "" || lastName === "" || password === "")
+      this.setState({ registered: "empty field(s)" });
+    else if (!ValidateEmail(email))
+      this.setState({ registered: "invalid email" });
+    else if (password.length < 6)
+      this.setState({ registered: "password length" });
+    else {
+      const url = domain + "/createAccount";
+      const body = JSON.stringify({
+        username: email,
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+      });
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.success) {
+            this.setState({
+              docTitle: "Lists | Doozy",
+              loggedIn: "successful",
+              registered: "successful",
+              username: email,
+              firstName: firstName,
+              lastName: lastName,
+            });
+            this.getLists();
+            // set a cookie
+            var aWeekFromNow = new Date();
+            aWeekFromNow.setDate(aWeekFromNow.getDate() + 7);
+            cookies.set(
+              "DoozyLogin",
+              { email: email, firstName: firstName, lastName: lastName },
+              {
+                path: "/",
+                expires: aWeekFromNow,
+              }
+            );
+          } else if (res.info === "username already exists") {
+            this.setState({ registered: "username already exists" });
+          }
+        });
+    }
   }
 
   setSelectedItem(itemID) {
@@ -115,8 +193,6 @@ export default class App extends Component {
   setSelectedList(listName) {
     this.setState({ currentlySelectedListName: listName });
   }
-
-  verifyCookie() {}
 
   toggleLoginRegister() {
     if (this.state.loginOrRegister === "login")
@@ -168,7 +244,10 @@ export default class App extends Component {
       .then((res) => res.json())
       .then((res) => {
         var lists = res;
-        this.setState({ lists: lists });
+        this.setState({
+          lists: lists,
+          currentlySelectedListName: lists[0].name,
+        });
       });
   }
 
@@ -424,6 +503,30 @@ export default class App extends Component {
     });
   }
 
+  handleLogOut() {
+    // delete the cookie
+    cookies.remove("DoozyLogin");
+
+    const bgURL = getRandomBGURL();
+
+    // reset state back to start
+    this.setState({
+      docTitle: "Log in | Doozy",
+      loggedIn: "not yet",
+      registered: "not yet",
+      loginOrRegister: "login",
+      lists: [],
+      username: "",
+      currentlySelectedListIndex: 0,
+      currentlySelectedListName: "",
+      currentlySelectedItemID: "",
+      // bgURL: bgURL,
+      firstName: "",
+      lastName: "",
+      loaded: false,
+    });
+  }
+
   render() {
     document.title = this.state.docTitle;
 
@@ -455,7 +558,6 @@ export default class App extends Component {
           >
             <Login
               loginInfo={this.state.loggedIn}
-              registerInfo={this.state.registered}
               verifyLogin={(username, password) =>
                 this.verifyLogin(username, password)
               }
@@ -468,7 +570,13 @@ export default class App extends Component {
               (this.state.loginOrRegister === "register" ? "" : " d-none")
             }
           >
-            <Register switchToLogin={() => this.toggleLoginRegister()} />
+            <Register
+              switchToLogin={() => this.toggleLoginRegister()}
+              createAccount={(email, fName, lName, password) =>
+                this.createAccount(email, fName, lName, password)
+              }
+              registerInfo={this.state.registered}
+            />
           </div>
         </div>
         <div
@@ -476,7 +584,7 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
         >
-          <div id="sidebar" className="col-2 p-0">
+          <div id="sidebar" className="p-0">
             <Sidebar
               lists={this.state.lists}
               firstName={this.state.firstName}
@@ -552,7 +660,7 @@ export default class App extends Component {
                 </div>
                 <div
                   id="toolbar"
-                  className="pl-5 col-1 h-25 row justify-content-center"
+                  className="pl-2 pr-2 h-25 row justify-content-center"
                 >
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
                     <i className="fas fa-cogs"></i>
@@ -560,7 +668,10 @@ export default class App extends Component {
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
                     <i className="fas fa-hand-sparkles"></i>
                   </div>
-                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+                  <div
+                    className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center"
+                    onClick={() => this.handleLogOut()}
+                  >
                     <i className="fas fa-sign-out-alt"></i>
                   </div>
                 </div>
@@ -600,4 +711,39 @@ function sortListItems(a, b) {
       return dateA - dateB;
     }
   }
+}
+
+function ValidateEmail(mail) {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    return true;
+  }
+  return false;
+}
+
+function getRandomBGURL() {
+  // visit https://freeimage.host/ to host more background images
+  const backgroundURLs = [
+    "https://iili.io/J4xbBS.jpg",
+    "https://iili.io/J4xtQ2.jpg",
+    "https://iili.io/J4z92e.jpg",
+    "https://iili.io/J4zdpj.jpg",
+    "https://iili.io/J4zJkb.jpg",
+    "https://iili.io/J4zWZl.jpg",
+    "https://iili.io/J4Weln.jpg",
+    "https://iili.io/J4WhoN.jpg",
+    "https://iili.io/J4WwPt.jpg",
+    "https://iili.io/J4WOKX.jpg",
+    "https://iili.io/J4WUN4.jpg",
+    "https://iili.io/J4WgDl.jpg",
+    "https://iili.io/J4WSRf.jpg",
+    "https://iili.io/J4WmDQ.jpg",
+    "https://iili.io/J4X9WB.jpg",
+    "https://iili.io/J4XHiP.jpg",
+    "https://iili.io/J4WyxV.jpg",
+  ];
+  var currBackground = Math.floor(
+    Math.random() * Math.floor(backgroundURLs.length)
+  );
+
+  return 'url("' + backgroundURLs[currBackground] + '")';
 }

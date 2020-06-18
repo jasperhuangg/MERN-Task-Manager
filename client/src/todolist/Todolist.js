@@ -234,7 +234,7 @@ export default class Todolist extends Component {
         className="container-fluid todolist"
         onClick={(e) => this.handleCloseOverlays(e)}
       >
-        <h3 className="text-left my-4">{name}</h3>
+        <h3 className="list-name text-left my-4">{name}</h3>
         <div className="add-item-input-container">
           <div className="input-group mb-4">
             <input
@@ -399,7 +399,10 @@ export default class Todolist extends Component {
           <div
             id="bottom-line"
             className={
-              "list-item" + (this.state.completedItemsShowing ? " d-none" : "")
+              "list-item" +
+              (this.state.completedItemsShowing || completedItems.length === 0
+                ? " d-none"
+                : "")
             }
           ></div>
         </div>

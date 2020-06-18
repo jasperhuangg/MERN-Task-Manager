@@ -17,6 +17,7 @@
   background: rgba(255, 255, 255, 0.9);
   border-radius: 7px;
   height: 90vh;
+  width: 200px !important;
   overflow-x: hidden;
 }
 
@@ -140,7 +141,7 @@ select:focus {
   color: rgb(73, 80, 87);
   background-color: white;
   border: solid 0.25px rgb(240, 240, 240);
-  transition: 0.05s ease;
+  transition: 0.1s ease;
   font-size: 13px;
 }
 
@@ -202,13 +203,13 @@ select:focus {
 }
 
 .todo-item {
-  /* transition: 0.1s ease; */
+  transition: 0.2s ease;
   border-right: 2px solid rgb(21, 127, 251);
 }
 
 .selected-item {
-  /* transition: 0.1s ease; */
-  background-color: rgba(216, 214, 214, 0.3) !important;
+  transition: 0.2s ease;
+  background-color: rgba(216, 214, 214, 0.5) !important;
 
   box-sizing: border-box;
 }
@@ -312,13 +313,14 @@ select:focus {
 
 #toolbar {
   position: absolute;
+  width: 100px !important;
   top: 1.5em;
   right: 1.5em;
 }
 
 .toolbar-icon {
   color: rgba(255, 255, 255, 0.75);
-  font-size: 27px;
+  font-size: 20px;
   transition: 0.2s ease;
   text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.1);
 }
@@ -343,10 +345,14 @@ select:focus {
   color: rgb(113, 123, 133);
 }
 
+.list-name {
+  pointer-events: none;
+}
+
 .sidebar-item:hover {
   cursor: pointer;
   transition: 0.2s ease;
-  background-color: rgb(235, 232, 232);
+  background-color: rgba(216, 214, 214, 0.5) !important;
 }
 
 .selected-sidebar-item {
@@ -363,7 +369,6 @@ select:focus {
   color: white;
 }
 
-.profile-icon {
-  margin-top: 5px;
-  margin-bottom: 5px;
+.sidebar-count {
+  font-size: 9px;
 }

@@ -16,11 +16,12 @@
 .Register {
   border-radius: 7px;
   height: 87vh;
-  width: 370px;
+  width: 400px;
   background-color: rgba(255, 255, 255, 0.85);
+  overflow: hidden;
 }
 .login-section {
-  width: 370px;
+  width: 400px;
   float: left;
 }
 

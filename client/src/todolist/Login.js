@@ -12,6 +12,7 @@ export default class Login extends Component {
       nextClicked: false,
     };
     this.passwordInput = React.createRef();
+    this.inputRef = React.createRef();
   }
 
   componentDidUpdate() {
@@ -29,9 +30,10 @@ export default class Login extends Component {
   }
 
   handleEmailEnter(e) {
-    if (this.state.usernameEntered && e.keyCode === 13) {
+    if (this.state.usernameEntered && (e.keyCode === 13 || e.keyCode === 9)) {
       e.preventDefault();
       this.setState({ nextClicked: true });
+      this.passwordInput.current.focus();
     }
   }
 
@@ -109,6 +111,7 @@ export default class Login extends Component {
                 this.state.nextClicked &&
                 this.props.loginInfo !== "username does not exist"
               }
+              ref={this.inputRef}
             />
             <div
               className={
@@ -151,9 +154,11 @@ export default class Login extends Component {
           <br />
 
           <button
-            className="btn btn-primary px-4"
+            className="btn btn-primary px-4 font-small-login-reg"
             type={this.state.nextClicked ? "submit" : "button"}
-            disabled={!this.state.usernameEntered}
+            disabled={
+              !this.state.usernameEntered || this.inputRef.current.value === ""
+            }
             onClick={(e) => this.handleLoginBtnClick(e)}
           >
             {this.state.nextClicked ? "Log In" : "Next"}

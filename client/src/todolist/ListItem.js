@@ -39,10 +39,18 @@ export default class ListItem extends Component {
   };
 
   handleCmdDelete(e) {
-    const map = this.state.pressedKeys;
-    // e = e || event;
-    map[e.keyCode] = e.type === "keydown";
-    if (map[91] && map[8]) this.props.handleDelete(this.state.itemID);
+    var map = this.state.pressedKeys;
+
+    if (e.keyCode === 91 && map[8]) {
+      map[e.keyCode] = e.type === "keydown";
+      map[8] = false;
+    } else if (e.keyCode === 91 && !map[8]) {
+      map[e.keyCode] = e.type === "keydown";
+    } else if (e.keyCode === 8 && map[91] === true) {
+      this.props.handleDelete(this.state.itemID);
+      map = {};
+      this.setState({ pressedKeys: map });
+    }
   }
 
   handleBlur = (e) => {
@@ -185,4 +193,13 @@ function getRowBorderColor(priority) {
   if (priority === "high") return "rgb(218, 56, 73)";
   else if (priority === "medium") return "rgb(254, 192, 47)";
   else if (priority === "low") return "rgb(21, 127, 251)";
+}
+
+function shallowCopyMap(map) {
+  var copy = {};
+  for (var key in map) {
+    copy[key] = map[key];
+  }
+
+  return copy;
 }

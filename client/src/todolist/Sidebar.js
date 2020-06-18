@@ -9,23 +9,28 @@ export default class Sidebar extends Component {
   }
 
   selectList(e) {
-    const listName = e.target.innerText;
+    var listName = e.target.innerText;
+
+    if (listName.indexOf("\n") !== -1)
+      listName = listName.substring(0, listName.indexOf("\n"));
 
     this.setState({ selectedList: listName });
     this.props.setSelectedList(listName);
   }
 
   render() {
-    const selectedList = this.state.selectedList;
+    const selectedList = this.props.currentlySelectedListName;
     return (
       <div className="sidebar-container py-5">
-        <div className="profile-icon mb-4 pl-3">
+        <div className="mb-4 pl-3">
           <span
+            className="profile-icon"
             style={{
               color: "white",
               backgroundColor: "rgb(21, 127, 251)",
               borderRadius: "50%",
               padding: "10px",
+              fontSize: "14px",
             }}
           >
             {this.props.firstName.toUpperCase()[0] +
@@ -72,10 +77,23 @@ export default class Sidebar extends Component {
             >
               <i className="fas fa-bars sidebar-icon"></i>
               {list.name}
+              <span className="ml-4 sidebar-count">
+                {countIncompletedItems(list)}
+              </span>
             </div>
           );
         })}
       </div>
     );
   }
+}
+
+function countIncompletedItems(list) {
+  const items = list.items;
+  var res = 0;
+  for (let i = 0; i < items.length; i++) {
+    if (!items[i].completed) res++;
+  }
+
+  return res;
 }

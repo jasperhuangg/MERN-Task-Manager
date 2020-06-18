@@ -40,7 +40,6 @@ router.post("/", (req, res, next) => {
     MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
       if (err) throw err;
       var dbo = db.db("Todolist");
-
       dbo
         .collection("Users")
         .find({ username: username })
@@ -56,10 +55,10 @@ router.post("/", (req, res, next) => {
               lists: [
                 {
                   name: "How to Doozy",
-                  color: "blue",
+                  color: "#157ffb",
                   items: [
                     {
-                      title: "Add items by typing them in above.",
+                      title: "Add items above: Hit [Enter] to add",
                       description: "Add a description here!",
                       dueDate: "",
                       priority: "high",
@@ -67,9 +66,8 @@ router.post("/", (req, res, next) => {
                       itemID: "0",
                     },
                     {
-                      title:
-                        "Keywords set due dates automatically when adding.",
-                      description: 'Try adding "Get groceries tmr"',
+                      title: "Keywords set due dates when adding items.",
+                      description: 'Try typing and adding "Get groceries tmr"',
                       dueDate: "",
                       priority: "medium",
                       completed: false,
@@ -77,11 +75,21 @@ router.post("/", (req, res, next) => {
                     },
                     {
                       title: "Set item priorities to affect sorting.",
-                      description: "",
+                      description:
+                        "Try clicking the scale icon and changing the priority!\n\nItems are sorted with due dates, then priorities amongst dates.",
                       dueDate: "",
                       priority: "low",
                       completed: false,
                       itemID: "2",
+                    },
+                    {
+                      title: "Deleting items",
+                      description:
+                        "Right-click or use [Cmd][Delete] when focused on an item to delete it.",
+                      dueDate: "",
+                      priority: "low",
+                      completed: false,
+                      itemID: "3",
                     },
                   ],
                 },
@@ -90,10 +98,11 @@ router.post("/", (req, res, next) => {
 
             dbo.collection("Users").insertOne(userObj, (err, result) => {
               if (err) {
-                res.send({ successful: false, info: err });
+                res.send({ success: false, info: err });
                 throw err;
+              } else {
+                res.send({ success: true, info: "" });
               }
-              res.send({ successful: true });
             });
           }
         });

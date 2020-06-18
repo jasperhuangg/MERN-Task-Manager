@@ -10,20 +10,68 @@ export default class Register extends Component {
       firstName: "",
       lastName: "",
     };
+    this.passwordInput = React.createRef();
   }
 
-  handleSubmit(e) {
-    e.preventDefault(); // prevent it from reloading the page
-
-    // make a call to the DB in App.js to create the account
+  handleEmailChange(e) {
+    this.setState({ email: e.target.value });
   }
+
+  handleFirstNameChange(e) {
+    this.setState({ firstName: e.target.value });
+  }
+
+  handleLastNameChange(e) {
+    this.setState({ lastName: e.target.value });
+  }
+
+  handlePasswordChange(e) {
+    this.setState({ password: e.target.value });
+  }
+
+  handleSubmit() {
+    const email = this.state.email;
+    const firstName = this.state.firstName;
+    const lastName = this.state.lastName;
+    const password = this.state.password;
+    this.props.createAccount(email, firstName, lastName, password);
+  }
+
+  handleKeyDown(e) {
+    if (e.keyCode === 13) {
+      this.handleSubmit();
+    }
+  }
+
   render() {
-    var sentBack = false;
+    var warningMessage = "";
+    var emptyFields = new Array(4).fill(false);
+
+    if (this.props.registerInfo === "username already exists")
+      warningMessage = "An account with that email already exists. ";
+    else if (this.props.registerInfo === "invalid email")
+      warningMessage = "Please enter a valid email address.";
+    else if (this.props.registerInfo === "password length")
+      warningMessage = "Password must be at least 6 characters.";
+    else if (this.props.registerInfo === "empty field(s)") {
+      warningMessage = "Please fill in all fields.";
+      emptyFields[0] = this.state.email === "";
+      emptyFields[1] = this.state.firstName === "";
+      emptyFields[2] = this.state.lastName === "";
+      emptyFields[3] = this.state.password === "";
+    }
+
+    const emailInputHighlighted =
+      this.props.registerInfo === "username already exists" ||
+      this.props.registerInfo === "invalid email" ||
+      emptyFields[0];
+    const firstNameInputHighlighted = emptyFields[1];
+    const lastNameInputHighlighted = emptyFields[2];
+    const passwordInputHighlighted =
+      this.props.registerInfo === "password length" || emptyFields[3];
+
     return (
       <div className="Register py-5 px-4">
-        <h1>LOGO</h1>
-        <br />
-        <br />
         <h5 style={{ fontWeight: "600" }}>Create your account</h5>
         <br />
         <br />
@@ -32,61 +80,63 @@ export default class Register extends Component {
         <div className="or-separator my-2 w-100 text-center font-grey">
           <span className="px-1">or</span>
         </div>
-
         <div
           className={
-            "font-small text-danger" +
-            (this.props.loginInfo === "not yet" ? " d-none" : "")
+            "font-small-login-reg text-danger py-2" +
+            (warningMessage === "" ? " d-none" : "")
           }
         >
-          Please provide a valid username and password.
+          {warningMessage}
         </div>
-        <br />
-        <form className="font-grey font-small">
+        <form className="font-grey font-small-login-reg">
           <label htmlFor="login-email-input" style={{ fontWeight: "500" }}>
             Email Address{" "}
           </label>
-          <div className="input-group input-group-sm">
+          <div className="input-group input-group-sm mb-3">
             <input
               type="email"
               className={
                 "form-control form-control-sm" +
-                (sentBack && this.props.loginInfo === "username does not exist"
-                  ? " border-danger"
-                  : "")
+                (emailInputHighlighted ? " border-danger" : "")
               }
               id="login-email-input"
               aria-describedby="emailHelp"
-              // onChange={(e) => this.handleEmailInput(e)}
-              // onKeyDown={(e) => this.handleEmailEnter(e)}
-              disabled={
-                this.state.nextClicked &&
-                this.props.loginInfo !== "username does not exist"
-              }
+              onChange={(e) => this.handleEmailChange(e)}
             />
-            <div
-              className={
-                "input-group-append" +
-                (this.state.nextClicked &&
-                this.props.loginInfo !== "username does not exist"
-                  ? ""
-                  : " d-none")
-              }
-            >
-              <span className="input-group-text email-check">
-                <i className="fas fa-check"></i>
-              </span>
-            </div>
-
-            {/* <small id="emailHelp" className="form-text text-muted">
-              This is your email address you used when you registered.
-            </small> */}
           </div>
-
-          <div
-            className={"form-group" + (this.state.nextClicked ? "" : " d-none")}
-          >
+          <label htmlFor="login-firstName-input" style={{ fontWeight: "500" }}>
+            First Name{" "}
+          </label>
+          <div className="input-group input-group-sm mb-3">
             <br></br>
+            <input
+              type="text"
+              className={
+                "form-control form-control-sm " +
+                (firstNameInputHighlighted ? " border-danger" : "")
+              }
+              id="login-firstName-input"
+              aria-describedby="emailHelp"
+              onChange={(e) => this.handleFirstNameChange(e)}
+            />
+          </div>
+          <label htmlFor="login-lastName-input" style={{ fontWeight: "500" }}>
+            Last Name{" "}
+          </label>
+          <div className="input-group input-group-sm mb-3">
+            <br></br>
+            <input
+              type="text"
+              className={
+                "form-control form-control-sm" +
+                (lastNameInputHighlighted ? " border-danger" : "")
+              }
+              id="login-lastName-input"
+              aria-describedby="emailHelp"
+              onChange={(e) => this.handleLastNameChange(e)}
+            />
+          </div>
+          <div className={"form-group"}>
             <label htmlFor="login-password-input" style={{ fontWeight: "500" }}>
               Password
             </label>
@@ -94,27 +144,25 @@ export default class Register extends Component {
               type="password"
               className={
                 "form-control form-control-sm" +
-                (sentBack ? " border-danger" : "")
+                (passwordInputHighlighted ? " border-danger" : "")
               }
               id="login-password-input"
-              // onChange={(e) => this.handlePasswordInput(e)}
+              onChange={(e) => this.handlePasswordChange(e)}
+              onKeyDown={(e) => this.handleKeyDown(e)}
               ref={this.passwordInput}
             />
           </div>
           <br />
-          <br />
-
           <button
-            className="btn btn-primary px-4"
-            type={this.state.nextClicked ? "submit" : "button"}
-            disabled={!this.state.usernameEntered}
-            onClick={(e) => this.handleLoginBtnClick(e)}
+            className="btn btn-primary px-4 font-small-login-reg"
+            type="button"
+            onClick={() => this.handleSubmit()}
           >
-            {this.state.nextClicked ? "Log In" : "Next"}
+            {"Sign Up"}
           </button>
 
-          <span className="ml-3 font-small">
-            Don't have an account?{" "}
+          <span className="ml-3 font-small-login-reg">
+            Already have an account?{" "}
             <span
               onClick={() => {
                 this.props.switchToLogin();
@@ -122,7 +170,7 @@ export default class Register extends Component {
               className="text-primary toggle-prompt-text"
               style={{ cursor: "pointer" }}
             >
-              Sign Up
+              Log In
             </span>
           </span>
         </form>
