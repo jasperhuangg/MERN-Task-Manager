@@ -99,6 +99,7 @@ export default class Login extends Component {
               type="email"
               className={
                 "form-control form-control-sm" +
+                (this.state.usernameEntered ? " input-validated" : "") +
                 (sentBack && this.props.loginInfo === "username does not exist"
                   ? " border-danger"
                   : "")

@@ -66,8 +66,10 @@ router.post("/", (req, res, next) => {
                       itemID: "0",
                     },
                     {
-                      title: "Keywords set due dates when adding items.",
-                      description: 'Try typing and adding "Get groceries tmr"',
+                      title:
+                        "Keywords set deadlines/priorities when adding items.",
+                      description:
+                        'Try adding "Get groceries tmr" or "Hit the gym today"',
                       dueDate: "",
                       priority: "medium",
                       completed: false,

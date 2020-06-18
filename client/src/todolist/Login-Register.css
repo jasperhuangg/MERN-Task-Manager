@@ -8,13 +8,15 @@
 }
 
 .Login {
-  border-radius: 7px;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
   height: 87vh;
   background-color: rgba(255, 255, 255, 0.85);
 }
 
 .Register {
-  border-radius: 7px;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
   height: 87vh;
   width: 400px;
   background-color: rgba(255, 255, 255, 0.85);
@@ -74,4 +76,15 @@
 }
 .or-separator::after {
   margin-left: 0.25em;
+}
+
+input {
+  border-radius: 4px !important;
+}
+
+.input-validated {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
 }
