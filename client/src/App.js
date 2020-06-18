@@ -363,12 +363,14 @@ export default class App extends Component {
   }
 
   setItemCompleted(listName, itemID, completed) {
+    console.log(listName + " " + itemID + " " + completed);
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
+            console.log("updating lists");
             items[j].completed = completed;
             items.sort(sortListItems);
             break;
@@ -594,6 +596,7 @@ export default class App extends Component {
             />
           </div>
           {listArr.map((list, i) => {
+            console.log(list);
             return (
               <React.Fragment key={list.name}>
                 <div id="todolist" className="col-5">

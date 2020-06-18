@@ -126,7 +126,7 @@ export default class Todolist extends Component {
   }
 
   getIndexOfFirstCompletedItem() {
-    const items = this.state.listItems;
+    const items = this.props.items;
 
     for (let i = 0; i < items.length; i++) {
       if (items[i].completed) return i;
@@ -187,6 +187,8 @@ export default class Todolist extends Component {
 
   render() {
     // important variables used for render setup
+    const items = this.props.items;
+    // console.log(items);
     var name = this.props.name;
     const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
@@ -216,19 +218,20 @@ export default class Todolist extends Component {
     var incompletedItems = [];
     var completedItems = [];
     if (firstCompletedIndex !== -1) {
-      incompletedItems = this.state.listItems.slice(0, firstCompletedIndex);
-      completedItems = this.state.listItems.slice(
+      incompletedItems = this.props.items.slice(0, firstCompletedIndex);
+      completedItems = this.props.items.slice(
         firstCompletedIndex,
-        this.state.listItems.length
+        this.props.items.length
       );
     } else {
-      incompletedItems = this.state.listItems.slice();
+      incompletedItems = this.props.items.slice();
       completedItems = [];
     }
     const completedSeparatorIconClasses =
       "fas fa-sort-down mr-2 base" +
       (this.state.completedItemsShowing ? "" : " icon-rotated");
-
+    console.log(incompletedItems);
+    console.log(completedItems);
     return (
       <div
         className="container-fluid todolist"
@@ -288,7 +291,7 @@ export default class Todolist extends Component {
             <span
               className={
                 "pl-2 font-small font-italic " +
-                (this.state.listItems.length === 0 ? "" : "d-none")
+                (this.props.items.length === 0 ? "" : "d-none")
               }
             >
               Add an item above
