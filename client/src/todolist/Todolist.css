@@ -381,14 +381,15 @@ select:focus {
 .notification {
   font-size: 14px;
   width: 300px;
-  height: 100px;
+  height: 90px;
   border-radius: 7px;
   position: absolute;
-  top: 20px;
+  bottom: 20px;
   right: -300px;
   z-index: 1000;
   background-color: white;
   transition: 0.5s ease-in-out;
+  color: rgb(73, 80, 87);
 }
 
 .notification-displayed {

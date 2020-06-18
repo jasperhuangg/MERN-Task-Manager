@@ -62,12 +62,22 @@ export default class Sidebar extends Component {
           </span>
         </div>
         <div
+          className="text-center font-small sidebar-item py-1 pt-3"
+          style={{
+            pointerEvents: "none",
+            fontWeight: "600",
+            color: "rgb(113, 123, 133)",
+          }}
+        >
+          Smart Lists
+        </div>
+        <div
           id="sidebar-today"
           className={
             "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "Today" ? " selected-sidebar-item" : "")
           }
-          style={{ borderTop: "0.25px solid rgb(187, 187, 187, 0.4)" }}
+          // style={{ borderTop: "0.25px solid rgb(187, 187, 187, 0.4)" }}
           onClick={(e) => this.selectList(e)}
         >
           <i className="fas fa-calendar-day sidebar-icon col-1 mr-1"></i>
@@ -107,7 +117,7 @@ export default class Sidebar extends Component {
           </div>
         </div>
         <div
-          className="text-center font-small sidebar-item py-1 pt-5"
+          className="text-center font-small sidebar-item py-1 pt-3"
           style={{
             pointerEvents: "none",
             fontWeight: "600",
