@@ -816,6 +816,10 @@ export default class App extends Component {
           id="app"
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
+          onKeyDown={(e) => {
+            if (e.keyCode === 27 && this.state.addListOverlayDisplaying)
+              this.setState({ addListOverlayDisplaying: false });
+          }}
         >
           <AddListOverlay
             id="addListOverlay"

@@ -345,6 +345,7 @@ select:focus {
   color: rgba(255, 255, 255, 1);
   transition: 0.2s ease;
   cursor: pointer;
+  transform: scale(1.2, 1.2);
 }
 
 .sidebar-item {
@@ -467,4 +468,12 @@ select:focus {
   left: 27px;
   bottom: 20px;
   font-size: 15px;
+}
+
+.btn-secondary {
+  background-color: rgb(98, 102, 107) !important;
+}
+
+.btn-secondary:hover {
+  background-color: rgb(86, 92, 99) !important;
 }

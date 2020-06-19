@@ -74,8 +74,11 @@ export default class Sidebar extends Component {
           onClick={(e) => this.selectList(e)}
         >
           <i className="fas fa-calendar-day sidebar-icon col-1 mr-1"></i>
-          <div className="col-6 text-left p-0 sidebar-list-name">Today</div>
-          <div className="col-4 font-small">
+          <div className="col-5 text-left p-0 sidebar-list-name">Today</div>
+          <div className="col-1 sidebar-list-color text-left invisible">
+            <i className="fa fa-circle" style={{ fontSize: "8px" }}></i>
+          </div>
+          <div className="col-1 font-small">
             {incompletedCountToday > 0 ? incompletedCountToday : ""}
           </div>
         </div>
@@ -89,10 +92,13 @@ export default class Sidebar extends Component {
           data-list-name="Next 7 Days"
         >
           <i className="fas fa-calendar-week sidebar-icon col-1 mr-1"></i>
-          <div className="col-6 text-left p-0 sidebar-list-name">
+          <div className="col-5 text-left p-0 sidebar-list-name">
             Next 7 Days
           </div>
-          <div className="col-4 font-small">
+          <div className="col-1 sidebar-list-color text-left invisible">
+            <i className="fa fa-circle" style={{ fontSize: "8px" }}></i>
+          </div>
+          <div className="col-1 font-small">
             {incompletedCountNext7Days > 0 ? incompletedCountNext7Days : ""}
           </div>
         </div>
@@ -106,8 +112,11 @@ export default class Sidebar extends Component {
           data-list-name="All"
         >
           <i className="fas fa-calendar sidebar-icon col-1 mr-1"></i>
-          <div className="col-6 text-left p-0 sidebar-list-name">All</div>
-          <div className="col-4 font-small">
+          <div className="col-5 text-left p-0 sidebar-list-name">All</div>
+          <div className="col-1 sidebar-list-color text-left invisible">
+            <i className="fa fa-circle" style={{ fontSize: "8px" }}></i>
+          </div>
+          <div className="col-1 font-small">
             {incompletedCountAll > 0 ? incompletedCountAll : ""}
           </div>
         </div>
