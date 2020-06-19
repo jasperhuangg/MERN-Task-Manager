@@ -58,8 +58,3 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
-
-// var stuff = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-// stuff.splice(4, 1);
-
-// console.log(stuff);

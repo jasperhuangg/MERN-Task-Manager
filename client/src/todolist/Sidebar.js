@@ -139,10 +139,9 @@ export default class Sidebar extends Component {
                 ? list.name.substring(0, 12) + "..."
                 : list.name;
             return (
-              <>
+              <div key={list.name}>
                 <ContextMenuTrigger id={list.name}>
                   <div
-                    key={list.name}
                     className={
                       "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
                       (selectedList === list.name
@@ -174,7 +173,9 @@ export default class Sidebar extends Component {
                   <MenuItem
                     data={{ listName: list.name }}
                     className="sidebar-context-menu-item px-2 py-1"
-                    // onClick={(id) => this.handleDelete(item.itemID)}
+                    onClick={() =>
+                      this.props.showEditListOverlay(list.name, list.color)
+                    }
                   >
                     <div className="row align-items-center justify-content-left">
                       <i className="fas fa-edit col-1"></i>
@@ -198,7 +199,7 @@ export default class Sidebar extends Component {
                     </div>
                   </MenuItem>
                 </ContextMenu>
-              </>
+              </div>
             );
           })}
         </div>

@@ -21,6 +21,7 @@ var verifyLoginRouter = require("./routes/verifyLogin");
 var createAccountRouter = require("./routes/createAccount");
 var createEmptyListRouter = require("./routes/createEmptylist");
 var deleteListRouter = require("./routes/deleteList");
+var editListRouter = require("./routes/editList");
 
 var app = express();
 
@@ -51,6 +52,7 @@ app.use("/setItemPriority", setItemPriorityRouter);
 app.use("/setItemTitle", setItemTitleRouter);
 app.use("/createEmptyList", createEmptyListRouter);
 app.use("/deleteList", deleteListRouter);
+app.use("/editList", editListRouter);
 
 app;
 

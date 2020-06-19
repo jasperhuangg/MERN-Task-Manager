@@ -12,6 +12,7 @@ import Sidebar from "./todolist/Sidebar.js";
 import Notification from "./todolist/Notification.js";
 import Toolbar from "./todolist/Toolbar.js";
 import AddListOverlay from "./todolist/AddListOverlay.js";
+import EditListOverlay from "./todolist/EditListOverlay.js";
 
 var ObjectID = require("bson-objectid");
 const cookies = new Cookies();
@@ -40,8 +41,12 @@ export default class App extends Component {
       lastDeletedItem: {},
       lastDeletedItemListName: "",
       addListOverlayDisplaying: false,
+      editListOverlayDisplaying: false,
+      editListName: "",
+      editListColor: "",
     };
     this.addListTitleRef = React.createRef();
+    this.editListTitleRef = React.createRef();
   }
 
   componentDidMount() {
@@ -385,6 +390,7 @@ export default class App extends Component {
       dueDate: dueDate,
       priority: priority,
       completed: false,
+      originalList: listName,
       itemID: new ObjectID().toString(),
     };
     for (let i = 0; i < lists.length; i++) {
@@ -741,11 +747,18 @@ export default class App extends Component {
     this.addListTitleRef.current.focus();
   }
 
+  focusEditListOverlayTitleInput() {
+    this.editListTitleRef.current.focus();
+  }
+
   deleteList(listName) {
     var idx = -1;
     var lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++)
-      if (lists[i].name === listName) idx = i;
+      if (lists[i].name === listName) {
+        idx = i;
+        break;
+      }
     lists.splice(idx, 1);
 
     lists = lists.slice(0, lists.length - 3);
@@ -762,6 +775,38 @@ export default class App extends Component {
     const body = JSON.stringify({
       username: this.state.username,
       listName: listName,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+  }
+
+  editList(oldName, newName, color) {
+    var lists = this.state.lists.slice();
+
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === oldName) {
+        lists[i].name = newName;
+        lists[i].color = color;
+        var items = lists[i].items;
+        for (let j = 0; j < items.length; j++) items[j].originalList = newName;
+        break;
+      }
+    }
+
+    this.setState({ lists: lists });
+
+    const url = domain + "/editList";
+    const body = JSON.stringify({
+      username: this.state.username,
+      oldName: oldName,
+      newName: newName,
+      color: color,
     });
 
     fetch(url, {
@@ -791,8 +836,31 @@ export default class App extends Component {
     }, 500);
   }
 
+  handleShowEditListOverlay(listName, color) {
+    console.log("color: " + color);
+    this.setState({
+      editListOverlayDisplaying: true,
+      editListColor: color,
+      editListName: listName,
+    });
+
+    this.editListTitleRef.current.value = listName;
+
+    setTimeout(() => {
+      this.editListTitleRef.current.focus();
+    }, 500);
+  }
+
   handleHideAddListOverlay() {
     this.setState({ addListOverlayDisplaying: false });
+  }
+
+  handleHideEditListOverlay() {
+    this.setState({
+      editListOverlayDisplaying: false,
+      editListColor: "",
+      editListName: "",
+    });
   }
 
   render() {
@@ -871,6 +939,19 @@ export default class App extends Component {
             }
             focusTitleInput={() => this.focusAddListOverlayTitleInput()}
           />
+          <EditListOverlay
+            id="editListOverlay"
+            displaying={this.state.editListOverlayDisplaying}
+            editListTitleRef={this.editListTitleRef}
+            lists={this.state.lists}
+            hideOverlay={() => this.handleHideEditListOverlay()}
+            focusTitleInput={() => this.focusEditListOverlayTitleInput()}
+            startingName={this.state.editListName}
+            startingColor={this.state.editListColor}
+            editList={(oldName, newName, color) =>
+              this.editList(oldName, newName, color)
+            }
+          />
           <Notification
             displaying={this.state.notificationDisplaying}
             hideNotification={() =>
@@ -899,6 +980,9 @@ export default class App extends Component {
               setSelectedList={(listName) => this.setSelectedList(listName)}
               showAddListOverlay={() => this.handleShowAddListOverlay()}
               deleteList={(listName) => this.deleteList(listName)}
+              showEditListOverlay={(listName, color) =>
+                this.handleShowEditListOverlay(listName, color)
+              }
             />
           </div>
           {listArr.map((list, i) => {

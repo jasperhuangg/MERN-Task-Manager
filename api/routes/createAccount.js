@@ -50,7 +50,7 @@ router.post("/", (req, res, next) => {
             var userObj = {
               username: username,
               firstName: firstName,
-              lastName: lastName,
+              lastName: laastName,
               password: encryptedPass,
               lists: [
                 {

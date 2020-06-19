@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 
-export default class AddListOverlay extends Component {
+export default class EditListOverlay extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedColor: "", listName: "", issue: "" };
+    this.state = {
+      selectedColor: undefined,
+      listName: undefined,
+      issue: "",
+    };
   }
 
   selectColor(e) {
@@ -14,22 +18,35 @@ export default class AddListOverlay extends Component {
   }
 
   handleSubmit() {
-    console.log("triggered in addlistoverlay");
     const listName = this.state.listName;
     const color = this.state.selectedColor;
 
-    if (listNameExists(this.props.lists, listName)) {
-      this.setState({ issue: "List name already exists." });
-    } else {
-      // call create list function
-      this.props.createList(listName, color);
+    if (!listNameExists(this.props.startingName, this.props.lists, listName)) {
+      this.setState({ selectedColor: undefined, listName: undefined });
+
+      this.props.editList(this.props.startingName, listName, color);
+
       // close the overlay
       this.props.hideOverlay();
+    } else {
+      this.setState({ issue: "List name already exists." });
     }
   }
 
   render() {
     var issueText = this.state.issue;
+    if (
+      (this.state.listName === undefined ||
+        this.state.selectedColor === undefined) &&
+      this.props.startingColor !== "" &&
+      this.props.startingName !== ""
+    ) {
+      console.log("setting");
+      this.setState({
+        selectedColor: this.props.startingColor,
+        listName: this.props.startingName,
+      });
+    }
 
     const colors = [
       "#FDC5F5",
@@ -62,13 +79,13 @@ export default class AddListOverlay extends Component {
         }}
       >
         <div className="text-center" style={{ pointerEvents: "none" }}>
-          <h5>Add List</h5>
+          <h5>Edit List</h5>
         </div>
         <label htmlFor="add-list-title-input">Title</label>
         <input
           id="add-list-title-input"
           className="form-control form-control-sm"
-          ref={this.props.addListTitleRef}
+          ref={this.props.editListTitleRef}
           onChange={(e) => {
             this.setState({
               listName: e.currentTarget.value,
@@ -114,9 +131,8 @@ export default class AddListOverlay extends Component {
             style={{ borderRadius: "5px" }}
             onClick={() => {
               this.setState({
-                selectedColor: "",
-                listName: "",
-                listNameExists: false,
+                selectedColor: undefined,
+                listName: undefined,
               });
               this.props.hideOverlay();
             }}
@@ -139,10 +155,10 @@ export default class AddListOverlay extends Component {
   }
 }
 
-function listNameExists(lists, listName) {
-  console.log(lists);
+function listNameExists(originalName, lists, listName) {
   for (let i = 0; i < lists.length; i++)
-    if (lists[i].name === listName) return true;
+    if (lists[i].name === listName && lists[i].name !== originalName)
+      return true;
 
   return false;
 }
