@@ -500,7 +500,10 @@ export default class App extends Component {
     const url = domain + "/deleteListItem";
     const body = JSON.stringify({
       username: this.state.username,
-      listName: listName,
+      listName:
+        listName === "All" || listName === "Next 7 Days" || listName === "Today"
+          ? item.originalList
+          : listName,
       itemID: itemID,
     });
 
@@ -515,13 +518,15 @@ export default class App extends Component {
   }
 
   setItemTitle(listName, itemID, title) {
-    const lists = this.state.lists.slice();
+    var lists = this.state.lists.slice();
+    var item = undefined;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             items[j].title = title;
+            item = items[j];
             break;
           }
         }
@@ -529,12 +534,31 @@ export default class App extends Component {
       }
     }
 
-    this.setState({ lists: lists });
+    if (item.originalList !== listName) {
+      for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === item.originalList) {
+          const items = lists[i].items;
+          for (let j = 0; j < items.length; j++) {
+            if (items[j].itemID === itemID) {
+              items[j].title = title;
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    lists = lists.slice(0, lists.length - 3);
+    lists = this.appendSmartLists(lists);
 
     const url = domain + "/setItemTitle";
     const body = JSON.stringify({
       username: this.state.username,
-      listName: listName,
+      listName:
+        listName === "All" || listName === "Next 7 Days" || listName === "Today"
+          ? item.originalList
+          : listName,
       itemID: itemID,
       title: title,
     });
@@ -548,10 +572,7 @@ export default class App extends Component {
     }).then((res) => res.text());
   }
 
-  // affects sorting
   setItemCompleted(listName, itemID, completed) {
-    var originalList = "";
-    console.log(listName + ", " + itemID + ", " + completed);
     var lists = this.state.lists.slice();
     var item = undefined;
     for (let i = 0; i < lists.length; i++) {
@@ -560,16 +581,14 @@ export default class App extends Component {
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             items[j].completed = completed;
-            items.sort(sortListItems);
             item = items[j];
-            console.log(items[j]);
+            items.sort(sortListItems);
             break;
           }
         }
         break;
       }
     }
-    // console.log("here: " + item.originalList);
 
     if (item.originalList !== listName) {
       for (let i = 0; i < lists.length; i++) {
@@ -621,8 +640,8 @@ export default class App extends Component {
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             items[j].dueDate = dueDate;
-            items.sort(sortListItems);
             item = items[j];
+            items.sort(sortListItems);
             break;
           }
         }
@@ -654,7 +673,10 @@ export default class App extends Component {
     const url = domain + "/setItemDueDate";
     const body = JSON.stringify({
       username: this.state.username,
-      listName: listName,
+      listName:
+        listName === "All" || listName === "Next 7 Days" || listName === "Today"
+          ? item.originalList
+          : listName,
       itemID: itemID,
       dueDate: dueDate,
     });
@@ -677,8 +699,8 @@ export default class App extends Component {
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             items[j].priority = priority;
-            items.sort(sortListItems);
             item = items[j];
+            items.sort(sortListItems);
             break;
           }
         }
@@ -710,7 +732,10 @@ export default class App extends Component {
     const url = domain + "/setItemPriority";
     const body = JSON.stringify({
       username: this.state.username,
-      listName: listName,
+      listName:
+        listName === "All" || listName === "Next 7 Days" || listName === "Today"
+          ? item.originalList
+          : listName,
       itemID: itemID,
       priority: priority,
     });
@@ -725,17 +750,34 @@ export default class App extends Component {
   }
 
   setItemDescription(listName, itemID, description) {
-    const lists = this.state.lists.slice();
+    var lists = this.state.lists.slice();
+    var item = undefined;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
         for (let j = 0; j < items.length; j++) {
           if (items[j].itemID === itemID) {
             items[j].description = description;
+            item = items[j];
             break;
           }
         }
         break;
+      }
+    }
+
+    if (item.originalList !== listName) {
+      for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === item.originalList) {
+          const items = lists[i].items;
+          for (let j = 0; j < items.length; j++) {
+            if (items[j].itemID === itemID) {
+              items[j].description = description;
+              break;
+            }
+          }
+          break;
+        }
       }
     }
 
@@ -744,7 +786,10 @@ export default class App extends Component {
     const url = domain + "/setItemDescription";
     const body = JSON.stringify({
       username: this.state.username,
-      listName: listName,
+      listName:
+        listName === "All" || listName === "Next 7 Days" || listName === "Today"
+          ? item.originalList
+          : listName,
       itemID: itemID,
       description: description,
     });
