@@ -290,7 +290,8 @@ export default class App extends Component {
 
         this.setState({
           lists: lists,
-          currentlySelectedListName: lists[0].name,
+          currentlySelectedListIndex: lists.length - 1,
+          currentlySelectedListName: lists[lists.length - 1].name,
         });
       });
   }
