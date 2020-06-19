@@ -59,7 +59,7 @@ router.post("/", (req, res, next) => {
                   items: [
                     {
                       title: "Add items above: Hit [Enter] to add",
-                      description: "Add a description here!",
+                      description: "",
                       dueDate: "",
                       priority: "high",
                       completed: false,
