@@ -69,7 +69,7 @@ router.post("/", (req, res, next) => {
                       title:
                         "Keywords set deadlines/priorities when adding items.",
                       description:
-                        'Try adding "Get groceries tmr" or "Hit the gym today"',
+                        'Try adding "Get groceries tmr !medium" or "Hit the gym today !high"',
                       dueDate: "",
                       priority: "medium",
                       completed: false,
@@ -78,7 +78,7 @@ router.post("/", (req, res, next) => {
                     {
                       title: "Set item priorities to affect sorting.",
                       description:
-                        "Try clicking the scale icon and changing the priority!\n\nItems are sorted with due dates, then priorities amongst dates.",
+                        "- Try clicking the scale icon and changing the priority!\n- Items are sorted with due dates, then priorities among dates.",
                       dueDate: "",
                       priority: "low",
                       completed: false,

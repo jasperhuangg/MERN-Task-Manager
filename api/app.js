@@ -20,6 +20,7 @@ var setItemTitleRouter = require("./routes/setItemTitle");
 var verifyLoginRouter = require("./routes/verifyLogin");
 var createAccountRouter = require("./routes/createAccount");
 var createEmptyListRouter = require("./routes/createEmptylist");
+var deleteListRouter = require("./routes/deleteList");
 
 var app = express();
 
@@ -49,6 +50,7 @@ app.use("/setItemDueDate", setItemDueDateRouter);
 app.use("/setItemPriority", setItemPriorityRouter);
 app.use("/setItemTitle", setItemTitleRouter);
 app.use("/createEmptyList", createEmptyListRouter);
+app.use("/deleteList", deleteListRouter);
 
 app;
 

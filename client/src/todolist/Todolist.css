@@ -165,6 +165,22 @@ select:focus {
   background-color: rgb(240, 240, 240);
 }
 
+.sidebar-context-menu {
+  border-radius: 5px;
+  z-index: 1000;
+  color: rgb(73, 80, 87);
+  background-color: white;
+  border: solid 0.25px rgb(240, 240, 240);
+  transition: 0.1s ease;
+  font-size: 13px;
+}
+
+.sidebar-context-menu-item:hover {
+  transition: 0.2s ease;
+  cursor: pointer;
+  background-color: rgb(240, 240, 240);
+}
+
 .priorities-overlay-item:hover {
   transition: 0.15s ease;
   cursor: pointer;

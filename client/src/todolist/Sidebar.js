@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export default class Sidebar extends Component {
   constructor(props) {
@@ -138,27 +139,66 @@ export default class Sidebar extends Component {
                 ? list.name.substring(0, 12) + "..."
                 : list.name;
             return (
-              <div
-                key={list.name}
-                className={
-                  "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
-                  (selectedList === list.name ? " selected-sidebar-item" : "")
-                }
-                onClick={(e) => this.selectList(e)}
-                data-list-name={list.name}
-              >
-                <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
-                <div className="col-5 text-left p-0 sidebar-list-name">
-                  {listName}
-                </div>
-                <div className="col-1 sidebar-list-color text-left">
-                  <i
-                    className="fa fa-circle"
-                    style={{ color: list.color, fontSize: "8px" }}
-                  ></i>
-                </div>
-                <div className="col-1 font-small">{count > 0 ? count : ""}</div>
-              </div>
+              <>
+                <ContextMenuTrigger id={list.name}>
+                  <div
+                    key={list.name}
+                    className={
+                      "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
+                      (selectedList === list.name
+                        ? " selected-sidebar-item"
+                        : "")
+                    }
+                    onClick={(e) => this.selectList(e)}
+                    data-list-name={list.name}
+                  >
+                    <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
+                    <div className="col-5 text-left p-0 sidebar-list-name">
+                      {listName}
+                    </div>
+                    <div className="col-1 sidebar-list-color text-left">
+                      <i
+                        className="fa fa-circle"
+                        style={{ color: list.color, fontSize: "8px" }}
+                      ></i>
+                    </div>
+                    <div className="col-1 font-small">
+                      {count > 0 ? count : ""}
+                    </div>
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenu
+                  id={list.name}
+                  className="sidebar-context-menu p-0 shadow-sm"
+                >
+                  <MenuItem
+                    data={{ listName: list.name }}
+                    className="sidebar-context-menu-item px-2 py-1"
+                    // onClick={(id) => this.handleDelete(item.itemID)}
+                  >
+                    <div className="row align-items-center justify-content-left">
+                      <i className="fas fa-edit col-1"></i>
+                      <span className="col-6">Edit</span>
+                    </div>
+                  </MenuItem>
+                  <MenuItem
+                    data={{ listName: list.name }}
+                    className="sidebar-context-menu-item px-2 py-1"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const confirmed = window.confirm(
+                        "Are you sure? \n\nDeleting this list will permanently delete all of its items."
+                      );
+                      if (confirmed) this.props.deleteList(list.name);
+                    }}
+                  >
+                    <div className="row align-items-center justify-content-left">
+                      <i className="fas fa-trash col-1"></i>
+                      <span className="col-6">Delete</span>
+                    </div>
+                  </MenuItem>
+                </ContextMenu>
+              </>
             );
           })}
         </div>

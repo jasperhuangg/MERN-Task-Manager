@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 export default class Notification extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     var itemTitle = this.props.title;
     if (itemTitle !== undefined && itemTitle.length > 16)

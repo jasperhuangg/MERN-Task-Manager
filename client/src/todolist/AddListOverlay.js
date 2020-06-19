@@ -10,9 +10,11 @@ export default class AddListOverlay extends Component {
     const color = e.currentTarget.dataset.color;
     console.log(color);
     this.setState({ selectedColor: color });
+    this.props.focusTitleInput();
   }
 
   handleSubmit() {
+    console.log("triggered in addlistoverlay");
     const listName = this.state.listName;
     const color = this.state.selectedColor;
 
@@ -54,8 +56,13 @@ export default class AddListOverlay extends Component {
       "add-list-overlay shadow font-grey p-4" +
       (this.props.displaying ? " add-list-overlay-displayed" : "");
     return (
-      <div className={classes}>
-        <div className="text-center">
+      <div
+        className={classes}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) this.handleSubmit();
+        }}
+      >
+        <div className="text-center" style={{ pointerEvents: "none" }}>
           <h5>Add List</h5>
         </div>
         <label htmlFor="add-list-title-input">Title</label>

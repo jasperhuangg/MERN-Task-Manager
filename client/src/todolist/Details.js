@@ -255,9 +255,9 @@ export default class Details extends Component {
                 ? ""
                 : " d-none")
             }
-            style={{ fontWeight: "600" }}
+            style={{ fontWeight: "600", pointerEvents: "none" }}
           >
-            <i className="fas fa-bars sidebar-icon mr-1"></i>
+            <i className="fas fa-bars sidebar-icon mr-2"></i>
             {this.props.selectedItemList}
           </div>
         </div>

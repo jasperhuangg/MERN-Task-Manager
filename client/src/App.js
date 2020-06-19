@@ -737,6 +737,42 @@ export default class App extends Component {
     });
   }
 
+  focusAddListOverlayTitleInput() {
+    this.addListTitleRef.current.focus();
+  }
+
+  deleteList(listName) {
+    var idx = -1;
+    var lists = this.state.lists.slice();
+    for (let i = 0; i < lists.length; i++)
+      if (lists[i].name === listName) idx = i;
+    lists.splice(idx, 1);
+
+    lists = lists.slice(0, lists.length - 3);
+    lists = this.appendSmartLists(lists);
+
+    this.setState({
+      lists: lists,
+      currentlySelectedItemID: "",
+      currentlySelectedListIndex: lists.length - 1,
+      currentlySelectedListName: "All",
+    });
+
+    const url = domain + "/deleteList";
+    const body = JSON.stringify({
+      username: this.state.username,
+      listName: listName,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+  }
+
   handleDisplayNotification() {
     this.setState({ notificationDisplaying: true });
     setTimeout(() => {
@@ -833,6 +869,7 @@ export default class App extends Component {
             createList={(listName, color) =>
               this.createEmptyList(listName, color)
             }
+            focusTitleInput={() => this.focusAddListOverlayTitleInput()}
           />
           <Notification
             displaying={this.state.notificationDisplaying}
@@ -861,6 +898,7 @@ export default class App extends Component {
               currentlySelectedListName={this.state.currentlySelectedListName}
               setSelectedList={(listName) => this.setSelectedList(listName)}
               showAddListOverlay={() => this.handleShowAddListOverlay()}
+              deleteList={(listName) => this.deleteList(listName)}
             />
           </div>
           {listArr.map((list, i) => {

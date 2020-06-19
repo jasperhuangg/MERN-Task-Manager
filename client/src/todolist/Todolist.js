@@ -188,7 +188,6 @@ export default class Todolist extends Component {
   render() {
     // important variables used for render setup
     var name = this.props.name;
-    const color = this.props.color;
     const calendarOverlayClasslist = this.state.calendarOverlayDisplaying
       ? ""
       : "d-none";
@@ -330,6 +329,7 @@ export default class Todolist extends Component {
                 "pl-2 font-small font-grey " +
                 (incompletedItems.length === 0 ? "" : "d-none")
               }
+              style={{ pointerEvents: "none" }}
             >
               <i className={emptyListIcon}></i>
               {emptyListText}
@@ -361,7 +361,7 @@ export default class Todolist extends Component {
                   </ContextMenuTrigger>
                   <ContextMenu
                     id={item.itemID}
-                    className="delete-menu px-2 py-1"
+                    className="delete-menu px-2 py-1 shadow-sm"
                   >
                     <MenuItem
                       data={{ foo: "bar" }}
@@ -432,7 +432,7 @@ export default class Todolist extends Component {
                   </ContextMenuTrigger>
                   <ContextMenu
                     id={item.itemID.toString()}
-                    className="delete-menu px-2 py-1"
+                    className="delete-menu px-2 py-1 shadow-sm"
                   >
                     <MenuItem
                       data={{ foo: "bar" }}
