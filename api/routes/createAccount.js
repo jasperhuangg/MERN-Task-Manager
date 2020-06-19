@@ -55,7 +55,7 @@ router.post("/", (req, res, next) => {
               lists: [
                 {
                   name: "How to Doozy",
-                  color: "#157ffb",
+                  color: "#0496FF",
                   items: [
                     {
                       title: "Add items above: Hit [Enter] to add",

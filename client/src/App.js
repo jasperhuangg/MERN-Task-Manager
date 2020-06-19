@@ -288,10 +288,13 @@ export default class App extends Component {
 
         lists = this.appendSmartLists(lists);
 
+        const index =
+          this.state.registered === "successful" ? 0 : lists.length - 1;
+        const name = lists[index].name;
         this.setState({
           lists: lists,
-          currentlySelectedListIndex: lists.length - 1,
-          currentlySelectedListName: lists[lists.length - 1].name,
+          currentlySelectedListIndex: index,
+          currentlySelectedListName: name,
         });
       });
   }
