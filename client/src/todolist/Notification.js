@@ -6,7 +6,7 @@ export default class Notification extends Component {
   }
 
   render() {
-    // TOOD: put this inside a function
+    // TODO: put this inside a function
     var itemTitle = this.props.title;
     if (itemTitle !== undefined && itemTitle.length > 16)
       itemTitle = itemTitle.substring(0, 16) + "...";
@@ -29,6 +29,10 @@ export default class Notification extends Component {
           <div
             className="col-3 text-primary undo-button"
             style={{ cursor: "pointer", fontWeight: "600" }}
+            onClick={() => {
+              this.props.undo();
+              this.props.hideNotification();
+            }}
           >
             Undo
           </div>

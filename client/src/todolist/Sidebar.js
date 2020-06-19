@@ -45,7 +45,7 @@ export default class Sidebar extends Component {
 
     return (
       <div className="sidebar-container py-5">
-        <div className="mb-4 pl-3">
+        <div className="mb-4 text-center">
           <span
             className="profile-icon"
             style={{
@@ -53,7 +53,7 @@ export default class Sidebar extends Component {
               backgroundColor: "rgb(21, 127, 251)",
               borderRadius: "50%",
               padding: "10px",
-              fontSize: "14px",
+              fontSize: "16px",
               pointerEvents: "none",
             }}
           >
@@ -126,25 +126,27 @@ export default class Sidebar extends Component {
         >
           Your Lists
         </div>
-        {personalLists.map((list, index) => {
-          const count = countIncompletedItems(list);
-          return (
-            <div
-              key={list.name}
-              className={
-                "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
-                (selectedList === list.name ? " selected-sidebar-item" : "")
-              }
-              onClick={(e) => this.selectList(e)}
-            >
-              <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
-              <div className="col-6 text-left p-0 sidebar-list-name">
-                {list.name}
+        <div id="personal-lists">
+          {personalLists.map((list, index) => {
+            const count = countIncompletedItems(list);
+            return (
+              <div
+                key={list.name}
+                className={
+                  "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
+                  (selectedList === list.name ? " selected-sidebar-item" : "")
+                }
+                onClick={(e) => this.selectList(e)}
+              >
+                <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
+                <div className="col-6 text-left p-0 sidebar-list-name">
+                  {list.name}
+                </div>
+                <div className="col-4 font-small">{count > 0 ? count : ""}</div>
               </div>
-              <div className="col-4 font-small">{count > 0 ? count : ""}</div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     );
   }

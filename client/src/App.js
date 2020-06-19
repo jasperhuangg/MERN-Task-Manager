@@ -770,7 +770,21 @@ export default class App extends Component {
         >
           <Notification
             displaying={this.state.notificationDisplaying}
+            hideNotification={() =>
+              this.setState({ notificationDisplaying: false })
+            }
             title={lastDeletedItemTitle}
+            undo={() => {
+              if (this.state.lastDeletedItem.itemID !== undefined) {
+                this.addListItem(
+                  this.state.lastDeletedItemListName,
+                  this.state.lastDeletedItem.title,
+                  this.state.lastDeletedItem.dueDate,
+                  this.state.lastDeletedItem.description,
+                  this.state.lastDeletedItem.priority
+                );
+              }
+            }}
             listName={this.state.lastDeletedItemListName}
           />
           <div id="sidebar" className="p-0">
@@ -847,12 +861,15 @@ export default class App extends Component {
                     }
                   />
                 </div>
-                <div id="toolbar" className="h-25 row justify-content-center">
+                <div id="toolbar" className="row justify-content-center">
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
                     <i className="fas fa-cogs"></i>
                   </div>
                   <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
                     <i className="fas fa-hand-sparkles"></i>
+                  </div>
+                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+                    <i className="fas fa-share-alt"></i>
                   </div>
                   <div
                     className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center"

@@ -21,7 +21,16 @@
   border-bottom-right-radius: 7px;
   height: 90vh;
   width: 200px !important;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+#personal-lists {
+  -ms-overflow-style: none;
+  overflow: scroll;
+}
+
+#personal-lists::-webkit-scrollbar {
+  display: none;
 }
 
 .todolist {
@@ -321,6 +330,7 @@ select:focus {
   top: 1.5em;
   right: 1.5em;
   padding-left: 30px;
+  height: 35%;
 }
 
 .toolbar-icon {
