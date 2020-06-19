@@ -103,6 +103,7 @@ export default class App extends Component {
   }
 
   verifyLogin(username, password) {
+    console.log("calling verify login with " + username + ", " + password);
     const url = domain + "/verifyLogin";
     const body = JSON.stringify({
       username: username,
@@ -1012,6 +1013,9 @@ export default class App extends Component {
               verifyLogin={(username, password) =>
                 this.verifyLogin(username, password)
               }
+              createAccount={(email, fName, lName, password) =>
+                this.createAccount(email, fName, lName, password)
+              }
               switchToRegister={() => this.toggleLoginRegister()}
             />
           </div>
@@ -1023,6 +1027,9 @@ export default class App extends Component {
           >
             <Register
               switchToLogin={() => this.toggleLoginRegister()}
+              verifyLogin={(username, password) =>
+                this.verifyLogin(username, password)
+              }
               createAccount={(email, fName, lName, password) =>
                 this.createAccount(email, fName, lName, password)
               }
@@ -1223,7 +1230,6 @@ function getRandomBGURL() {
     "https://iili.io/J4zWZl.jpg",
     "https://iili.io/J4Weln.jpg",
     "https://iili.io/J4WhoN.jpg",
-    "https://iili.io/J4WwPt.jpg",
     "https://iili.io/J4WOKX.jpg",
     "https://iili.io/J4WUN4.jpg",
     "https://iili.io/J4WgDl.jpg",
@@ -1232,10 +1238,10 @@ function getRandomBGURL() {
     "https://iili.io/J4X9WB.jpg",
     "https://iili.io/J4XHiP.jpg",
     "https://iili.io/J4WyxV.jpg",
-    "https://iili.io/JPNA4p.jpg",
     "https://iili.io/JPNuGR.jpg",
     "https://iili.io/JPN53N.jpg",
     "https://iili.io/JPNTCv.jpg",
+    "https://iili.io/JiKSp4.jpg",
   ];
   var currBackground = Math.floor(
     Math.random() * Math.floor(backgroundURLs.length)

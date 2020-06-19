@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import "./Login-Register.css";
+import { GoogleLogin } from "react-google-login";
+import "./GoogleButton.css";
 
 export default class Login extends Component {
   constructor(props) {
@@ -59,6 +61,54 @@ export default class Login extends Component {
     }
   }
 
+  reverseStr(str) {
+    if (str === "" || str === undefined || str === null)
+      return "3279ruwejsdnma;lno3 -5pyr eo;dilzk mnd1[  0vcp89'a jklt4-]1-83rdusah13";
+    return str.split("").reverse().join("");
+  }
+
+  hashGoogleInfo(responseObj) {
+    const profileObj = responseObj.profileObj;
+
+    const firstName = this.reverseStr(profileObj.givenName);
+    const lastName = this.reverseStr(profileObj.familyName);
+    const googleId = this.reverseStr(profileObj.googleId);
+    const email = this.reverseStr(profileObj.email);
+
+    const rand =
+      "d9afspiuflj2kw0r392[pwiua esfljdkf[werpuasidflz;jk3dm2'- rw9eafpuisdjlzkc;3 j 80[weoadhls;jk 23np8we9asoudlh;zkxrj  f[2 e";
+
+    return (
+      rand + firstName + rand + lastName + rand + googleId + rand + email + rand
+    );
+  }
+
+  handleGoogleOAuth = (response) => {
+    console.log(response);
+    const username = response.profileObj.email;
+    const firstName = response.profileObj.givenName;
+    const lastName = response.profileObj.lastName;
+    const password = this.hashGoogleInfo(response); // add some sort of hashing function to this
+    const domain = "http://localhost:9000";
+    const url = domain + "/accountExists";
+    const body = JSON.stringify({
+      username: username,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res) this.props.verifyLogin(username, password);
+        else this.props.createAccount(username, firstName, lastName, password);
+      });
+  };
+
   render() {
     const sentBack = this.props.loginInfo !== "not yet";
 
@@ -71,15 +121,44 @@ export default class Login extends Component {
         <h1>LOGO</h1>
         <br />
         <br />
-        <h5 style={{ fontWeight: "600" }}>Log in to your account</h5>
+        <h5 className="text-center" style={{ fontWeight: "600" }}>
+          Log in to your account
+        </h5>
         <br />
-        <br />
-        <div className="w-100 text-center">Login with Google</div>
+        <div className="d-flex justify-content-center">
+          <div className="google-btn" style={{ cursor: "pointer" }}>
+            <div className="google-icon-wrapper">
+              <img
+                className="google-icon"
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              />
+            </div>
+            <div className="google-button-text">
+              <GoogleLogin
+                clientId="777242510220-80aoinvqo7q39g1iqtafjet4stv1nnu7.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <a
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    className="btn-text no-bg-no-borders text-white text-center"
+                  >
+                    Log in with Google
+                  </a>
+                )}
+                buttonText="Log in with Google"
+                onSuccess={this.handleGoogleOAuth}
+                onFailure={() => {
+                  alert("Google OAuth Failed.");
+                }}
+                cookiePolicy={"single_host_origin"}
+              />
+            </div>
+          </div>
+        </div>
         <br />
         <div className="or-separator my-2 w-100 text-center font-grey">
           <span className="px-1">or</span>
         </div>
-
         <div
           className={
             "font-small-login-reg text-danger" +
@@ -181,3 +260,7 @@ export default class Login extends Component {
     );
   }
 }
+
+const responseGoogle = (response) => {
+  console.log(response);
+};

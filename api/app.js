@@ -22,6 +22,7 @@ var createAccountRouter = require("./routes/createAccount");
 var createEmptyListRouter = require("./routes/createEmptylist");
 var deleteListRouter = require("./routes/deleteList");
 var editListRouter = require("./routes/editList");
+var accountExistsRouter = require("./routes/accountExists.js");
 
 var app = express();
 
@@ -53,6 +54,7 @@ app.use("/setItemTitle", setItemTitleRouter);
 app.use("/createEmptyList", createEmptyListRouter);
 app.use("/deleteList", deleteListRouter);
 app.use("/editList", editListRouter);
+app.use("/accountExists", accountExistsRouter);
 
 app;
 
