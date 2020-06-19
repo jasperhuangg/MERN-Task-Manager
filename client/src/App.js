@@ -738,7 +738,7 @@ export default class App extends Component {
     this.setState({ notificationDisplaying: true });
     setTimeout(() => {
       this.setState({ notificationDisplaying: false });
-    }, 5000);
+    }, 4000);
   }
 
   handleShowAddListOverlay() {
@@ -996,6 +996,10 @@ function getRandomBGURL() {
     "https://iili.io/J4X9WB.jpg",
     "https://iili.io/J4XHiP.jpg",
     "https://iili.io/J4WyxV.jpg",
+    "https://iili.io/JPNA4p.jpg",
+    "https://iili.io/JPNuGR.jpg",
+    "https://iili.io/JPN53N.jpg",
+    "https://iili.io/JPNTCv.jpg",
   ];
   var currBackground = Math.floor(
     Math.random() * Math.floor(backgroundURLs.length)
