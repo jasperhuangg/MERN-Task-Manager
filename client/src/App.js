@@ -355,6 +355,8 @@ export default class App extends Component {
 
     all.items.sort(sortListItems);
 
+    console.log(all);
+
     return all;
   }
 
@@ -546,8 +548,12 @@ export default class App extends Component {
     }).then((res) => res.text());
   }
 
+  // affects sorting
   setItemCompleted(listName, itemID, completed) {
+    var originalList = "";
+    console.log(listName + ", " + itemID + ", " + completed);
     var lists = this.state.lists.slice();
+    var item = undefined;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -555,10 +561,29 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             items[j].completed = completed;
             items.sort(sortListItems);
+            item = items[j];
+            console.log(items[j]);
             break;
           }
         }
         break;
+      }
+    }
+    // console.log("here: " + item.originalList);
+
+    if (item.originalList !== listName) {
+      for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === item.originalList) {
+          const items = lists[i].items;
+          for (let j = 0; j < items.length; j++) {
+            if (items[j].itemID === itemID) {
+              items[j].completed = completed;
+              items.sort(sortListItems);
+              break;
+            }
+          }
+          break;
+        }
       }
     }
 
@@ -570,7 +595,10 @@ export default class App extends Component {
     const url = domain + "/setItemCompleted";
     const body = JSON.stringify({
       username: this.state.username,
-      listName: listName,
+      listName:
+        listName === "All" || listName === "Next 7 Days" || listName === "Today"
+          ? item.originalList
+          : listName,
       itemID: itemID,
       completed: completed,
     });
@@ -584,10 +612,9 @@ export default class App extends Component {
     });
   }
 
-  setListName(oldListName, newListName) {}
-
   setItemDueDate(listName, itemID, dueDate) {
     var lists = this.state.lists.slice();
+    var item = undefined;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -595,10 +622,27 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             items[j].dueDate = dueDate;
             items.sort(sortListItems);
+            item = items[j];
             break;
           }
         }
         break;
+      }
+    }
+
+    if (item.originalList !== listName) {
+      for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === item.originalList) {
+          const items = lists[i].items;
+          for (let j = 0; j < items.length; j++) {
+            if (items[j].itemID === itemID) {
+              items[j].dueDate = dueDate;
+              items.sort(sortListItems);
+              break;
+            }
+          }
+          break;
+        }
       }
     }
 
@@ -625,7 +669,8 @@ export default class App extends Component {
   }
 
   setItemPriority(listName, itemID, priority) {
-    const lists = this.state.lists.slice();
+    var lists = this.state.lists.slice();
+    var item = undefined;
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
         const items = lists[i].items;
@@ -633,12 +678,32 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             items[j].priority = priority;
             items.sort(sortListItems);
+            item = items[j];
             break;
           }
         }
         break;
       }
     }
+
+    if (item.originalList !== listName) {
+      for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === item.originalList) {
+          const items = lists[i].items;
+          for (let j = 0; j < items.length; j++) {
+            if (items[j].itemID === itemID) {
+              items[j].priority = priority;
+              items.sort(sortListItems);
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    lists = lists.slice(0, lists.length - 3);
+    lists = this.appendSmartLists(lists);
 
     this.setState({ lists: lists });
 
