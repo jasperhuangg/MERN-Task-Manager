@@ -767,8 +767,9 @@ export default class App extends Component {
     this.setState({
       lists: lists,
       currentlySelectedItemID: "",
-      currentlySelectedListIndex: lists.length - 1,
-      currentlySelectedListName: "All",
+      currentlySelectedListIndex: idx - 1 >= 0 ? idx - 1 : 2,
+      currentlySelectedListName:
+        idx - 1 >= 0 ? lists[idx - 1].name : lists[2].name,
     });
 
     const url = domain + "/deleteList";

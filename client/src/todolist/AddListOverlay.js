@@ -25,6 +25,7 @@ export default class AddListOverlay extends Component {
       this.props.createList(listName, color);
       // close the overlay
       this.props.hideOverlay();
+      this.setState({ selectedColor: "", listName: "", issue: "" });
     }
   }
 
