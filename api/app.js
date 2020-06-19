@@ -12,13 +12,14 @@ var testAPIRouter = require("./routes/testAPI");
 var getListsRouter = require("./routes/getLists");
 var addItemRouter = require("./routes/addListItem");
 var deleteItemRouter = require("./routes/deleteListItem");
-var setItemCompleted = require("./routes/setItemCompleted");
-var setItemDescription = require("./routes/setItemDescription");
-var setItemDueDate = require("./routes/setItemDueDate");
-var setItemPriority = require("./routes/setItemPriority");
-var setItemTitle = require("./routes/setItemTitle");
-var verifyLoginRouter = require("./routes/verifyLogin.js");
+var setItemCompletedRouter = require("./routes/setItemCompleted");
+var setItemDescriptionRouter = require("./routes/setItemDescription");
+var setItemDueDateRouter = require("./routes/setItemDueDate");
+var setItemPriorityRouter = require("./routes/setItemPriority");
+var setItemTitleRouter = require("./routes/setItemTitle");
+var verifyLoginRouter = require("./routes/verifyLogin");
 var createAccountRouter = require("./routes/createAccount");
+var createEmptyListRouter = require("./routes/createEmptylist");
 
 var app = express();
 
@@ -42,11 +43,13 @@ app.use("/testAPI", testAPIRouter);
 app.use("/getLists", getListsRouter);
 app.use("/addListItem", addItemRouter);
 app.use("/deleteListItem", deleteItemRouter);
-app.use("/setItemCompleted", setItemCompleted);
-app.use("/setItemDescription", setItemDescription);
-app.use("/setItemDueDate", setItemDueDate);
-app.use("/setItemPriority", setItemPriority);
-app.use("/setItemTitle", setItemTitle);
+app.use("/setItemCompleted", setItemCompletedRouter);
+app.use("/setItemDescription", setItemDescriptionRouter);
+app.use("/setItemDueDate", setItemDueDateRouter);
+app.use("/setItemPriority", setItemPriorityRouter);
+app.use("/setItemTitle", setItemTitleRouter);
+app.use("/createEmptyList", createEmptyListRouter);
+
 app;
 
 // catch 404 and forward to error handler

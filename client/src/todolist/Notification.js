@@ -6,7 +6,6 @@ export default class Notification extends Component {
   }
 
   render() {
-    // TODO: put this inside a function
     var itemTitle = this.props.title;
     if (itemTitle !== undefined && itemTitle.length > 16)
       itemTitle = itemTitle.substring(0, 16) + "...";

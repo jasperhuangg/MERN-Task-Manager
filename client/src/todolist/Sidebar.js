@@ -9,13 +9,7 @@ export default class Sidebar extends Component {
   }
 
   selectList(e) {
-    var listName = e.currentTarget.getElementsByClassName(
-      "sidebar-list-name"
-    )[0].innerText;
-
-    if (listName.indexOf("\n") !== -1)
-      listName = listName.substring(0, listName.indexOf("\n"));
-
+    var listName = e.currentTarget.dataset.listName;
     this.setState({ selectedList: listName });
     this.props.setSelectedList(listName);
   }
@@ -44,10 +38,9 @@ export default class Sidebar extends Component {
     }
 
     return (
-      <div className="sidebar-container py-5">
-        <div className="mb-4 text-center">
+      <div className="sidebar-container pt-5">
+        <div className="profile-icon mb-4 text-center">
           <span
-            className="profile-icon"
             style={{
               color: "white",
               backgroundColor: "rgb(21, 127, 251)",
@@ -77,7 +70,7 @@ export default class Sidebar extends Component {
             "sidebar-item py-2 pl-4 .no-gutters row align-items-center justify-content-left" +
             (selectedList === "Today" ? " selected-sidebar-item" : "")
           }
-          // style={{ borderTop: "0.25px solid rgb(187, 187, 187, 0.4)" }}
+          data-list-name="Today"
           onClick={(e) => this.selectList(e)}
         >
           <i className="fas fa-calendar-day sidebar-icon col-1 mr-1"></i>
@@ -93,6 +86,7 @@ export default class Sidebar extends Component {
             (selectedList === "Next 7 Days" ? " selected-sidebar-item" : "")
           }
           onClick={(e) => this.selectList(e)}
+          data-list-name="Next 7 Days"
         >
           <i className="fas fa-calendar-week sidebar-icon col-1 mr-1"></i>
           <div className="col-6 text-left p-0 sidebar-list-name">
@@ -109,6 +103,7 @@ export default class Sidebar extends Component {
             (selectedList === "All" ? " selected-sidebar-item" : "")
           }
           onClick={(e) => this.selectList(e)}
+          data-list-name="All"
         >
           <i className="fas fa-calendar sidebar-icon col-1 mr-1"></i>
           <div className="col-6 text-left p-0 sidebar-list-name">All</div>
@@ -117,7 +112,7 @@ export default class Sidebar extends Component {
           </div>
         </div>
         <div
-          className="text-center font-small sidebar-item py-1 pt-3"
+          className="text-center font-small sidebar-item py-1 pt-5"
           style={{
             pointerEvents: "none",
             fontWeight: "600",
@@ -129,6 +124,10 @@ export default class Sidebar extends Component {
         <div id="personal-lists">
           {personalLists.map((list, index) => {
             const count = countIncompletedItems(list);
+            const listName =
+              list.name.length > 13
+                ? list.name.substring(0, 12) + "..."
+                : list.name;
             return (
               <div
                 key={list.name}
@@ -137,15 +136,29 @@ export default class Sidebar extends Component {
                   (selectedList === list.name ? " selected-sidebar-item" : "")
                 }
                 onClick={(e) => this.selectList(e)}
+                data-list-name={list.name}
               >
                 <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
-                <div className="col-6 text-left p-0 sidebar-list-name">
-                  {list.name}
+                <div className="col-5 text-left p-0 sidebar-list-name">
+                  {listName}
                 </div>
-                <div className="col-4 font-small">{count > 0 ? count : ""}</div>
+                <div className="col-1 sidebar-list-color text-left">
+                  <i
+                    className="fa fa-circle"
+                    style={{ color: list.color, fontSize: "8px" }}
+                  ></i>
+                </div>
+                <div className="col-1 font-small">{count > 0 ? count : ""}</div>
               </div>
             );
           })}
+        </div>
+        <div
+          className="createListBtn text-center sidebar-icon sidebar-item py-2"
+          style={{ borderBottom: "none" }}
+          onClick={() => this.props.showAddListOverlay()}
+        >
+          <i className="fas fa-plus-circle" />
         </div>
       </div>
     );

@@ -170,7 +170,10 @@ export default class Details extends Component {
                   ? ""
                   : " text-primary")
               }
-              onClick={() => this.handleShowCalendarOverlay()}
+              onClick={() => {
+                this.handleShowCalendarOverlay();
+                this.props.hideAddListOverlay();
+              }}
             >
               <span className="mr-2">
                 <i className="fas fa-calendar-alt"></i>
@@ -179,7 +182,10 @@ export default class Details extends Component {
             </div>
             <div
               className={priorityPickerClasses}
-              onClick={() => this.handleShowPrioritiesOverlay()}
+              onClick={() => {
+                this.handleShowPrioritiesOverlay();
+                this.props.hideAddListOverlay();
+              }}
             >
               <i className="fas fa-balance-scale-left"></i>
             </div>
@@ -187,6 +193,7 @@ export default class Details extends Component {
               className="details-delete-btn col-1"
               onClick={() => {
                 this.props.handleDelete(this.props.listName, this.state.itemID);
+                this.props.hideAddListOverlay();
               }}
             >
               <i className="fas fa-trash"></i>
@@ -220,6 +227,7 @@ export default class Details extends Component {
               onBlur={(e) => this.handleTitleInputBlur(e)}
               ref={this.titleInputRef}
               onChange={(e) => this.setState({ title: e.target.value })}
+              onClick={() => this.props.hideAddListOverlay()}
             />
           </div>
           <div
@@ -235,7 +243,22 @@ export default class Details extends Component {
               onKeyDown={(e) => this.handleDescInputKeyPress(e)}
               onBlur={(e) => this.handleDescInputBlur(e)}
               onChange={(e) => this.setState({ description: e.target.value })}
+              onClick={() => this.props.hideAddListOverlay()}
             />
+          </div>
+          <div
+            className={
+              "details-list-name font-grey" +
+              (this.props.listName === "Today" ||
+              this.props.listName === "All" ||
+              this.props.listName === "Next 7 Days"
+                ? ""
+                : " d-none")
+            }
+            style={{ fontWeight: "600" }}
+          >
+            <i className="fas fa-bars sidebar-icon mr-1"></i>
+            {this.props.selectedItemList}
           </div>
         </div>
         <div

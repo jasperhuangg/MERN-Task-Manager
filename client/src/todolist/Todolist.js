@@ -269,6 +269,7 @@ export default class Todolist extends Component {
               onInput={(e) => this.handleInput(e)}
               onKeyDown={(e) => this.keyPress(e)}
               ref={this.inputRef}
+              onClick={() => this.props.hideAddListOverlay()}
             ></input>
             <div
               className={
@@ -277,7 +278,10 @@ export default class Todolist extends Component {
                   ? " d-none"
                   : "")
               }
-              onClick={(e) => this.handleShowPrioritiesOverlay(e)}
+              onClick={(e) => {
+                this.handleShowPrioritiesOverlay(e);
+                this.props.hideAddListOverlay();
+              }}
             >
               <span className="input-group-text icon">
                 <i className={priorityIconClasses}></i>
@@ -293,7 +297,10 @@ export default class Todolist extends Component {
             </div>
             <div
               className="input-group-append"
-              onClick={(e) => this.handleShowCalendarOverlay(e)}
+              onClick={(e) => {
+                this.handleShowCalendarOverlay(e);
+                this.props.hideAddListOverlay();
+              }}
             >
               <span
                 className={

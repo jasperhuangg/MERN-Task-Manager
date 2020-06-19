@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Cookies from "universal-cookie";
 import "./App.css";
 
-// import $ from "jquery";
+import $ from "jquery";
 
 import Todolist from "./todolist/Todolist.js";
 import Details from "./todolist/Details.js";
@@ -10,6 +10,8 @@ import Login from "./todolist/Login.js";
 import Register from "./todolist/Register.js";
 import Sidebar from "./todolist/Sidebar.js";
 import Notification from "./todolist/Notification.js";
+import Toolbar from "./todolist/Toolbar.js";
+import AddListOverlay from "./todolist/AddListOverlay.js";
 
 var ObjectID = require("bson-objectid");
 const cookies = new Cookies();
@@ -37,7 +39,9 @@ export default class App extends Component {
       notificationDisplaying: false,
       lastDeletedItem: {},
       lastDeletedItemListName: "",
+      addListOverlayDisplaying: false,
     };
+    this.addListTitleRef = React.createRef();
   }
 
   componentDidMount() {
@@ -194,7 +198,10 @@ export default class App extends Component {
   }
 
   setSelectedItem(itemID) {
-    this.setState({ currentlySelectedItemID: itemID });
+    this.setState({
+      currentlySelectedItemID: itemID,
+      addListOverlayDisplaying: false,
+    });
   }
 
   setSelectedList(listName) {
@@ -214,6 +221,8 @@ export default class App extends Component {
     this.setState({
       currentlySelectedListName: listName,
       currentlySelectedListIndex: index,
+      currentlySelectedItemID: "",
+      addListOverlayDisplaying: false,
     });
   }
 
@@ -309,6 +318,7 @@ export default class App extends Component {
       const items = lists[i].items;
       for (let j = 0; j < items.length; j++) {
         if (checkIfNext7Days(items[j].dueDate)) {
+          items[j].originalList = lists[i].name;
           next7Days.items.push(items[j]);
         }
       }
@@ -326,12 +336,11 @@ export default class App extends Component {
     };
 
     for (let i = 0; i < lists.length; i++) {
-      // const items = lists[i].items;
-      // for (let j = 0; j < items.length; j++) {
-      //   if (!items[j].completed) {
-      //     all.items.push(items[j]);
-      //   }
-      // }
+      const items = lists[i].items;
+
+      for (let j = 0; j < items.length; j++)
+        items[j].originalList = lists[i].name;
+
       all.items = all.items.concat(lists[i].items);
     }
 
@@ -353,6 +362,7 @@ export default class App extends Component {
       const items = lists[i].items;
       for (let j = 0; j < items.length; j++) {
         if (items[j].dueDate === t) {
+          items[j].originalList = lists[i].name;
           today.items.push(items[j]);
         }
       }
@@ -468,7 +478,6 @@ export default class App extends Component {
     }
     items = items.splice(index, 1);
 
-    console.log(item);
     this.setState({
       lists: lists,
       currentlySelectedItemID: "",
@@ -678,7 +687,7 @@ export default class App extends Component {
     // delete the cookie
     cookies.remove("DoozyLogin");
 
-    const bgURL = getRandomBGURL();
+    // const bgURL = getRandomBGURL();
 
     // reset state back to start
     this.setState({
@@ -691,20 +700,59 @@ export default class App extends Component {
       currentlySelectedListIndex: 0,
       currentlySelectedListName: "",
       currentlySelectedItemID: "",
-      bgURL: bgURL,
+      // bgURL: bgURL,
       firstName: "",
       lastName: "",
       loaded: false,
     });
   }
 
+  createEmptyList(listName, color) {
+    var list = { name: listName, color: color, items: [] };
+    var lists = this.state.lists.slice();
+    lists.splice(lists.length - 3, 0, list);
+    this.setState({
+      lists: lists,
+      currentlySelectedListIndex: lists.length - 4,
+      currentlySelectedListName: listName,
+    });
+
+    const url = domain + "/createEmptyList";
+    const body = JSON.stringify({
+      username: this.state.username,
+      listName: listName,
+      color: color,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+  }
+
   handleDisplayNotification() {
-    console.log("in");
     this.setState({ notificationDisplaying: true });
     setTimeout(() => {
-      console.log("out");
       this.setState({ notificationDisplaying: false });
     }, 5000);
+  }
+
+  handleShowAddListOverlay() {
+    this.setState({ addListOverlayDisplaying: true });
+    $(".add-list-overlay-color-selected").removeClass(
+      ".add-list-overlay-color-selected"
+    );
+    this.addListTitleRef.current.value = "";
+    setTimeout(() => {
+      this.addListTitleRef.current.focus();
+    }, 500);
+  }
+
+  handleHideAddListOverlay() {
+    this.setState({ addListOverlayDisplaying: false });
   }
 
   render() {
@@ -768,6 +816,16 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
         >
+          <AddListOverlay
+            id="addListOverlay"
+            displaying={this.state.addListOverlayDisplaying}
+            addListTitleRef={this.addListTitleRef}
+            lists={this.state.lists}
+            hideOverlay={() => this.handleHideAddListOverlay()}
+            createList={(listName, color) =>
+              this.createEmptyList(listName, color)
+            }
+          />
           <Notification
             displaying={this.state.notificationDisplaying}
             hideNotification={() =>
@@ -794,6 +852,7 @@ export default class App extends Component {
               lastName={this.state.lastName}
               currentlySelectedListName={this.state.currentlySelectedListName}
               setSelectedList={(listName) => this.setSelectedList(listName)}
+              showAddListOverlay={() => this.handleShowAddListOverlay()}
             />
           </div>
           {listArr.map((list, i) => {
@@ -830,12 +889,14 @@ export default class App extends Component {
                     }
                     setSelectedItem={(itemID) => this.setSelectedItem(itemID)}
                     selectedItemID={this.state.currentlySelectedItemID}
+                    hideAddListOverlay={() => this.handleHideAddListOverlay()}
                   />
                 </div>
                 <div id="details" className="col-4">
                   <Details
                     listName={list.name}
                     selectedItemID={selectedItem.itemID}
+                    selectedItemList={selectedItem.originalList}
                     selectedItemTitle={selectedItem.title}
                     selectedItemDueDate={selectedItem.dueDate}
                     selectedItemDescription={selectedItem.description}
@@ -859,24 +920,11 @@ export default class App extends Component {
                     handleDelete={(listName, itemID) =>
                       this.deleteListItem(listName, itemID)
                     }
+                    hideAddListOverlay={() => this.handleHideAddListOverlay()}
                   />
                 </div>
                 <div id="toolbar" className="row justify-content-center">
-                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
-                    <i className="fas fa-cogs"></i>
-                  </div>
-                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
-                    <i className="fas fa-hand-sparkles"></i>
-                  </div>
-                  <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
-                    <i className="fas fa-share-alt"></i>
-                  </div>
-                  <div
-                    className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center"
-                    onClick={() => this.handleLogOut()}
-                  >
-                    <i className="fas fa-sign-out-alt"></i>
-                  </div>
+                  <Toolbar handleLogOut={() => this.handleLogOut()} />
                 </div>
               </React.Fragment>
             );
