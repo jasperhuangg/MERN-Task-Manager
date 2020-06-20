@@ -1152,6 +1152,7 @@ export default class App extends Component {
           />
           <div id="sidebar" className="p-0">
             <Sidebar
+              username={this.state.username}
               lists={this.state.lists}
               firstName={this.state.firstName}
               lastName={this.state.lastName}

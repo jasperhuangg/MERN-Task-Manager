@@ -15,6 +15,42 @@ export default class Sidebar extends Component {
     this.props.setSelectedList(listName);
   }
 
+  createProfileAbbreviation() {
+    var profileIconAbbr;
+    if (
+      this.props.firstName === undefined ||
+      this.props.firstName === null ||
+      (this.props.firstName === "" && this.props.lastName === undefined) ||
+      this.props.lastName === null ||
+      this.props.lastName === ""
+    ) {
+      profileIconAbbr = this.props.username.substring(0, 2);
+    } else if (
+      this.props.firstName === undefined ||
+      this.props.firstName === null ||
+      (this.props.firstName === "" &&
+        this.props.lastName !== undefined &&
+        this.props.lastName !== null &&
+        this.props.lastName !== "")
+    ) {
+      profileIconAbbr = this.props.lastName.substring(0, 2);
+    } else if (
+      this.props.firstName !== undefined &&
+      this.props.firstName !== null &&
+      ((this.props.firstName !== "" && this.props.lastName === undefined) ||
+        this.props.lastName === null ||
+        this.props.lastName === "")
+    ) {
+      profileIconAbbr = this.props.firstName.substring(0, 2);
+    } else {
+      profileIconAbbr =
+        this.props.firstName.toUpperCase().substring(0, 1) +
+        this.props.lastName.toUpperCase().substring(0, 1);
+    }
+
+    return profileIconAbbr;
+  }
+
   render() {
     const selectedList = this.props.currentlySelectedListName;
 
@@ -38,6 +74,8 @@ export default class Sidebar extends Component {
       );
     }
 
+    var profileIconAbbr = this.createProfileAbbreviation();
+
     return (
       <div className="sidebar-container pt-5">
         <div className="profile-icon mb-4 text-center">
@@ -46,21 +84,15 @@ export default class Sidebar extends Component {
               color: "white",
               backgroundColor: "rgb(21, 127, 251)",
               borderRadius: "50%",
-              padding: "10px",
+              paddingLeft: "11px",
+              paddingRight: "11px",
+              paddingTop: "10px",
+              paddingBottom: "10px",
               fontSize: "16px",
               pointerEvents: "none",
             }}
           >
-            {(this.props.firstName === undefined ||
-            this.props.firstName === null ||
-            this.props.firstName === ""
-              ? " "
-              : this.props.firstName.toUpperCase()[0]) +
-              (this.props.lastName === undefined ||
-              this.props.lastName === null ||
-              this.props.lastName === ""
-                ? " "
-                : this.props.lastName.toUpperCase()[0])}
+            {profileIconAbbr}
           </span>
         </div>
         <div
@@ -82,7 +114,7 @@ export default class Sidebar extends Component {
           data-list-name="Today"
           onClick={(e) => this.selectList(e)}
         >
-          <i className="fas fa-calendar-day sidebar-icon col-1 mr-1"></i>
+          <i className="fas fa-calendar-day sidebar-icon col-1 mr-2"></i>
           <div className="col-5 text-left p-0 sidebar-list-name">Today</div>
           <div className="col-1 sidebar-list-color text-left invisible">
             <i className="fa fa-circle" style={{ fontSize: "8px" }}></i>
@@ -100,7 +132,7 @@ export default class Sidebar extends Component {
           onClick={(e) => this.selectList(e)}
           data-list-name="Next 7 Days"
         >
-          <i className="fas fa-calendar-week sidebar-icon col-1 mr-1"></i>
+          <i className="fas fa-calendar-week sidebar-icon col-1 mr-2"></i>
           <div className="col-5 text-left p-0 sidebar-list-name">
             Next 7 Days
           </div>
@@ -120,7 +152,7 @@ export default class Sidebar extends Component {
           onClick={(e) => this.selectList(e)}
           data-list-name="All"
         >
-          <i className="fas fa-calendar sidebar-icon col-1 mr-1"></i>
+          <i className="fas fa-calendar sidebar-icon col-1 mr-2"></i>
           <div className="col-5 text-left p-0 sidebar-list-name">All</div>
           <div className="col-1 sidebar-list-color text-left invisible">
             <i className="fa fa-circle" style={{ fontSize: "8px" }}></i>
@@ -143,8 +175,8 @@ export default class Sidebar extends Component {
           {personalLists.map((list, index) => {
             const count = countIncompletedItems(list);
             const listName =
-              list.name.length > 13
-                ? list.name.substring(0, 12) + "..."
+              list.name.length > 11
+                ? list.name.substring(0, 11) + "..."
                 : list.name;
             return (
               <div key={list.name}>
@@ -159,7 +191,7 @@ export default class Sidebar extends Component {
                     onClick={(e) => this.selectList(e)}
                     data-list-name={list.name}
                   >
-                    <i className="fas fa-bars sidebar-icon col-1 mr-1"></i>
+                    <i className="fas fa-bars sidebar-icon col-1 mr-2"></i>
                     <div className="col-5 text-left p-0 sidebar-list-name">
                       {listName}
                     </div>
@@ -196,7 +228,9 @@ export default class Sidebar extends Component {
                     onClick={(e) => {
                       e.preventDefault();
                       const confirmed = window.confirm(
-                        "Are you sure? \n\nDeleting this list will permanently delete all of its items."
+                        'Are you sure you want to delete "' +
+                          list.name +
+                          '"? \n\nDeleting it will permanently delete all of its items.'
                       );
                       if (confirmed) this.props.deleteList(list.name);
                     }}
