@@ -258,10 +258,11 @@ export default class Details extends Component {
             <span className="font-grey ">{this.props.selectedItemList}</span>
 
             <i
-              className="ml-2 pt-1 fa fa-circle"
+              className="ml-2 fa fa-circle"
               style={{
                 fontSize: "8px",
                 color: this.props.selectedItemColor,
+                paddingTop: "3px",
               }}
             ></i>
           </div>
