@@ -13,7 +13,7 @@ export default function DateParser(str) {
     "tmr",
     "monday",
     "tuesday",
-    "wednesday",
+    "wednesaday",
     "thursday",
     "friday",
     "saturday",

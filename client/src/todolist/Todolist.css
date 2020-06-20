@@ -205,6 +205,22 @@ select:focus {
   transition: 0.3s ease;
 }
 
+.priorities-base {
+  transition: 0.3s ease;
+}
+
+.text-warning {
+  transition: 0.3s ease;
+}
+
+.text-danger {
+  transition: 0.3s ease;
+}
+
+.text-primary {
+  transition: 0.3s ease;
+}
+
 .calendar-selected {
   color: rgb(21, 127, 251);
   transition: 0.3s ease;

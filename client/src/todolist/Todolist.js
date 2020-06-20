@@ -6,6 +6,7 @@ import ListItem from "./ListItem.js";
 import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
 import DateParser from "./DateParser.js";
+import PriorityParser from "./PriorityParser.js";
 
 import "./Todolist.css";
 
@@ -20,6 +21,7 @@ export default class Todolist extends Component {
       addItemPriority: "low",
       listItems: this.props.items,
       addItemDateKeywords: "",
+      addItemPriorityKeywords: "",
       completedItemsShowing: false,
     };
     this.inputRef = React.createRef();
@@ -35,6 +37,8 @@ export default class Todolist extends Component {
     var val = document.getElementById("addItemInput").value;
     if (this.state.addItemDate !== "")
       val = removeOccurence(val, this.state.addItemDateKeywords);
+    if (this.state.addItemPriorityKeywords !== "")
+      val = removeOccurence(val, this.state.addItemPriorityKeywords);
     val = removeExtraWhitespace(val);
 
     // hardcoded date and priority values as UI components not yet implemented
@@ -64,8 +68,11 @@ export default class Todolist extends Component {
 
   handleInput(e) {
     var dateParserObj = DateParser(e.target.value);
+    var priorityParserObj = PriorityParser(e.target.value);
     var parsedDate = dateParserObj.date;
     var keywords = dateParserObj.keywords;
+    var parsedPriority = priorityParserObj.priority;
+    var priorityKeywords = priorityParserObj.keywords;
 
     if (
       keywords === "" &&
@@ -76,10 +83,21 @@ export default class Todolist extends Component {
       keywords = this.state.addItemDateKeywords;
     }
 
+    if (
+      priorityKeywords === "" &&
+      // this.state.addItemPriorityKeywords !== "" &&
+      e.target.value.indexOf(this.state.addItemPriorityKeywords) !== -1
+    ) {
+      parsedPriority = this.state.addItemPriority;
+      priorityKeywords = this.state.addItemPriorityKeywords;
+    }
+
     this.setState({
       addItemValue: e.target.value,
       addItemDate: parsedDate,
       addItemDateKeywords: keywords,
+      addItemPriority: parsedPriority,
+      addItemPriorityKeywords: priorityKeywords,
     });
   }
 
@@ -136,7 +154,7 @@ export default class Todolist extends Component {
   }
 
   getPriorityIconClasses() {
-    var classes = "fas fa-balance-scale-left";
+    var classes = "fas fa-balance-scale-left priorities-base";
     if (this.state.addItemPriority === "high") {
       classes += " text-danger";
     } else if (this.state.addItemPriority === "medium") {
