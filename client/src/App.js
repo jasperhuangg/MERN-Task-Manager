@@ -1320,7 +1320,6 @@ function getRandomBGURL() {
     "https://iili.io/Jszxun.jpg",
     "https://iili.io/JszAG4.jpg",
     "https://iili.io/JszIZG.jpg",
-    "https://iili.io/JsznyX.jpg",
     "https://iili.io/Jszzjs.jpg",
     "https://iili.io/Jszunf.jpg",
   ];
