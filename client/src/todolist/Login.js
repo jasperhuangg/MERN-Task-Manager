@@ -151,7 +151,7 @@ export default class Login extends Component {
         <h1>LOGO</h1>
         <br />
         <br />
-        <h5 className="text-center" style={{ fontWeight: "600" }}>
+        <h5 className="text-left" style={{ fontWeight: "600" }}>
           Log in to your account
         </h5>
         <br />
@@ -160,6 +160,7 @@ export default class Login extends Component {
             <div className="google-icon-wrapper">
               <img
                 className="google-icon"
+                alt=""
                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
               />
             </div>
@@ -178,7 +179,7 @@ export default class Login extends Component {
                 buttonText="Log in with Google"
                 onSuccess={this.handleGoogleOAuth}
                 onFailure={() => {
-                  alert("Google OAuth Failed.");
+                  // alert("Google OAuth Failed.");
                 }}
                 cookiePolicy={"single_host_origin"}
               />

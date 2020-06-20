@@ -41,7 +41,7 @@ app.use(cookierParser("abcdef-12345"));
 
 app.use("/verifyLogin", verifyLoginRouter);
 app.use("/createAccount", createAccountRouter);
-app.use("/app", appRouter);
+app.use("/", appRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
 app.use("/getLists", getListsRouter);

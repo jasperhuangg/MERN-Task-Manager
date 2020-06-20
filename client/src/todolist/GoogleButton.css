@@ -1,16 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:500);
 .google-btn {
-  width: 184px;
+  width: 355px;
   height: 42px;
   background-color: #4285f4;
   border-radius: 2px;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
   transition: 0.2s ease;
+  /* padding-right: 100px; */
 }
-
+/* 
 .google-btn-lg {
   width: 195px;
-}
+} */
 
 .google-btn .google-icon-wrapper {
   position: absolute;
@@ -34,6 +35,7 @@
   color: #fff;
   font-size: 14px;
   letter-spacing: 0.2px;
+  width: 320px;
   font-family: "Roboto";
 }
 .google-btn:hover {
