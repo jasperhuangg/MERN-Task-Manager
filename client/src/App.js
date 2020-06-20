@@ -96,6 +96,7 @@ export default class App extends Component {
   }
 
   verifyLogin(username, password, authType) {
+    // console.log("verifying login for " + username);
     const url = domain + "/verifyLogin";
     const body = JSON.stringify({
       username: username,
@@ -112,6 +113,7 @@ export default class App extends Component {
     })
       .then((res) => res.json())
       .then((res) => {
+        // console.log(res);
         if (res.success) {
           this.setState({
             docTitle: "Lists | Doozy",
@@ -199,40 +201,48 @@ export default class App extends Component {
     }
   }
 
-  deleteAllCompletedItems() {
-    var lists = this.state.lists.slice();
+  deleteAllCompletedItems(listName) {
+    if (
+      listName !== "Today" &&
+      listName !== "Next 7 Days" &&
+      listName !== "All"
+    ) {
+      var lists = this.state.lists.slice();
 
-    for (let i = 0; i < lists.length; i++) {
-      var items = lists[i].items;
-      var firstCompletedIndex = 0;
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].completed) {
-          firstCompletedIndex = j;
+      for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === listName) {
+          var items = lists[i].items;
+          var firstCompletedIndex = 0;
+          for (let j = 0; j < items.length; j++) {
+            if (items[j].completed) {
+              firstCompletedIndex = j;
+              break;
+            }
+          }
+          items = items.slice(0, firstCompletedIndex);
           break;
         }
       }
-      items = items.slice(0, firstCompletedIndex);
-    }
 
-    const url = domain + "/deleteCompletedItems";
-    const body = JSON.stringify({
-      username: this.state.username,
-    });
-
-    console.log(body);
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: body,
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        this.setState({ lists: lists });
-        this.getLists();
+      const url = domain + "/deleteCompletedItems";
+      const body = JSON.stringify({
+        username: this.state.username,
+        listName: listName,
       });
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          this.setState({ lists: lists });
+          this.getLists();
+        });
+    }
   }
 
   setSelectedItem(itemID) {
@@ -418,73 +428,15 @@ export default class App extends Component {
     return today;
   }
 
-  addListItem(listName, title, dueDate, description, priority, color) {
-    const lists = this.state.lists.slice();
-    var id = null;
-    var item = {
-      title: title,
-      description: description,
-      dueDate: dueDate,
-      priority: priority,
-      completed: false,
-      originalList: listName,
-      color: color,
-      itemID: new ObjectID().toString(),
-    };
-    for (let i = 0; i < lists.length; i++) {
-      if (lists[i].name === listName) {
-        const items = lists[i].items;
-        items.push(item);
-        id = item.itemID;
-        items.sort(sortListItems);
-        break;
-      }
-    }
-
-    var today = dateToStr(new Date());
-    if (dueDate === today) {
-      lists[lists.length - 3].items.push(item);
-      lists[lists.length - 3].items.sort(sortListItems);
-    }
-    if (checkIfNext7Days(dueDate)) {
-      lists[lists.length - 2].items.push(item);
-      lists[lists.length - 2].items.sort(sortListItems);
-    }
-    lists[lists.length - 1].items.push(item);
-    lists[lists.length - 1].items.sort(sortListItems);
-
-    this.setState({ lists: lists, currentlySelectedItemID: id });
-
-    const url = domain + "/addListItem";
-    const body = JSON.stringify({
-      username: this.state.username,
-      listName: listName,
-      title: title,
-      dueDate: dueDate,
-      description: description,
-      priority: priority,
-      itemID: id,
-    });
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: body,
-    });
-  }
-
-  undoDeleteItem(
-    itemID,
+  addListItem(
     listName,
     title,
     dueDate,
     description,
     priority,
-    completed,
-    originalList,
-    color
+    color,
+    itemID,
+    completed
   ) {
     const lists = this.state.lists.slice();
     var id = null;
@@ -493,9 +445,10 @@ export default class App extends Component {
       description: description,
       dueDate: dueDate,
       priority: priority,
-      completed: false,
+      completed: completed === undefined ? false : completed,
       originalList: listName,
-      itemID: new ObjectID().toString(),
+      color: color,
+      itemID: itemID === undefined ? new ObjectID().toString() : itemID,
     };
     for (let i = 0; i < lists.length; i++) {
       if (lists[i].name === listName) {
@@ -541,12 +494,13 @@ export default class App extends Component {
     });
   }
 
-  deleteListItem(listName, itemID) {
+  deleteListItem(listName, itemID, originalList) {
+    console.log(listName, itemID, originalList);
     var dueDate = "";
     var item;
     const lists = this.state.lists.slice();
     for (let i = 0; i < lists.length; i++) {
-      if (lists[i].name === listName) {
+      if (lists[i].name === listName || lists[i].name === originalList) {
         var items = lists[i].items;
         var idx = -1;
         for (let j = 0; j < items.length; j++) {
@@ -1182,12 +1136,14 @@ export default class App extends Component {
             undo={() => {
               if (this.state.lastDeletedItem.itemID !== undefined) {
                 this.addListItem(
-                  this.state.lastDeletedItemListName,
+                  this.state.lastDeletedItem.originalList,
                   this.state.lastDeletedItem.title,
                   this.state.lastDeletedItem.dueDate,
                   this.state.lastDeletedItem.description,
                   this.state.lastDeletedItem.priority,
-                  this.state.lastDeletedItem.color
+                  this.state.lastDeletedItem.color,
+                  this.state.lastDeletedItem.itemID,
+                  this.state.lastDeletedItem.completed
                 );
               }
             }}
@@ -1233,8 +1189,8 @@ export default class App extends Component {
                         color
                       )
                     }
-                    deleteListItem={(listName, itemID) =>
-                      this.deleteListItem(listName, itemID)
+                    deleteListItem={(listName, itemID, originalList) =>
+                      this.deleteListItem(listName, itemID, originalList)
                     }
                     setItemTitle={(listName, itemID, title) =>
                       this.setItemTitle(listName, itemID, title)
@@ -1273,8 +1229,8 @@ export default class App extends Component {
                     setItemDescription={(listName, itemID, description) =>
                       this.setItemDescription(listName, itemID, description)
                     }
-                    handleDelete={(listName, itemID) =>
-                      this.deleteListItem(listName, itemID)
+                    handleDelete={(listName, itemID, originalList) =>
+                      this.deleteListItem(listName, itemID, originalList)
                     }
                     hideAddListOverlay={() => this.handleHideAddListOverlay()}
                   />
@@ -1283,8 +1239,13 @@ export default class App extends Component {
                 <div id="toolbar" className="row col-1 justify-content-center">
                   <Toolbar
                     handleLogOut={() => this.handleLogOut()}
-                    deleteAllCompletedItems={() =>
-                      this.deleteAllCompletedItems()
+                    deleteAllCompletedItems={() => {
+                      this.deleteAllCompletedItems(
+                        this.state.currentlySelectedListName
+                      );
+                    }}
+                    currentlySelectedListName={
+                      this.state.currentlySelectedListName
                     }
                   />
                 </div>

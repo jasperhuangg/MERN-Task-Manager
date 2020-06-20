@@ -54,12 +54,12 @@ export default class Sidebar extends Component {
             {(this.props.firstName === undefined ||
             this.props.firstName === null ||
             this.props.firstName === ""
-              ? "?"
+              ? " "
               : this.props.firstName.toUpperCase()[0]) +
               (this.props.lastName === undefined ||
               this.props.lastName === null ||
               this.props.lastName === ""
-                ? "?"
+                ? " "
                 : this.props.lastName.toUpperCase()[0])}
           </span>
         </div>

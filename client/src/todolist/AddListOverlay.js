@@ -8,13 +8,11 @@ export default class AddListOverlay extends Component {
 
   selectColor(e) {
     const color = e.currentTarget.dataset.color;
-    console.log(color);
     this.setState({ selectedColor: color });
     this.props.focusTitleInput();
   }
 
   handleSubmit() {
-    console.log("triggered in addlistoverlay");
     const listName = this.state.listName;
     const color = this.state.selectedColor;
 
@@ -99,7 +97,7 @@ export default class AddListOverlay extends Component {
 
         <div className="d-flex justify-content-around">
           {colors.map((color, index) => {
-            var shadedColor = shadeColor(color, -40) + "BB";
+            var shadedColor = shadeColor(color, -30) + "BB";
 
             return (
               <i
@@ -160,7 +158,6 @@ export default class AddListOverlay extends Component {
 }
 
 function listNameExists(lists, listName) {
-  console.log(lists);
   for (let i = 0; i < lists.length; i++)
     if (lists[i].name === listName) return true;
 

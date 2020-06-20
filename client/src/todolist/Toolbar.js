@@ -11,10 +11,20 @@ export default class Toolbar extends Component {
           className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center"
           onClick={(e) => {
             e.preventDefault();
-            var confirmed = window.confirm("Delete all completed items?");
-            if (confirmed) {
-              // delete all completed items
-              this.props.deleteAllCompletedItems();
+            if (
+              this.props.currentlySelectedListName !== "Today" &&
+              this.props.currentlySelectedListName !== "Next 7 Days" &&
+              this.props.currentlySelectedListName !== "All"
+            ) {
+              var confirmed = window.confirm(
+                'Clear all completed items for "' +
+                  this.props.currentlySelectedListName +
+                  '"?'
+              );
+              if (confirmed) {
+                // delete all completed items
+                this.props.deleteAllCompletedItems();
+              }
             }
           }}
         >

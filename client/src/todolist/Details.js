@@ -139,8 +139,6 @@ export default class Details extends Component {
       ? ""
       : "d-none";
 
-    console.log(this.props.selectedItemColor);
-
     return (
       <React.Fragment>
         <div
@@ -194,7 +192,11 @@ export default class Details extends Component {
             <div
               className="details-delete-btn col-1"
               onClick={() => {
-                this.props.handleDelete(this.props.listName, this.state.itemID);
+                this.props.handleDelete(
+                  this.props.listName,
+                  this.state.itemID,
+                  this.props.selectedItemList
+                );
                 this.props.hideAddListOverlay();
               }}
             >

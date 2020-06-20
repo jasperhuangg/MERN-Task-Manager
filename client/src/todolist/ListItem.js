@@ -47,7 +47,7 @@ export default class ListItem extends Component {
     } else if (e.keyCode === 91 && !map[8]) {
       map[e.keyCode] = e.type === "keydown";
     } else if (e.keyCode === 8 && map[91] === true) {
-      this.props.handleDelete(this.state.itemID);
+      this.props.handleDelete();
       map = {};
       this.setState({ pressedKeys: map });
     }

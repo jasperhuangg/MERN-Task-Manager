@@ -12,7 +12,6 @@ export default class EditListOverlay extends Component {
 
   selectColor(e) {
     const color = e.currentTarget.dataset.color;
-    console.log(color);
     this.setState({ selectedColor: color });
     this.props.focusTitleInput();
   }
@@ -41,7 +40,6 @@ export default class EditListOverlay extends Component {
       this.props.startingColor !== "" &&
       this.props.startingName !== ""
     ) {
-      console.log("setting");
       this.setState({
         selectedColor: this.props.startingColor,
         listName: this.props.startingName,
@@ -115,7 +113,7 @@ export default class EditListOverlay extends Component {
 
         <div className="d-flex justify-content-around">
           {colors.map((color, index) => {
-            var shadedColor = shadeColor(color, -40) + "BB";
+            var shadedColor = shadeColor(color, -30) + "BB";
             return (
               <i
                 key={color}

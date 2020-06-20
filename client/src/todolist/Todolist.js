@@ -106,8 +106,8 @@ export default class Todolist extends Component {
     this.setState({ addItemDate: date });
   }
 
-  handleDelete(id) {
-    this.props.deleteListItem(this.props.name, id);
+  handleDelete(id, originalList) {
+    this.props.deleteListItem(this.props.name, id, originalList);
   }
 
   handleCalendarOverlayOK() {
@@ -379,7 +379,9 @@ export default class Todolist extends Component {
                         this.props.setSelectedItem(itemID)
                       }
                       selectedItemID={this.props.selectedItemID}
-                      handleDelete={(id) => this.handleDelete(id)}
+                      handleDelete={() =>
+                        this.handleDelete(item.itemID, item.originalList)
+                      }
                     />
                   </ContextMenuTrigger>
                   <ContextMenu
@@ -389,7 +391,9 @@ export default class Todolist extends Component {
                     <MenuItem
                       data={{ foo: "bar" }}
                       className="delete-menu-item px-1"
-                      onClick={(id) => this.handleDelete(item.itemID)}
+                      onClick={() =>
+                        this.handleDelete(item.itemID, item.originalList)
+                      }
                     >
                       <div className="row align-items-center justify-content-left">
                         <i className="fas fa-trash col-1"></i>
@@ -450,7 +454,9 @@ export default class Todolist extends Component {
                         this.props.setSelectedItem(itemID)
                       }
                       selectedItemID={this.props.selectedItemID}
-                      handleDelete={(id) => this.handleDelete(id)}
+                      handleDelete={() => {
+                        this.handleDelete(item.itemID, item.originalList);
+                      }}
                     />
                   </ContextMenuTrigger>
                   <ContextMenu
@@ -460,7 +466,9 @@ export default class Todolist extends Component {
                     <MenuItem
                       data={{ foo: "bar" }}
                       className="delete-menu-item px-1"
-                      onClick={(id) => this.handleDelete(item.itemID)}
+                      onClick={() =>
+                        this.handleDelete(item.itemID, item.originalList)
+                      }
                     >
                       <div className="row align-items-center justify-content-left">
                         <i className="fas fa-trash col-1"></i>

@@ -15,6 +15,7 @@ const uri =
 
 router.post("/", (req, res, next) => {
   const username = req.body.username;
+  const listName = req.body.listName;
 
   try {
     MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
@@ -28,13 +29,15 @@ router.post("/", (req, res, next) => {
         .forEach((user) => {
           if (user.lists) {
             user.lists.forEach((list) => {
-              var items = list.items;
-              var counter = 0;
+              if (list.name === listName) {
+                var items = list.items;
+                var counter = 0;
 
-              while (counter !== items.length) {
-                var item = items[counter];
-                if (item.completed) items.splice(counter, 1);
-                else counter++;
+                while (counter !== items.length) {
+                  var item = items[counter];
+                  if (item.completed) items.splice(counter, 1);
+                  else counter++;
+                }
               }
             });
           }
