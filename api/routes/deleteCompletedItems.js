@@ -29,14 +29,6 @@ router.post("/", (req, res, next) => {
           if (user.lists) {
             user.lists.forEach((list) => {
               var items = list.items;
-              // var incompleted = [];
-              // for (let i = 0; i < items.length; i++) {
-              //   if (items[i].completed === false) {
-              //     incompleted.push(items[i]);
-              //   }
-              // }
-              // items = [];
-              // items.concat(incompleted);
               var counter = 0;
 
               while (counter !== items.length) {
@@ -56,41 +48,3 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
-
-function test() {
-  var items = [
-    {
-      completed: true,
-    },
-    {
-      completed: false,
-    },
-    {
-      completed: true,
-    },
-    {
-      completed: false,
-    },
-    {
-      completed: false,
-    },
-    {
-      completed: true,
-    },
-    {
-      completed: true,
-    },
-  ];
-
-  var counter = 0;
-
-  while (counter !== items.length) {
-    var item = items[counter];
-    if (item.completed) items.splice(counter, 1);
-    else counter++;
-  }
-
-  return items;
-}
-
-console.log(test());
