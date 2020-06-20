@@ -33,6 +33,7 @@ router.post("/", (req, res, next) => {
   const password = req.body.password;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
+  const authType = req.body.authType;
 
   const encryptedPass = key.encrypt(password, "base64");
 
@@ -52,6 +53,7 @@ router.post("/", (req, res, next) => {
               firstName: firstName,
               lastName: lastName,
               password: encryptedPass,
+              authType: authType,
               lists: [
                 {
                   name: "How to Doozy",

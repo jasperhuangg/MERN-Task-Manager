@@ -50,13 +50,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    // this will be where you check for the cookie
-    // if the cookie is valid, then
-    // this.setState({
-    //   loggedIn: "successful",
-    //   username: "[whatever was in the cookie]",
-    // });
-
     var username = "";
     var firstName = "";
     var lastName = "";
@@ -102,12 +95,12 @@ export default class App extends Component {
     }
   }
 
-  verifyLogin(username, password) {
-    console.log("calling verify login with " + username + ", " + password);
+  verifyLogin(username, password, authType) {
     const url = domain + "/verifyLogin";
     const body = JSON.stringify({
       username: username,
       password: password,
+      authType: authType,
     });
 
     fetch(url, {
@@ -145,12 +138,14 @@ export default class App extends Component {
           );
         } else if (res.info === "username does not exist")
           this.setState({ loggedIn: "username does not exist" });
+        else if (res.info === "auth type")
+          this.setState({ loggedIn: "auth type" });
         else if (res.info === "incorrect password")
           this.setState({ loggedIn: "incorrect password" });
       });
   }
 
-  createAccount(email, firstName, lastName, password) {
+  createAccount(email, firstName, lastName, password, authType) {
     if (email === "" || firstName === "" || lastName === "" || password === "")
       this.setState({ registered: "empty field(s)" });
     else if (!ValidateEmail(email))
@@ -164,6 +159,7 @@ export default class App extends Component {
         firstName: firstName,
         lastName: lastName,
         password: password,
+        authType: authType,
       });
 
       fetch(url, {
@@ -201,6 +197,42 @@ export default class App extends Component {
           }
         });
     }
+  }
+
+  deleteAllCompletedItems() {
+    var lists = this.state.lists.slice();
+
+    for (let i = 0; i < lists.length; i++) {
+      var items = lists[i].items;
+      var firstCompletedIndex = 0;
+      for (let j = 0; j < items.length; j++) {
+        if (items[j].completed) {
+          firstCompletedIndex = j;
+          break;
+        }
+      }
+      items = items.slice(0, firstCompletedIndex);
+    }
+
+    const url = domain + "/deleteCompletedItems";
+    const body = JSON.stringify({
+      username: this.state.username,
+    });
+
+    console.log(body);
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.setState({ lists: lists });
+        this.getLists();
+      });
   }
 
   setSelectedItem(itemID) {
@@ -329,6 +361,7 @@ export default class App extends Component {
       for (let j = 0; j < items.length; j++) {
         if (checkIfNext7Days(items[j].dueDate)) {
           items[j].originalList = lists[i].name;
+          items[j].color = lists[i].color;
           next7Days.items.push(items[j]);
         }
       }
@@ -348,15 +381,15 @@ export default class App extends Component {
     for (let i = 0; i < lists.length; i++) {
       const items = lists[i].items;
 
-      for (let j = 0; j < items.length; j++)
+      for (let j = 0; j < items.length; j++) {
         items[j].originalList = lists[i].name;
+        items[j].color = lists[i].color;
+      }
 
       all.items = all.items.concat(lists[i].items);
     }
 
     all.items.sort(sortListItems);
-
-    console.log(all);
 
     return all;
   }
@@ -375,6 +408,7 @@ export default class App extends Component {
       for (let j = 0; j < items.length; j++) {
         if (items[j].dueDate === t) {
           items[j].originalList = lists[i].name;
+          items[j].color = lists[i].color;
           today.items.push(items[j]);
         }
       }
@@ -384,7 +418,74 @@ export default class App extends Component {
     return today;
   }
 
-  addListItem(listName, title, dueDate, description, priority) {
+  addListItem(listName, title, dueDate, description, priority, color) {
+    const lists = this.state.lists.slice();
+    var id = null;
+    var item = {
+      title: title,
+      description: description,
+      dueDate: dueDate,
+      priority: priority,
+      completed: false,
+      originalList: listName,
+      color: color,
+      itemID: new ObjectID().toString(),
+    };
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        const items = lists[i].items;
+        items.push(item);
+        id = item.itemID;
+        items.sort(sortListItems);
+        break;
+      }
+    }
+
+    var today = dateToStr(new Date());
+    if (dueDate === today) {
+      lists[lists.length - 3].items.push(item);
+      lists[lists.length - 3].items.sort(sortListItems);
+    }
+    if (checkIfNext7Days(dueDate)) {
+      lists[lists.length - 2].items.push(item);
+      lists[lists.length - 2].items.sort(sortListItems);
+    }
+    lists[lists.length - 1].items.push(item);
+    lists[lists.length - 1].items.sort(sortListItems);
+
+    this.setState({ lists: lists, currentlySelectedItemID: id });
+
+    const url = domain + "/addListItem";
+    const body = JSON.stringify({
+      username: this.state.username,
+      listName: listName,
+      title: title,
+      dueDate: dueDate,
+      description: description,
+      priority: priority,
+      itemID: id,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+  }
+
+  undoDeleteItem(
+    itemID,
+    listName,
+    title,
+    dueDate,
+    description,
+    priority,
+    completed,
+    originalList,
+    color
+  ) {
     const lists = this.state.lists.slice();
     var id = null;
     var item = {
@@ -906,7 +1007,10 @@ export default class App extends Component {
         lists[i].name = newName;
         lists[i].color = color;
         var items = lists[i].items;
-        for (let j = 0; j < items.length; j++) items[j].originalList = newName;
+        for (let j = 0; j < items.length; j++) {
+          items[j].originalList = newName;
+          items[j].color = color;
+        }
         break;
       }
     }
@@ -949,7 +1053,6 @@ export default class App extends Component {
   }
 
   handleShowEditListOverlay(listName, color) {
-    console.log("color: " + color);
     this.setState({
       editListOverlayDisplaying: true,
       editListColor: color,
@@ -1010,11 +1113,11 @@ export default class App extends Component {
           >
             <Login
               loginInfo={this.state.loggedIn}
-              verifyLogin={(username, password) =>
-                this.verifyLogin(username, password)
+              verifyLogin={(username, password, authType) =>
+                this.verifyLogin(username, password, authType)
               }
-              createAccount={(email, fName, lName, password) =>
-                this.createAccount(email, fName, lName, password)
+              createAccount={(email, fName, lName, password, authType) =>
+                this.createAccount(email, fName, lName, password, authType)
               }
               switchToRegister={() => this.toggleLoginRegister()}
             />
@@ -1027,11 +1130,11 @@ export default class App extends Component {
           >
             <Register
               switchToLogin={() => this.toggleLoginRegister()}
-              verifyLogin={(username, password) =>
-                this.verifyLogin(username, password)
+              verifyLogin={(username, password, authType) =>
+                this.verifyLogin(username, password, authType)
               }
-              createAccount={(email, fName, lName, password) =>
-                this.createAccount(email, fName, lName, password)
+              createAccount={(email, fName, lName, password, authType) =>
+                this.createAccount(email, fName, lName, password, authType)
               }
               registerInfo={this.state.registered}
             />
@@ -1083,11 +1186,13 @@ export default class App extends Component {
                   this.state.lastDeletedItem.title,
                   this.state.lastDeletedItem.dueDate,
                   this.state.lastDeletedItem.description,
-                  this.state.lastDeletedItem.priority
+                  this.state.lastDeletedItem.priority,
+                  this.state.lastDeletedItem.color
                 );
               }
             }}
             listName={this.state.lastDeletedItemListName}
+            originalList={this.state.lastDeletedItem.originalList}
           />
           <div id="sidebar" className="p-0">
             <Sidebar
@@ -1116,14 +1221,16 @@ export default class App extends Component {
                       title,
                       dueDate,
                       description,
-                      priority
+                      priority,
+                      color
                     ) =>
                       this.addListItem(
                         listName,
                         title,
                         dueDate,
                         description,
-                        priority
+                        priority,
+                        color
                       )
                     }
                     deleteListItem={(listName, itemID) =>
@@ -1144,6 +1251,7 @@ export default class App extends Component {
                   <Details
                     listName={list.name}
                     selectedItemID={selectedItem.itemID}
+                    selectedItemColor={selectedItem.color}
                     selectedItemList={selectedItem.originalList}
                     selectedItemTitle={selectedItem.title}
                     selectedItemDueDate={selectedItem.dueDate}
@@ -1171,8 +1279,14 @@ export default class App extends Component {
                     hideAddListOverlay={() => this.handleHideAddListOverlay()}
                   />
                 </div>
-                <div id="toolbar" className="row justify-content-center">
-                  <Toolbar handleLogOut={() => this.handleLogOut()} />
+                <div className="col-1"></div>
+                <div id="toolbar" className="row col-1 justify-content-center">
+                  <Toolbar
+                    handleLogOut={() => this.handleLogOut()}
+                    deleteAllCompletedItems={() =>
+                      this.deleteAllCompletedItems()
+                    }
+                  />
                 </div>
               </React.Fragment>
             );

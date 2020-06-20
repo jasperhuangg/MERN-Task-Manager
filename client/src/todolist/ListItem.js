@@ -127,6 +127,7 @@ export default class ListItem extends Component {
             }}
             onBlur={(e) => this.handleBlur(e)}
             onChange={(e) => this.setState({ title: e.target.value })}
+            autoComplete="off"
           />
         </div>
 

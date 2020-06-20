@@ -30,6 +30,7 @@ const uri =
 router.post("/", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
+  const authType = req.body.authType;
 
   try {
     MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
@@ -45,6 +46,8 @@ router.post("/", (req, res, next) => {
           else {
             if (result.length === 0)
               res.send({ success: false, info: "username does not exist" });
+            else if (result[0].authType !== authType)
+              res.send({ success: false, info: "auth type" });
             else {
               const firstName = result[0].firstName;
               const lastName = result[0].lastName;

@@ -139,6 +139,8 @@ export default class Details extends Component {
       ? ""
       : "d-none";
 
+    console.log(this.props.selectedItemColor);
+
     return (
       <React.Fragment>
         <div
@@ -228,6 +230,7 @@ export default class Details extends Component {
               ref={this.titleInputRef}
               onChange={(e) => this.setState({ title: e.target.value })}
               onClick={() => this.props.hideAddListOverlay()}
+              autoComplete="off"
             />
           </div>
           <div
@@ -244,21 +247,23 @@ export default class Details extends Component {
               onBlur={(e) => this.handleDescInputBlur(e)}
               onChange={(e) => this.setState({ description: e.target.value })}
               onClick={() => this.props.hideAddListOverlay()}
+              autoComplete="off"
             />
           </div>
           <div
-            className={
-              "details-list-name font-grey" +
-              (this.props.listName === "Today" ||
-              this.props.listName === "All" ||
-              this.props.listName === "Next 7 Days"
-                ? ""
-                : " d-none")
-            }
+            className={"details-list-name d-flex align-items-center"}
             style={{ fontWeight: "600", pointerEvents: "none" }}
           >
-            <i className="fas fa-bars sidebar-icon mr-2"></i>
-            {this.props.selectedItemList}
+            <i className="font-grey fas fa-bars sidebar-icon mr-2"></i>
+            <span className="font-grey ">{this.props.selectedItemList}</span>
+
+            <i
+              className="ml-2 pt-1 fa fa-circle"
+              style={{
+                fontSize: "8px",
+                color: this.props.selectedItemColor,
+              }}
+            ></i>
           </div>
         </div>
         <div

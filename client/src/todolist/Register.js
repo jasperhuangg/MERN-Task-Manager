@@ -40,7 +40,7 @@ export default class Register extends Component {
       firstName,
       lastName,
       password,
-      "conventional"
+      "Conventional"
     );
   }
 
@@ -73,7 +73,6 @@ export default class Register extends Component {
   }
 
   handleGoogleOAuth = (response) => {
-    console.log(response);
     const username = response.profileObj.email;
     const firstName = response.profileObj.givenName;
     const lastName = response.profileObj.lastName;
@@ -94,7 +93,14 @@ export default class Register extends Component {
       .then((res) => res.json())
       .then((res) => {
         if (res) this.props.verifyLogin(username, password);
-        else this.props.createAccount(username, firstName, lastName, password);
+        else
+          this.props.createAccount(
+            username,
+            firstName,
+            lastName,
+            password,
+            "Google"
+          );
       });
   };
 

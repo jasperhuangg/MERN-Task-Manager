@@ -16,8 +16,6 @@ export default class Sidebar extends Component {
   }
 
   render() {
-    console.log(this.props);
-
     const selectedList = this.props.currentlySelectedListName;
 
     const personalLists = this.props.lists.slice(

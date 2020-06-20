@@ -48,7 +48,8 @@ export default class Todolist extends Component {
         val,
         this.state.addItemDate,
         "",
-        this.state.addItemPriority
+        this.state.addItemPriority,
+        this.props.color
       );
       $("#addItemInput").val("");
       this.handleCalendarOverlayOK();
@@ -224,23 +225,6 @@ export default class Todolist extends Component {
     const priorityIconClasses = this.getPriorityIconClasses();
     const calendarIconClasses = this.getCalendarIconClasses();
 
-    var emptyListText = "";
-    var emptyListIcon = "fas fa-plus-square mr-2";
-
-    if (name === "Today") {
-      emptyListText = "Nothing due today, let's get ahead!";
-      emptyListIcon = "fas fa-exclamation-circle mr-2";
-    } else if (name === "All") {
-      emptyListText = "Nothing due, kick back and relax.";
-      emptyListIcon = "fas fa-exclamation-circle mr-2";
-    } else if (name === "Next 7 Days") {
-      emptyListText = "Nothing due in the next week, let's get ahead!";
-      emptyListIcon = "fas fa-exclamation-circle mr-2";
-    } else {
-      emptyListText = "Add an item above";
-      emptyListIcon = "fas fa-exclamation-circle mr-2";
-    }
-
     // used so placeholder text stays in title input when it is focused but empty
     $(document).find(".add-item-input-container").show();
 
@@ -259,6 +243,26 @@ export default class Todolist extends Component {
       incompletedItems = this.props.items.slice();
       completedItems = [];
     }
+
+    var emptyListText = "";
+    var emptyListIcon = "fas fa-plus-square mr-2";
+
+    if (name === "Today") {
+      emptyListText = "Nothing due today, let's get ahead!";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    } else if (name === "All") {
+      emptyListText = "Nothing due, kick back and relax.";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    } else if (name === "Next 7 Days") {
+      emptyListText = "Nothing due in the next week, let's get ahead!";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    } else {
+      if (completedItems.length > 0)
+        emptyListText = "Nothing due at the moment.";
+      else emptyListText = "Add an item above";
+      emptyListIcon = "fas fa-exclamation-circle mr-2";
+    }
+
     const completedSeparatorIconClasses =
       "fas fa-sort-down mr-2 base" +
       (this.state.completedItemsShowing ? "" : " icon-rotated");
@@ -287,6 +291,7 @@ export default class Todolist extends Component {
               onKeyDown={(e) => this.keyPress(e)}
               ref={this.inputRef}
               onClick={() => this.props.hideAddListOverlay()}
+              autoComplete="off"
             ></input>
             <div
               className={

@@ -23,4 +23,4 @@ export default function PriorityParser(str) {
   }
 }
 
-console.log(PriorityParser("go to the gym today !medium"));
+// console.log(PriorityParser("go to the gym today !medium"));

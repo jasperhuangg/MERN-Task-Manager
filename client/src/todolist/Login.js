@@ -41,7 +41,11 @@ export default class Login extends Component {
   handlePasswordEnter(e) {
     if (this.state.nextClicked && e.keyCode === 13 && e.target.value !== "") {
       e.preventDefault();
-      this.props.verifyLogin(this.state.email, this.state.password);
+      this.props.verifyLogin(
+        this.state.email,
+        this.state.password,
+        "Conventional"
+      );
       // this.setState({ usernameEntered: false, nextClicked: false });
     }
   }
@@ -56,7 +60,11 @@ export default class Login extends Component {
     e.preventDefault();
     if (!this.state.nextClicked) this.setState({ nextClicked: true });
     else {
-      this.props.verifyLogin(this.state.email, this.state.password);
+      this.props.verifyLogin(
+        this.state.email,
+        this.state.password,
+        "Conventional"
+      );
       // this.setState({ usernameEntered: false, nextClicked: false });
     }
   }
@@ -100,7 +108,6 @@ export default class Login extends Component {
   }
 
   handleGoogleOAuth = (response) => {
-    console.log(response);
     const username = response.profileObj.email;
     const firstName = response.profileObj.givenName;
     const lastName = response.profileObj.lastName;
@@ -121,7 +128,14 @@ export default class Login extends Component {
       .then((res) => res.json())
       .then((res) => {
         if (res) this.props.verifyLogin(username, password);
-        else this.props.createAccount(username, firstName, lastName, password);
+        else
+          this.props.createAccount(
+            username,
+            firstName,
+            lastName,
+            password,
+            "Google"
+          );
       });
   };
 
@@ -181,7 +195,9 @@ export default class Login extends Component {
             (this.props.loginInfo === "not yet" ? " d-none" : "")
           }
         >
-          Please provide a valid username and password.
+          {this.props.loginInfo === "auth type"
+            ? "Please log in using the method you created your account."
+            : "Please provide a valid username and password."}
         </div>
         <br />
         <form className="font-grey font-small-login-reg">
@@ -276,7 +292,3 @@ export default class Login extends Component {
     );
   }
 }
-
-const responseGoogle = (response) => {
-  console.log(response);
-};

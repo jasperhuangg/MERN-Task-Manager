@@ -10,7 +10,10 @@ export default class Notification extends Component {
     if (itemTitle !== undefined && itemTitle !== "[Empty Title]")
       itemTitle = '"' + itemTitle + '"';
 
-    const listName = this.props.listName;
+    const listName =
+      this.props.listName === "All" || "Today" || "Next 7 Days"
+        ? this.props.originalList
+        : this.props.listName;
     const notificationClasses =
       "notification p-3 shadow" +
       (this.props.displaying ? " notification-displayed" : "");

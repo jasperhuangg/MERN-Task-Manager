@@ -7,7 +7,17 @@ export default class Toolbar extends Component {
         <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
           <i className="fas fa-cogs"></i>
         </div>
-        <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+        <div
+          className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center"
+          onClick={(e) => {
+            e.preventDefault();
+            var confirmed = window.confirm("Delete all completed items?");
+            if (confirmed) {
+              // delete all completed items
+              this.props.deleteAllCompletedItems();
+            }
+          }}
+        >
           <i className="fas fa-hand-sparkles"></i>
         </div>
         <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
