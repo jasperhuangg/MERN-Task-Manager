@@ -96,7 +96,6 @@ export default class App extends Component {
   }
 
   verifyLogin(username, password, authType) {
-    // console.log("verifying login for " + username);
     const url = domain + "/verifyLogin";
     const body = JSON.stringify({
       username: username,
@@ -141,7 +140,7 @@ export default class App extends Component {
         } else if (res.info === "username does not exist")
           this.setState({ loggedIn: "username does not exist" });
         else if (res.info === "auth type")
-          this.setState({ loggedIn: "auth type" });
+          this.setState({ loggedIn: "auth type", loginOrRegister: "login" });
         else if (res.info === "incorrect password")
           this.setState({ loggedIn: "incorrect password" });
       });
