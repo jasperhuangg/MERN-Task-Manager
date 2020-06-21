@@ -51,6 +51,10 @@ router.post("/", (req, res, next) => {
             else {
               const firstName = result[0].firstName;
               const lastName = result[0].lastName;
+              const sorting = result[0].sorting;
+              const keywords = result[0].keywords;
+              const background = result[0].background;
+
               const decryptedPass = key.decrypt(result[0].password, "utf8");
               if (decryptedPass === password)
                 res.send({
@@ -58,6 +62,9 @@ router.post("/", (req, res, next) => {
                   info: "login successful",
                   firstName: firstName,
                   lastName: lastName,
+                  sorting: sorting,
+                  keywords: keywords,
+                  background: background,
                 });
               else
                 res.send({

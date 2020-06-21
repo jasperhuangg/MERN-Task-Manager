@@ -44,6 +44,9 @@ export default class App extends Component {
       editListOverlayDisplaying: false,
       editListName: "",
       editListColor: "",
+      sorting: "",
+      background: "random",
+      keywords: true,
     };
     this.addListTitleRef = React.createRef();
     this.editListTitleRef = React.createRef();
@@ -55,6 +58,9 @@ export default class App extends Component {
     var lastName = "";
     var loggedIn = "not yet";
     var docTitle = this.state.docTitle;
+    var sorting = "dates first";
+    var background = "random";
+    var keywords = true;
 
     if (cookies.get("DoozyLogin") !== undefined) {
       username = cookies.get("DoozyLogin").email;
@@ -78,14 +84,46 @@ export default class App extends Component {
 
     const bgURL = getRandomBGURL();
 
-    this.setState({
-      bgURL: bgURL,
-      username: username,
-      firstName: firstName,
-      lastName: lastName,
-      loggedIn: loggedIn,
-      docTitle: docTitle,
-    });
+    if (username !== "") {
+      // make a call to the DB to get the user's settings
+      const url = domain + "/getSettings";
+      const body = JSON.stringify({
+        username: username,
+      });
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          this.setState({
+            bgURL: bgURL,
+            username: username,
+            firstName: firstName,
+            lastName: lastName,
+            loggedIn: loggedIn,
+            docTitle: docTitle,
+            sorting: res.sorting,
+            background: res.background,
+            keywords: res.keywords,
+          });
+        });
+    } else {
+      this.setState({
+        bgURL: bgURL,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        loggedIn: loggedIn,
+        docTitle: docTitle,
+        sorting: sorting,
+        background: background,
+        keywords: keywords,
+      });
+    }
   }
 
   componentDidUpdate() {
@@ -121,6 +159,9 @@ export default class App extends Component {
             username: username,
             firstName: res.firstName,
             lastName: res.lastName,
+            sorting: res.sorting,
+            keywords: res.keywords,
+            background: res.background,
           });
           this.getLists();
           // set a cookie
@@ -181,6 +222,9 @@ export default class App extends Component {
               username: email,
               firstName: firstName,
               lastName: lastName,
+              sorting: "keywords first",
+              keywords: true,
+              background: "random",
             });
             this.getLists();
             // set a cookie
@@ -376,7 +420,11 @@ export default class App extends Component {
         }
       }
     }
-    next7Days.items.sort(sortListItems);
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
+    next7Days.items.sort(sortingFunction);
 
     return next7Days;
   }
@@ -399,7 +447,11 @@ export default class App extends Component {
       all.items = all.items.concat(lists[i].items);
     }
 
-    all.items.sort(sortListItems);
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
+    all.items.sort(sortingFunction);
 
     return all;
   }
@@ -423,7 +475,11 @@ export default class App extends Component {
         }
       }
     }
-    today.items.sort(sortListItems);
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
+    today.items.sort(sortingFunction);
 
     return today;
   }
@@ -439,6 +495,11 @@ export default class App extends Component {
     completed
   ) {
     const lists = this.state.lists.slice();
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
+
     var id = null;
     var item = {
       title: title,
@@ -455,7 +516,8 @@ export default class App extends Component {
         const items = lists[i].items;
         items.push(item);
         id = item.itemID;
-        items.sort(sortListItems);
+
+        items.sort(sortingFunction);
         break;
       }
     }
@@ -463,14 +525,14 @@ export default class App extends Component {
     var today = dateToStr(new Date());
     if (dueDate === today) {
       lists[lists.length - 3].items.push(item);
-      lists[lists.length - 3].items.sort(sortListItems);
+      lists[lists.length - 3].items.sort(sortingFunction);
     }
     if (checkIfNext7Days(dueDate)) {
       lists[lists.length - 2].items.push(item);
-      lists[lists.length - 2].items.sort(sortListItems);
+      lists[lists.length - 2].items.sort(sortingFunction);
     }
     lists[lists.length - 1].items.push(item);
-    lists[lists.length - 1].items.sort(sortListItems);
+    lists[lists.length - 1].items.sort(sortingFunction);
 
     this.setState({ lists: lists, currentlySelectedItemID: id });
 
@@ -629,6 +691,10 @@ export default class App extends Component {
   }
 
   setItemCompleted(listName, itemID, completed) {
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
     var lists = this.state.lists.slice();
     var item = undefined;
     for (let i = 0; i < lists.length; i++) {
@@ -638,7 +704,7 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             items[j].completed = completed;
             item = items[j];
-            items.sort(sortListItems);
+            items.sort(sortingFunction);
             break;
           }
         }
@@ -653,7 +719,7 @@ export default class App extends Component {
           for (let j = 0; j < items.length; j++) {
             if (items[j].itemID === itemID) {
               items[j].completed = completed;
-              items.sort(sortListItems);
+              items.sort(sortingFunction);
               break;
             }
           }
@@ -688,6 +754,10 @@ export default class App extends Component {
   }
 
   setItemDueDate(listName, itemID, dueDate) {
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
     var lists = this.state.lists.slice();
     var item = undefined;
     for (let i = 0; i < lists.length; i++) {
@@ -697,7 +767,7 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             items[j].dueDate = dueDate;
             item = items[j];
-            items.sort(sortListItems);
+            items.sort(sortingFunction);
             break;
           }
         }
@@ -712,7 +782,7 @@ export default class App extends Component {
           for (let j = 0; j < items.length; j++) {
             if (items[j].itemID === itemID) {
               items[j].dueDate = dueDate;
-              items.sort(sortListItems);
+              items.sort(sortingFunction);
               break;
             }
           }
@@ -747,6 +817,11 @@ export default class App extends Component {
   }
 
   setItemPriority(listName, itemID, priority) {
+    var sortingFunction =
+      this.state.sorting === "dates first"
+        ? sortListItemsDatesFirst
+        : sortListItemsPrioritiesFirst;
+
     var lists = this.state.lists.slice();
     var item = undefined;
     for (let i = 0; i < lists.length; i++) {
@@ -756,7 +831,7 @@ export default class App extends Component {
           if (items[j].itemID === itemID) {
             items[j].priority = priority;
             item = items[j];
-            items.sort(sortListItems);
+            items.sort(sortingFunction);
             break;
           }
         }
@@ -771,7 +846,7 @@ export default class App extends Component {
           for (let j = 0; j < items.length; j++) {
             if (items[j].itemID === itemID) {
               items[j].priority = priority;
-              items.sort(sortListItems);
+              items.sort(sortingFunction);
               break;
             }
           }
@@ -1259,7 +1334,7 @@ export default class App extends Component {
   }
 }
 
-function sortListItems(a, b) {
+function sortListItemsDatesFirst(a, b) {
   if (a.completed && !b.completed) return 1;
   else if (!a.completed && b.completed) return -1;
   else if (a.dueDate === "" && b.dueDate !== "") return 1;
@@ -1285,6 +1360,33 @@ function sortListItems(a, b) {
       const dateB = new Date(b.dueDate + " 00:00");
       return dateA - dateB;
     }
+  }
+}
+
+function sortListItemsPrioritiesFirst(a, b) {
+  if (a.completed && !b.completed) return 1;
+  else if (!a.completed && b.completed) return -1;
+  else {
+    // sort items due priority first
+    const priorities = ["low", "medium", "high"];
+    const priorityA = priorities.indexOf(a.priority);
+    const priorityB = priorities.indexOf(b.priority);
+    // if they have the same priority, sort by due date
+    if (priorityA === priorityA) {
+      if (a.dueDate === "" && b.dueDate !== "") return 1;
+      else if (a.dueDate !== "" && b.dueDate === "") return -1;
+      // sort items based on date
+      const dateA = new Date(a.dueDate + " 00:00");
+      const dateB = new Date(b.dueDate + " 00:00");
+
+      if (dateA !== dateB) return dateB > dateA;
+      else {
+        // sort by itemID
+        const itemIDA = a.itemID;
+        const itemIDB = b.itemID;
+        return itemIDA - itemIDB;
+      }
+    } else return priorityB - priorityA;
   }
 }
 

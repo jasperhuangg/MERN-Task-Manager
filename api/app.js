@@ -24,6 +24,7 @@ var deleteListRouter = require("./routes/deleteList");
 var editListRouter = require("./routes/editList");
 var accountExistsRouter = require("./routes/accountExists");
 var deleteCompletedItemsRouter = require("./routes/deleteCompletedItems");
+var getSettingsRouter = require("./routes/getSettings");
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use("/deleteList", deleteListRouter);
 app.use("/editList", editListRouter);
 app.use("/accountExists", accountExistsRouter);
 app.use("/deleteCompletedItems", deleteCompletedItemsRouter);
+app.use("/getSettings", getSettingsRouter);
 
 app;
 
