@@ -452,6 +452,27 @@ select:focus {
   transition: 0.2s ease;
 }
 
+.settings-overlay {
+  width: 500px;
+  height: 350px;
+  position: absolute;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  margin-top: -65vh;
+  background-color: white;
+  border-radius: 7px;
+  transition: 0.35s ease-in-out;
+  opacity: 0;
+}
+
+.settings-overlay-displayed {
+  transition: 0.35s ease-in-out;
+  margin-top: -175px;
+  opacity: 1;
+}
+
 .add-list-overlay {
   width: 400px;
   height: 300px;

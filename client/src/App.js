@@ -4,15 +4,16 @@ import "./App.css";
 
 import $ from "jquery";
 
-import Todolist from "./todolist/Todolist.js";
-import Details from "./todolist/Details.js";
-import Login from "./todolist/Login.js";
-import Register from "./todolist/Register.js";
-import Sidebar from "./todolist/Sidebar.js";
-import Notification from "./todolist/Notification.js";
-import Toolbar from "./todolist/Toolbar.js";
-import AddListOverlay from "./todolist/AddListOverlay.js";
-import EditListOverlay from "./todolist/EditListOverlay.js";
+import Todolist from "./todolist/Todolist";
+import Details from "./todolist/Details";
+import Login from "./todolist/Login";
+import Register from "./todolist/Register";
+import Sidebar from "./todolist/Sidebar";
+import Notification from "./todolist/Notification";
+import Toolbar from "./todolist/Toolbar";
+import AddListOverlay from "./todolist/AddListOverlay";
+import EditListOverlay from "./todolist/EditListOverlay";
+import SettingsOverlay from "./todolist/SettingsOverlay";
 
 var ObjectID = require("bson-objectid");
 const cookies = new Cookies();
@@ -42,6 +43,7 @@ export default class App extends Component {
       lastDeletedItemListName: "",
       addListOverlayDisplaying: false,
       editListOverlayDisplaying: false,
+      settingsOverlayDisplaying: false,
       editListName: "",
       editListColor: "",
       sorting: "",
@@ -112,6 +114,7 @@ export default class App extends Component {
           });
         });
     } else {
+      $("#login-register").removeClass("d-none");
       this.setState({
         bgURL: bgURL,
         username: username,
@@ -1095,6 +1098,10 @@ export default class App extends Component {
     }, 500);
   }
 
+  handleShowSettingsOverlay() {
+    this.setState({ settingsOverlayDisplaying: true });
+  }
+
   handleHideAddListOverlay() {
     this.setState({ addListOverlayDisplaying: false });
   }
@@ -1202,6 +1209,7 @@ export default class App extends Component {
               this.editList(oldName, newName, color)
             }
           />
+          <SettingsOverlay displaying={this.state.settingsOverlayDisplaying} />
           <Notification
             displaying={this.state.notificationDisplaying}
             hideNotification={() =>
@@ -1322,6 +1330,9 @@ export default class App extends Component {
                     }}
                     currentlySelectedListName={
                       this.state.currentlySelectedListName
+                    }
+                    handleShowSettingsOverlay={() =>
+                      this.handleShowSettingsOverlay()
                     }
                   />
                 </div>

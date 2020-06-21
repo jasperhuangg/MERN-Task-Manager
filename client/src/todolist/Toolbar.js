@@ -4,7 +4,10 @@ export default class Toolbar extends Component {
   render() {
     return (
       <>
-        <div className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center">
+        <div
+          className="toolbar-icon col-10 mx-1 text-center d-flex justify-content-center align-items-center"
+          onClick={() => this.props.handleShowSettingsOverlay()}
+        >
           <i className="fas fa-cogs"></i>
         </div>
         <div
