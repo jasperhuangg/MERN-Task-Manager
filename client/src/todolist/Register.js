@@ -108,7 +108,7 @@ export default class Register extends Component {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res) this.props.verifyLogin(username, password);
+        if (res) this.props.verifyLogin(username, password, "Google");
         else
           this.props.createAccount(
             username,
@@ -180,8 +180,8 @@ export default class Register extends Component {
                 )}
                 buttonText="Sign Up with Google"
                 onSuccess={this.handleGoogleOAuth}
-                onFailure={() => {
-                  // alert("Google OAuth Failed.");
+                onFailure={(response) => {
+                  alert("Google OAuth Failed.\n" + JSON.stringify(response));
                 }}
                 cookiePolicy={"single_host_origin"}
               />

@@ -96,6 +96,7 @@ export default class App extends Component {
   }
 
   verifyLogin(username, password, authType) {
+    console.log("verify login with", username, password, authType);
     const url = domain + "/verifyLogin";
     const body = JSON.stringify({
       username: username,

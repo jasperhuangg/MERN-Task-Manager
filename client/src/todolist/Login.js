@@ -65,7 +65,6 @@ export default class Login extends Component {
         this.state.password,
         "Conventional"
       );
-      // this.setState({ usernameEntered: false, nextClicked: false });
     }
   }
 
@@ -111,7 +110,7 @@ export default class Login extends Component {
     const username = response.profileObj.email;
     const firstName = response.profileObj.givenName;
     const lastName = response.profileObj.lastName;
-    const password = this.hashGoogleInfo(response); // add some sort of hashing function to this
+    const password = this.hashGoogleInfo(response);
     const domain = "http://localhost:9000";
     const url = domain + "/accountExists";
     const body = JSON.stringify({
@@ -127,7 +126,7 @@ export default class Login extends Component {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res) this.props.verifyLogin(username, password);
+        if (res) this.props.verifyLogin(username, password, "Google");
         else
           this.props.createAccount(
             username,
@@ -178,8 +177,8 @@ export default class Login extends Component {
                 )}
                 buttonText="Log in with Google"
                 onSuccess={this.handleGoogleOAuth}
-                onFailure={() => {
-                  // alert("Google OAuth Failed.");
+                onFailure={(response) => {
+                  alert("Google OAuth Failed.\n" + JSON.stringify(response));
                 }}
                 cookiePolicy={"single_host_origin"}
               />

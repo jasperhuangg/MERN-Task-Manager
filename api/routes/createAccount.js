@@ -54,6 +54,9 @@ router.post("/", (req, res, next) => {
               lastName: lastName,
               password: encryptedPass,
               authType: authType,
+              background: "random",
+              sorting: "dates first",
+              keywords: true,
               lists: [
                 {
                   name: "How to Doozy",

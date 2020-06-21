@@ -27,8 +27,12 @@ router.post("/", (req, res, next) => {
           if (err) throw err;
           if (result.length) {
             var lists = result[0].lists;
+            var sortingFunction =
+              result[0].sorting === "dates first"
+                ? sortListItemsDatesFirst
+                : sortListItemsPrioritiesFirst;
             for (let i = 0; i < lists.length; i++)
-              lists[i].items.sort(sortListItems);
+              lists[i].items.sort(sortingFunction);
             res.send(JSON.stringify(lists));
           } else {
             res.send("Username not found.");
@@ -41,7 +45,7 @@ router.post("/", (req, res, next) => {
   }
 });
 
-function sortListItems(a, b) {
+function sortListItemsDatesFirst(a, b) {
   if (a.completed && !b.completed) return 1;
   else if (!a.completed && b.completed) return -1;
   else if (a.dueDate === "" && b.dueDate !== "") return 1;
@@ -67,6 +71,33 @@ function sortListItems(a, b) {
       const dateB = new Date(b.dueDate + " 00:00");
       return dateA - dateB;
     }
+  }
+}
+
+function sortListItemsPrioritiesFirst(a, b) {
+  if (a.completed && !b.completed) return 1;
+  else if (!a.completed && b.completed) return -1;
+  else {
+    // sort items due priority first
+    const priorities = ["low", "medium", "high"];
+    const priorityA = priorities.indexOf(a.priority);
+    const priorityB = priorities.indexOf(b.priority);
+    // if they have the same priority, sort by due date
+    if (priorityA === priorityA) {
+      if (a.dueDate === "" && b.dueDate !== "") return 1;
+      else if (a.dueDate !== "" && b.dueDate === "") return -1;
+      // sort items based on date
+      const dateA = new Date(a.dueDate + " 00:00");
+      const dateB = new Date(b.dueDate + " 00:00");
+
+      if (dateA !== dateB) return dateB > dateA;
+      else {
+        // sort by itemID
+        const itemIDA = a.itemID;
+        const itemIDB = b.itemID;
+        return itemIDA - itemIDB;
+      }
+    } else return priorityB - priorityA;
   }
 }
 
