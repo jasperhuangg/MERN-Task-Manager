@@ -83,14 +83,15 @@ function sortListItemsPrioritiesFirst(a, b) {
     const priorityA = priorities.indexOf(a.priority);
     const priorityB = priorities.indexOf(b.priority);
     // if they have the same priority, sort by due date
-    if (priorityA === priorityA) {
+    if (priorityB === priorityA) {
       if (a.dueDate === "" && b.dueDate !== "") return 1;
       else if (a.dueDate !== "" && b.dueDate === "") return -1;
+
       // sort items based on date
       const dateA = new Date(a.dueDate + " 00:00");
       const dateB = new Date(b.dueDate + " 00:00");
 
-      if (dateA !== dateB) return dateB > dateA;
+      if (a.dueDate !== b.dueDate) return dateA - dateB;
       else {
         // sort by itemID
         const itemIDA = a.itemID;

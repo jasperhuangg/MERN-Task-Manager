@@ -460,7 +460,7 @@ select:focus {
   left: 50%;
   top: 50%;
   margin-left: -250px;
-  margin-top: -65vh;
+  margin-top: -100vh;
   background-color: white;
   border-radius: 7px;
   transition: 0.35s ease-in-out;
