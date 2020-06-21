@@ -1,5 +1,5 @@
 export default function PriorityParser(str) {
-  const priorities = ["!high", "!medium", "!low"];
+  const priorities = ["!high", "!medium", "!low", "!lo", "!hi", "!med"];
 
   var words = str.toLowerCase().split(" "); // get an array of all the words the string in lowercase
 
@@ -14,13 +14,19 @@ export default function PriorityParser(str) {
     }
   }
 
-  // no date found
+  // no keywords found
   if (keywords === "") return { priority: "low", keywords: "" };
   else {
     // there exist priority strings
-    const priority = keywords.substring(1, keywords.length);
+    const priority = keywordToPriority(keywords);
     return { priority: priority, keywords: keywords };
   }
+}
+
+function keywordToPriority(keyword) {
+  if (keyword === "!lo" || keyword === "!low") return "low";
+  else if (keyword === "!med" || keyword === "!medium") return "medium";
+  else if (keyword === "!hi" || keyword === "!high") return "high";
 }
 
 // console.log(PriorityParser("go to the gym today !medium"));
