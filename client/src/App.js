@@ -52,6 +52,7 @@ export default class App extends Component {
     };
     this.addListTitleRef = React.createRef();
     this.editListTitleRef = React.createRef();
+    this.settingsRef = React.createRef();
   }
 
   componentDidMount() {
@@ -64,6 +65,7 @@ export default class App extends Component {
     var background = "random";
     var keywords = true;
 
+    // user has signed in previously
     if (cookies.get("DoozyLogin") !== undefined) {
       username = cookies.get("DoozyLogin").email;
       firstName = cookies.get("DoozyLogin").firstName;
@@ -84,8 +86,6 @@ export default class App extends Component {
       docTitle = "Lists | Doozy";
     }
 
-    const bgURL = getRandomBGURL();
-
     if (username !== "") {
       // make a call to the DB to get the user's settings
       const url = domain + "/getSettings";
@@ -101,6 +101,11 @@ export default class App extends Component {
       })
         .then((res) => res.json())
         .then((res) => {
+          var bgURL =
+            res.background === "random"
+              ? getRandomBGURL()
+              : 'url("' + res.background + '")';
+
           this.setState({
             bgURL: bgURL,
             username: username,
@@ -109,20 +114,20 @@ export default class App extends Component {
             loggedIn: loggedIn,
             docTitle: docTitle,
             sorting: res.sorting,
-            background: res.background,
             keywords: res.keywords,
+            background: bgURL,
           });
         });
     } else {
       $("#login-register").removeClass("d-none");
       this.setState({
-        bgURL: bgURL,
         username: username,
         firstName: firstName,
         lastName: lastName,
         loggedIn: loggedIn,
         docTitle: docTitle,
         sorting: sorting,
+        bgURL: background,
         background: background,
         keywords: keywords,
       });
@@ -1101,6 +1106,10 @@ export default class App extends Component {
 
   handleShowSettingsOverlay() {
     this.setState({ settingsOverlayDisplaying: true });
+
+    setTimeout(() => {
+      this.settingsRef.current.focus();
+    }, 500);
   }
 
   handleHideAddListOverlay() {
@@ -1113,6 +1122,21 @@ export default class App extends Component {
       editListColor: "",
       editListName: "",
     });
+  }
+
+  setBackgroundSetting(background) {
+    this.setState({
+      background: background,
+      bgURL: 'url("' + background + '")',
+    });
+  }
+
+  setKeywordsSetting(keywordsEnabled) {
+    this.setState({ keywords: keywordsEnabled });
+  }
+
+  setSortingSetting(sortingType) {
+    this.setState({ sorting: sortingType });
   }
 
   render() {
@@ -1182,8 +1206,15 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
           onKeyDown={(e) => {
-            if (e.keyCode === 27 && this.state.addListOverlayDisplaying)
-              this.setState({ addListOverlayDisplaying: false });
+            console.log("registered");
+            if (e.keyCode === 27) {
+              if (this.state.addListOverlayDisplaying)
+                this.setState({ addListOverlayDisplaying: false });
+              else if (this.state.settingsOverlayDisplaying)
+                this.setState({ settingsOverlayDisplaying: false });
+              else if (this.state.editListOverlayDisplaying)
+                this.setState({ editListOverlayDisplaying: false });
+            }
           }}
         >
           <AddListOverlay
@@ -1210,7 +1241,13 @@ export default class App extends Component {
               this.editList(oldName, newName, color)
             }
           />
-          <SettingsOverlay displaying={this.state.settingsOverlayDisplaying} />
+          <SettingsOverlay
+            settingsRef={this.settingsRef}
+            displaying={this.state.settingsOverlayDisplaying}
+            startingSorting={this.state.sorting}
+            startingKeywords={this.state.keywords}
+            startingBackground={this.state.background}
+          />
           <Notification
             displaying={this.state.notificationDisplaying}
             hideNotification={() =>
