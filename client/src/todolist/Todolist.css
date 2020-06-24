@@ -370,6 +370,7 @@ select:focus {
   color: rgba(255, 255, 255, 0.75);
   font-size: 20px;
   transition: 0.2s ease;
+  transform-origin: center;
   text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -454,7 +455,7 @@ select:focus {
 
 .settings-overlay {
   width: 500px;
-  height: 350px;
+  height: 450px;
   position: absolute;
   z-index: 1000;
   left: 50%;
@@ -469,8 +470,12 @@ select:focus {
 
 .settings-overlay-displayed {
   transition: 0.35s ease-in-out;
-  margin-top: -175px;
+  margin-top: -225px;
   opacity: 1;
+}
+
+.settings-label {
+  margin-top: 0.2em;
 }
 
 .add-list-overlay {

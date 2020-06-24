@@ -48,7 +48,7 @@ export default class App extends Component {
       editListColor: "",
       sorting: "",
       background: "random",
-      keywords: true,
+      keywords: "both",
     };
     this.addListTitleRef = React.createRef();
     this.editListTitleRef = React.createRef();
@@ -63,9 +63,9 @@ export default class App extends Component {
     var docTitle = this.state.docTitle;
     var sorting = "dates first";
     var background = "random";
-    var keywords = true;
+    var keywords = "both";
 
-    // user has signed in previously
+    // cookie exists
     if (cookies.get("DoozyLogin") !== undefined) {
       username = cookies.get("DoozyLogin").email;
       firstName = cookies.get("DoozyLogin").firstName;
@@ -77,7 +77,11 @@ export default class App extends Component {
       aWeekFromNow.setDate(aWeekFromNow.getDate() + 7);
       cookies.set(
         "DoozyLogin",
-        { email: username, firstName: firstName, lastName: lastName },
+        {
+          email: username,
+          firstName: firstName,
+          lastName: lastName,
+        },
         {
           path: "/",
           expires: aWeekFromNow,
@@ -86,8 +90,9 @@ export default class App extends Component {
       docTitle = "Lists | Doozy";
     }
 
+    // user has signed in previously
     if (username !== "") {
-      // make a call to the DB to get the user's settings
+      // make a call to the DB to retrieve the user's settings
       const url = domain + "/getSettings";
       const body = JSON.stringify({
         username: username,
@@ -105,6 +110,8 @@ export default class App extends Component {
             res.background === "random"
               ? getRandomBGURL()
               : 'url("' + res.background + '")';
+
+          console.log("keywords:", res.keywords);
 
           this.setState({
             bgURL: bgURL,
@@ -230,7 +237,7 @@ export default class App extends Component {
               username: email,
               firstName: firstName,
               lastName: lastName,
-              sorting: "keywords first",
+              sorting: "dates first",
               keywords: true,
               background: "random",
             });
@@ -1133,10 +1140,38 @@ export default class App extends Component {
 
   setKeywordsSetting(keywordsEnabled) {
     this.setState({ keywords: keywordsEnabled });
+
+    const url = domain + "/setKeywordSetting";
+    const body = JSON.stringify({
+      username: this.state.username,
+      keywords: keywordsEnabled,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
   }
 
   setSortingSetting(sortingType) {
     this.setState({ sorting: sortingType });
+
+    const url = domain + "/setSortingSetting";
+    const body = JSON.stringify({
+      username: this.state.username,
+      sorting: sortingType,
+    });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
   }
 
   render() {
@@ -1206,7 +1241,6 @@ export default class App extends Component {
           style={{ backgroundImage: this.state.bgURL }}
           className={appClasses}
           onKeyDown={(e) => {
-            console.log("registered");
             if (e.keyCode === 27) {
               if (this.state.addListOverlayDisplaying)
                 this.setState({ addListOverlayDisplaying: false });
@@ -1244,9 +1278,12 @@ export default class App extends Component {
           <SettingsOverlay
             settingsRef={this.settingsRef}
             displaying={this.state.settingsOverlayDisplaying}
-            startingSorting={this.state.sorting}
-            startingKeywords={this.state.keywords}
-            startingBackground={this.state.background}
+            sorting={this.state.sorting}
+            keywords={this.state.keywords}
+            background={this.state.background}
+            setKeywordsSetting={(keywords) => this.setKeywordsSetting(keywords)}
+            setSortingSetting={(sorting) => this.setSortingSetting(sorting)}
+            setBackgroundSetting={(bg) => this.setBackgroundSetting(bg)}
           />
           <Notification
             displaying={this.state.notificationDisplaying}
@@ -1461,7 +1498,6 @@ function getRandomBGURL() {
     "https://iili.io/J4WOKX.jpg",
     "https://iili.io/J4WUN4.jpg",
     "https://iili.io/J4WgDl.jpg",
-    "https://iili.io/J4WSRf.jpg",
     "https://iili.io/J4WmDQ.jpg",
     "https://iili.io/J4X9WB.jpg",
     "https://iili.io/J4XHiP.jpg",
