@@ -97,6 +97,7 @@ export default class SettingsOverlay extends Component {
               </label>
             </div>
           </div>
+          <br />
           <div className="form-group">
             <label htmlFor="sorting-settings">Item Sorting</label>
             <div id="sorting-settings" className="form-check ml-2">
@@ -137,8 +138,17 @@ export default class SettingsOverlay extends Component {
               </label>
             </div>
           </div>
+          <br />
+        </div>
+        <div
+          className="d-flex justify-content-center"
+          onClick={() => this.props.hideSettingsOverlay()}
+        >
+          <button className="btn btn btn-primary px-4">OK</button>
         </div>
       </div>
     );
   }
 }
+
+function bgToURL() {}

@@ -1296,6 +1296,9 @@ export default class App extends Component {
             setKeywordsSetting={(keywords) => this.setKeywordsSetting(keywords)}
             setSortingSetting={(sorting) => this.setSortingSetting(sorting)}
             setBackgroundSetting={(bg) => this.setBackgroundSetting(bg)}
+            hideSettingsOverlay={() =>
+              this.setState({ settingsOverlayDisplaying: false })
+            }
           />
           <Notification
             displaying={this.state.notificationDisplaying}

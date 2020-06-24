@@ -191,7 +191,7 @@ export default class Sidebar extends Component {
                     onClick={(e) => this.selectList(e)}
                     data-list-name={list.name}
                   >
-                    <i className="fas fa-bars sidebar-icon col-1 mr-2"></i>
+                    <i className="fas fa-tasks sidebar-icon col-1 mr-2"></i>
                     <div className="col-5 text-left p-0 sidebar-list-name">
                       {listName}
                     </div>

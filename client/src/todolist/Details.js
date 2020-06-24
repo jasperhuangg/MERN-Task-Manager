@@ -256,7 +256,7 @@ export default class Details extends Component {
             className={"details-list-name d-flex align-items-center"}
             style={{ fontWeight: "600", pointerEvents: "none" }}
           >
-            <i className="font-grey fas fa-bars sidebar-icon mr-2"></i>
+            <i className="font-grey fas fa-tasks sidebar-icon mr-2"></i>
             <span className="font-grey ">{this.props.selectedItemList}</span>
 
             <i
