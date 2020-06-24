@@ -12,12 +12,19 @@ export default function DateParser(str) {
     "yday",
     "tmr",
     "monday",
+    "mon",
     "tuesday",
-    "wednesaday",
+    "tue",
+    "wednesday",
+    "wed",
     "thursday",
+    "thu",
     "friday",
+    "fri",
     "saturday",
+    "sat",
     "sunday",
+    "sun",
   ];
 
   const months = [

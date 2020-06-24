@@ -62,14 +62,25 @@ export default class Todolist extends Component {
       });
       $(document).find(".add-item-input-container").show();
       var backspaceEvent = $.Event("keyDown");
-      backspaceEvent.which = 8; // # Some key code value
+      backspaceEvent.which = 8;
       $("#addItemInput").trigger(backspaceEvent);
     }
   }
 
   handleInput(e) {
-    var dateParserObj = DateParser(e.target.value);
-    var priorityParserObj = PriorityParser(e.target.value);
+    const datesEnabled =
+      this.props.keywords === "both" || this.props.keywords === "dates";
+    const prioritiesEnabled =
+      this.props.keywords === "both" || this.props.keywords === "priorities";
+
+    // handle disabling in settings
+    var dateParserObj = datesEnabled
+      ? DateParser(e.target.value)
+      : { date: this.state.addItemDate, keywords: "" };
+    var priorityParserObj = prioritiesEnabled
+      ? PriorityParser(e.target.value)
+      : { priority: this.state.addItemPriority, keywords: "" };
+
     var parsedDate = dateParserObj.date;
     var keywords = dateParserObj.keywords;
     var parsedPriority = priorityParserObj.priority;
@@ -86,7 +97,6 @@ export default class Todolist extends Component {
 
     if (
       priorityKeywords === "" &&
-      // this.state.addItemPriorityKeywords !== "" &&
       e.target.value.indexOf(this.state.addItemPriorityKeywords) !== -1
     ) {
       parsedPriority = this.state.addItemPriority;

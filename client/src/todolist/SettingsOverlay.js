@@ -7,7 +7,6 @@ export default class SettingsOverlay extends Component {
 
   setSorting(e) {
     const sortingType = e.currentTarget.dataset.type;
-    console.log(sortingType);
     this.props.setSortingSetting(sortingType);
   }
 
@@ -52,12 +51,6 @@ export default class SettingsOverlay extends Component {
     const classes =
       "settings-overlay shadow font-grey p-4" +
       (this.props.displaying ? " settings-overlay-displayed" : "");
-
-    console.log(
-      this.props.keywords,
-      prioritiesKeywordsChecked,
-      dateKeywordsChecked
-    );
 
     return (
       <div className={classes}>

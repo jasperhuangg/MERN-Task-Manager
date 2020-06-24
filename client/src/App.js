@@ -111,8 +111,6 @@ export default class App extends Component {
               ? getRandomBGURL()
               : 'url("' + res.background + '")';
 
-          console.log("keywords:", res.keywords);
-
           this.setState({
             bgURL: bgURL,
             username: username,
@@ -134,7 +132,7 @@ export default class App extends Component {
         loggedIn: loggedIn,
         docTitle: docTitle,
         sorting: sorting,
-        bgURL: background,
+        bgURL: getRandomBGURL(),
         background: background,
         keywords: keywords,
       });
@@ -305,7 +303,6 @@ export default class App extends Component {
   }
 
   setSelectedItem(itemID) {
-    console.log(itemID);
     this.setState({
       currentlySelectedItemID: itemID,
       addListOverlayDisplaying: false,
@@ -377,7 +374,7 @@ export default class App extends Component {
 
   // for now assume we are getting the user's username from the props
   // that are being passed in by a Login component (to be created)
-  getLists() {
+  getLists(currentlySelectedList, currentlySelectedListIndex) {
     const url = domain + "/getLists";
     const body = JSON.stringify({
       username: this.state.username /*this.props.username*/,
@@ -396,14 +393,25 @@ export default class App extends Component {
 
         lists = this.appendSmartLists(lists);
 
-        const index =
-          this.state.registered === "successful" ? 0 : lists.length - 1;
-        const name = lists[index].name;
-        this.setState({
-          lists: lists,
-          currentlySelectedListIndex: index,
-          currentlySelectedListName: name,
-        });
+        if (
+          currentlySelectedList !== undefined &&
+          currentlySelectedListIndex !== undefined
+        ) {
+          this.setState({
+            lists: lists,
+            currentlySelectedListIndex: currentlySelectedListIndex,
+            currentlySelectedListName: currentlySelectedList,
+          });
+        } else {
+          const index =
+            this.state.registered === "successful" ? 0 : lists.length - 1;
+          const name = lists[index].name;
+          this.setState({
+            lists: lists,
+            currentlySelectedListIndex: index,
+            currentlySelectedListName: name,
+          });
+        }
       });
   }
 
@@ -573,7 +581,6 @@ export default class App extends Component {
   }
 
   deleteListItem(listName, itemID, originalList) {
-    console.log(listName, itemID, originalList);
     var dueDate = "";
     var item;
     const lists = this.state.lists.slice();
@@ -1171,6 +1178,11 @@ export default class App extends Component {
         "Content-Type": "application/json",
       },
       body: body,
+    }).then(() => {
+      this.getLists(
+        this.state.currentlySelectedListName,
+        this.state.currentlySelectedListIndex
+      );
     });
   }
 
@@ -1331,6 +1343,7 @@ export default class App extends Component {
                     color={list.color}
                     name={list.name}
                     items={list.items}
+                    keywords={this.state.keywords}
                     addListItem={(
                       listName,
                       title,

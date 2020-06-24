@@ -56,10 +56,10 @@ router.post("/", (req, res, next) => {
               authType: authType,
               background: "random",
               sorting: "dates first",
-              keywords: true,
+              keywords: "both",
               lists: [
                 {
-                  name: "How to Doozy",
+                  name: "How to doozy",
                   color: "#0496FF",
                   items: [
                     {
@@ -74,7 +74,7 @@ router.post("/", (req, res, next) => {
                       title:
                         "Keywords set deadlines/priorities when adding items.",
                       description:
-                        'Try adding "Get groceries tmr !medium" or "Hit the gym today !high"',
+                        '- Try adding "Get groceries tmr !medium" or "Hit the gym today !high"\n- You can enable/disable each in the settings.',
                       dueDate: "",
                       priority: "medium",
                       completed: false,
@@ -83,7 +83,7 @@ router.post("/", (req, res, next) => {
                     {
                       title: "Set item priorities to affect sorting.",
                       description:
-                        "- Try clicking the scale icon and changing the priority!\n- Items are sorted with due dates, then priorities among dates.",
+                        "- Try clicking the scale icon and changing the priority!\n- Items are sorted with due dates, then priorities among dates by default. You can change this in the settings.",
                       dueDate: "",
                       priority: "low",
                       completed: false,

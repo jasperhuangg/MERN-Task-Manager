@@ -146,8 +146,14 @@ export default class Login extends Component {
     }
 
     return (
-      <div className="Login py-5 px-4">
-        <h1>LOGO</h1>
+      <div className="Login pb-5 px-4 pt-4">
+        <br />
+        <div className="text-left">
+          <img
+            style={{ width: "121.6px", height: "35px" }}
+            src="https://iili.io/JQP1Pp.png"
+          />
+        </div>
         <br />
         <br />
         <h5 className="text-left" style={{ fontWeight: "600" }}>
