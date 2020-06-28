@@ -6,7 +6,7 @@ A task manager app written with the Express.js, React.js, Node.js, and MongoDB i
 3. Run ```serve -s build``` in this same directory
 4. The app should now be hosted at http://localhost:5000.
 ## Features
-- Keyword Parsing: Set todo item priorities and due dates in real time as you type their titles. Adding 'Get groceries !high tmr' adds a high priority item called 'Get groceries' that is due tomorrow.
+- Keyword Parsing: Set todo item priorities and due dates in real time as you type their titles. Adding 'Get groceries !high tmr' adds a high priority item called 'Get groceries' that is due tomorrow. Can be enabled or disabled for either due dates or priorities in the settings menu.
 - Item Sorting: Settings to affect item sorting based on their due dates and priorities; completely changes how you use the app.
 - Real-time MongoDB Integration: Any changes made to any todo items are updated in the database in real-time.
 - Google OAuth
