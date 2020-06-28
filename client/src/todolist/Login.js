@@ -150,7 +150,7 @@ export default class Login extends Component {
         <br />
         <div className="text-left">
           <img
-            style={{ width: "121.6px", height: "35px" }}
+            style={{ width: "156.33px", height: "45px" }}
             src="https://iili.io/JQP1Pp.png"
           />
         </div>

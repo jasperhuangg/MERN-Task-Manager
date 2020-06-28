@@ -297,7 +297,10 @@ export default class App extends Component {
         .then((res) => res.json())
         .then((res) => {
           this.setState({ lists: lists });
-          this.getLists();
+          this.getLists(
+            this.state.currentlySelectedListName,
+            this.state.currentlySelectedListIndex
+          );
         });
     }
   }
@@ -1087,10 +1090,13 @@ export default class App extends Component {
   }
 
   handleDisplayNotification() {
-    this.setState({ notificationDisplaying: true });
-    setTimeout(() => {
-      this.setState({ notificationDisplaying: false });
-    }, 4000);
+    if (this.state.notificationDisplaying === false) {
+      this.setState({ notificationDisplaying: true });
+      setTimeout(() => {
+        this.setState({ notificationDisplaying: false });
+      }, 4500);
+    } else {
+    }
   }
 
   handleShowAddListOverlay() {
@@ -1562,3 +1568,30 @@ function checkIfNext7Days(dateStr) {
 
   return false;
 }
+
+function Timer(callback, time) {
+  this.setTimeout(callback, time);
+}
+
+Timer.prototype.setTimeout = function (callback, time) {
+  var self = this;
+  if (this.timer) {
+    clearTimeout(this.timer);
+  }
+  this.finished = false;
+  this.callback = callback;
+  this.time = time;
+  this.timer = setTimeout(function () {
+    self.finished = true;
+    callback();
+  }, time);
+  this.start = Date.now();
+};
+
+Timer.prototype.add = function (time) {
+  if (!this.finished) {
+    // add time to time left
+    time = this.time - (Date.now() - this.start) + time;
+    this.setTimeout(this.callback, time);
+  }
+};

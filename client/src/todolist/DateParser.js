@@ -16,15 +16,10 @@ export default function DateParser(str) {
     "tuesday",
     "tue",
     "wednesday",
-    "wed",
     "thursday",
-    "thu",
     "friday",
-    "fri",
     "saturday",
-    "sat",
     "sunday",
-    "sun",
   ];
 
   const months = [
@@ -288,7 +283,14 @@ function dayOfTheWeekToNumber(dayOfTheWeek) {
     "saturday",
   ];
 
-  return daysOfTheWeek.indexOf(dayOfTheWeek);
+  var idx = daysOfTheWeek.indexOf(dayOfTheWeek);
+
+  if (idx === -1) {
+    const daysAbbr = ["", "sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    idx = daysAbbr.indexOf(dayOfTheWeek);
+  }
+
+  return idx;
 }
 
 function distanceToNextDay(day1, day2) {

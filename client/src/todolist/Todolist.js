@@ -133,7 +133,7 @@ export default class Todolist extends Component {
 
   handleShowCalendarOverlay(e) {
     const xCoord = (e.clientX * 7) / 12;
-    $(".calendar-overlay").css("left", xCoord + "px");
+    $("#todolist-calendar-overlay").css("left", xCoord + "px");
     if (this.state.calendarOverlayDisplaying)
       this.setState({ calendarOverlayDisplaying: false });
     else this.setState({ calendarOverlayDisplaying: true });
@@ -141,7 +141,7 @@ export default class Todolist extends Component {
 
   handleShowPrioritiesOverlay(e) {
     const xCoord = (e.clientX * 7) / 12;
-    $(".priorities-overlay").css("left", xCoord + "px");
+    $("#todolist-priorities-overlay").css("left", xCoord + "px");
     if (this.state.prioritiesOverlayDisplaying)
       this.setState({ prioritiesOverlayDisplaying: false });
     else this.setState({ prioritiesOverlayDisplaying: true });
@@ -319,7 +319,10 @@ export default class Todolist extends Component {
                 <i className={priorityIconClasses}></i>
               </span>
             </div>
-            <div id="priorities-overlay" className={prioritiesOverlayClasslist}>
+            <div
+              id="todolist-priorities-overlay"
+              className={prioritiesOverlayClasslist}
+            >
               <PrioritiesOverlay
                 handlePrioritiesOverlayClick={(priority) =>
                   this.handlePrioritiesOverlayClick(priority)
@@ -347,7 +350,10 @@ export default class Todolist extends Component {
             </div>
           </div>
         </div>
-        <div id="calendar-overlay" className={calendarOverlayClasslist}>
+        <div
+          id="todolist-calendar-overlay"
+          className={calendarOverlayClasslist}
+        >
           <CalendarOverlay
             setDueDate={(date) => this.setAddItemDate(date)}
             handleCalendarOverlayOK={() => this.handleCalendarOverlayOK()}

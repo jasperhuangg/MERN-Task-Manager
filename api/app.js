@@ -27,6 +27,7 @@ var deleteCompletedItemsRouter = require("./routes/deleteCompletedItems");
 var getSettingsRouter = require("./routes/getSettings");
 var setKeywordSettingRouter = require("./routes/setKeywordSetting");
 var setSortingSettingRouter = require("./routes/setSortingSetting");
+var shareListRouter = require("./routes/shareList");
 
 var app = express();
 
@@ -63,6 +64,7 @@ app.use("/deleteCompletedItems", deleteCompletedItemsRouter);
 app.use("/getSettings", getSettingsRouter);
 app.use("/setKeywordSetting", setKeywordSettingRouter);
 app.use("/setSortingSetting", setSortingSettingRouter);
+app.use("/shareList", shareListRouter);
 
 app;
 

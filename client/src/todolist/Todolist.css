@@ -115,6 +115,24 @@ select:focus {
   width: 100%;
 }
 
+#todolist-calendar-overlay {
+  position: absolute;
+  transform-origin: center;
+  margin-right: 125px;
+}
+
+#todolist-priorities-overlay {
+  position: absolute;
+  transform-origin: center;
+  margin-right: 125px;
+}
+
+#details-priorities-overlay {
+  position: absolute;
+  transform-origin: center;
+  margin-right: 125px;
+}
+
 .calendar-overlay {
   position: absolute;
   z-index: 1000;

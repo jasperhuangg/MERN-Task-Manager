@@ -3,6 +3,7 @@ import CalendarOverlay from "./CalendarOverlay.js";
 import PrioritiesOverlay from "./PrioritiesOverlay.js";
 
 import "./Todolist.css";
+import $ from "jquery";
 
 export default class Details extends Component {
   constructor(props) {
@@ -72,7 +73,9 @@ export default class Details extends Component {
     else this.setState({ calendarOverlayDisplaying: true });
   }
 
-  handleShowPrioritiesOverlay() {
+  handleShowPrioritiesOverlay(e) {
+    const xCoord = (e.clientX * 7) / 12;
+    $("#details-priorities-overlay").css("left", xCoord + "px");
     if (this.state.prioritiesOverlayDisplaying)
       this.setState({ prioritiesOverlayDisplaying: false });
     else this.setState({ prioritiesOverlayDisplaying: true });
@@ -182,8 +185,8 @@ export default class Details extends Component {
             </div>
             <div
               className={priorityPickerClasses}
-              onClick={() => {
-                this.handleShowPrioritiesOverlay();
+              onClick={(e) => {
+                this.handleShowPrioritiesOverlay(e);
                 this.props.hideAddListOverlay();
               }}
             >
@@ -213,7 +216,10 @@ export default class Details extends Component {
               currentlySelectedDate={this.state.dueDate}
             />
           </div>
-          <div id="priorities-overlay" className={prioritiesOverlayClasslist}>
+          <div
+            id="details-priorities-overlay"
+            className={prioritiesOverlayClasslist}
+          >
             <PrioritiesOverlay
               handlePrioritiesOverlayClick={(priority) =>
                 this.handlePriorityChange(priority)
