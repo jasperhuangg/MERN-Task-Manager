@@ -9,4 +9,4 @@ Clone the repo, cd into the 'api' folder, and run 'npm start'. Then cd into the 
 - Google OAuth
 - RSA Encrytion of User Information
 - Cookies to Maintain User Login State
-- Numerous other featuers which improve user experience.
+- Numerous other features which improve user experience.
