@@ -2,7 +2,7 @@
 ## Description
 A task manager app written with the Express.js, React.js, Node.js, and MongoDB inspired by TickTick. The app is complete functionality-wise and is ready to be used. I'd still like to work on the styling for a few items and responsiveness.
 ## Demo
-![Imgur](https://i.imgur.com/Phn8sqy.gifv)
+![Imgur](https://i.imgur.com/Phn8sqy.gif)
 ## Setup
 1. Clone the repo, ```cd``` into the ```api``` folder, and run ```npm start```.
 2. In a new terminal window, ```cd``` into the ```client``` folder and run ```npm run build```. 
